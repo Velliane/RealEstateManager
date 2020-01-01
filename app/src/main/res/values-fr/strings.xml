@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Real Estate Manager</string>
+
+    <!-- Menu -->
+    <string name="toolbar_add">Ajouter</string>
+    <string name="toolbar_modify">Modifier</string>
+    <string name="toolbar_search">Rechercher</string>
+
+</resources>

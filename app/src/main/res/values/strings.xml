@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Real Estate Manager</string>
+
+    <!-- Menu -->
+    <string name="toolbar_add">Add</string>
+    <string name="toolbar_modify">Modify</string>
+    <string name="toolbar_search">Search</string>
+
+</resources>
