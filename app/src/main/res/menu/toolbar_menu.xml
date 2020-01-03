@@ -6,18 +6,21 @@
         android:id="@+id/toolbar_menu_add"
         app:showAsAction="ifRoom"
         android:title="@string/toolbar_add"
+        android:icon="@drawable/action_add"
         />
 
     <item
         android:id="@+id/toolbar_menu_modify"
         app:showAsAction="ifRoom"
         android:title="@string/toolbar_modify"
+        android:icon="@drawable/action_modify"
         />
 
     <item
         android:id="@+id/toolbar_menu_search"
         app:showAsAction="ifRoom"
         android:title="@string/toolbar_search"
+        android:icon="@drawable/action_search"
         />
 
 </menu>
