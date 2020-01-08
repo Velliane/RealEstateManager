@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/toolbar_menu_add"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         android:title="@string/toolbar_add"
         android:icon="@drawable/action_add"
         />

@@ -6,5 +6,7 @@
     <string name="toolbar_add">Ajouter</string>
     <string name="toolbar_modify">Modifier</string>
     <string name="toolbar_search">Rechercher</string>
+    <string name="main_drawer_open">Open navigation drawer</string>
+    <string name="main_drawer_close">Close navigation drawer</string>
 
 </resources>

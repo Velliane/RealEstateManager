@@ -9,4 +9,5 @@
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary"
     app:titleTextColor="@color/colorAccent"
-    android:theme= "@style/AppTheme"/>
+    android:theme= "@style/AppTheme"
+    app:menu="@menu/toolbar_menu"/>
