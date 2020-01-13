@@ -9,27 +9,42 @@
         android:layout_height="wrap_content">
 
 
+        <TextView
+            android:id="@+id/edit_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="15dp"
+            android:text="@string/add_property_title"
+            android:textAlignment="center"
+            android:textSize="35dp"
+            android:background="@color/colorPrimary"/>
 
         <!-- Type of the property -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/custom_type_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/custom_price_container"
+            app:layout_constraintBottom_toTopOf="@id/custom_surface_container"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:hint="Type"
-            app:boxStrokeColor="@color/colorAccent"
-            app:boxStrokeWidth="15dp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+            android:hint="@string/type"
+            style="@style/TextInputLayoutStyle">
 
-            <com.google.android.material.textfield.TextInputEditText
+<!--            <com.google.android.material.textfield.TextInputEditText-->
+<!--                android:id="@+id/edit_type"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content" />-->
+
+            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                 android:id="@+id/edit_type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
-
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Price -->
@@ -37,19 +52,20 @@
             android:id="@+id/custom_price_container"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_title"
             app:layout_constraintStart_toEndOf="@+id/custom_type_container"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/custom_rooms_container"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:hint="Price"
-            app:boxStrokeColor="@color/colorAccent"
-            app:boxStrokeWidth="15dp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+            android:hint="@string/price"
+            style="@style/TextInputLayoutStyle">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_price"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:inputType="number"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -61,16 +77,17 @@
             app:layout_constraintTop_toBottomOf="@id/custom_type_container"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/custom_rooms_container"
+            app:layout_constraintBottom_toTopOf="@id/custom_description_container"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:hint="Surface"
-            app:boxStrokeColor="@color/colorAccent"
-            app:boxStrokeWidth="15dp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+            android:hint="@string/surface"
+            style="@style/TextInputLayoutStyle">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_surface"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:inputType="number"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -82,18 +99,40 @@
             app:layout_constraintTop_toBottomOf="@id/custom_price_container"
             app:layout_constraintStart_toEndOf="@id/custom_surface_container"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/custom_description_container"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:hint="Number of rooms"
-            app:boxStrokeColor="@color/colorAccent"
-            app:boxStrokeWidth="15dp"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+            android:hint="@string/number_of_rooms"
+            style="@style/TextInputLayoutStyle">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_rooms"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:inputType="number"/>
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/custom_description_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/custom_surface_container"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:hint="@string/description"
+            style="@style/TextInputLayoutStyle">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

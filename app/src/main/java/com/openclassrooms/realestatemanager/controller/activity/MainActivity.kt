@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.controller.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -9,9 +10,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.navigation.NavigationView
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.controller.fragment.EditDialogFragment
+import com.openclassrooms.realestatemanager.injections.Injection
+import com.openclassrooms.realestatemanager.view_model.PropertyViewModel
 
 class MainActivity : AppCompatActivity(), View.OnClickListener{
 
@@ -20,6 +23,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener{
     /** Drawer */
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var drawerMenu: NavigationView
+    /** ViewModel */
+    private lateinit var propertyViewModel: PropertyViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +37,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener{
 
         configureToolbar()
         configureDrawerLayout()
+        configureViewModel()
 
     }
 
@@ -42,15 +48,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener{
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId){
             R.id.toolbar_menu_add -> {
-                val transaction = supportFragmentManager.beginTransaction()
-                val fragment = supportFragmentManager.findFragmentByTag("edit")
-                if(fragment != null){
-                    transaction.remove(fragment)
-                }
-                transaction.addToBackStack(null)
-
-                val dialogFragment = EditDialogFragment.newInstance("content")
-                dialogFragment.show(transaction, "edit")
+                val intent = Intent(this, EditActivity::class.java)
+                startActivity(intent)
                 return true
             }
         }
@@ -80,11 +79,24 @@ class MainActivity : AppCompatActivity(), View.OnClickListener{
         toogle.syncState()
     }
 
+    private fun configureViewModel() {
+        val viewModelFactory = Injection.provideViewModelFactory(this)
+        propertyViewModel = ViewModelProviders.of(this, viewModelFactory).get(PropertyViewModel::class.java)
+    }
+
     //-- FRAGMENT --//
     private fun addFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
                 .replace(R.id.container, fragment, fragment.javaClass.simpleName)
                 .commit()
+
+    }
+
+    fun getListOfProperty(){
+        propertyViewModel.getAllProperty().observe(this, )
+    }
+
+    fun updateView(){
 
     }
 

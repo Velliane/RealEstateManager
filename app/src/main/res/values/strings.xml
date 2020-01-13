@@ -7,5 +7,12 @@
     <string name="toolbar_search">Search</string>
     <string name="main_drawer_open">Open navigation drawer</string>
     <string name="main_drawer_close">Close navigation drawer</string>
+    <string name="type">Type</string>
+    <string name="price">Price</string>
+    <string name="surface">Surface</string>
+    <string name="number_of_rooms">Number of rooms</string>
+    <string name="description">Description</string>
+    <string name="add_property_title">Add a property</string>
+    <style name="edit_property_title">Edit a property</style>
 
 </resources>

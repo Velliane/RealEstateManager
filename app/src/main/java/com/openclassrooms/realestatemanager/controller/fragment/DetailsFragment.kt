@@ -6,12 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.utils.Constants
 
 class DetailsFragment: Fragment() {
 
     companion object{
-        fun newInstance(): DetailsFragment{
-            return DetailsFragment()
+
+        fun newInstance(id: Int): DetailsFragment{
+            val fragment = DetailsFragment()
+            val args = Bundle()
+            args.putInt(Constants.PROPERTY_ID, id)
+            fragment.arguments = args
+            return fragment
         }
     }
 
