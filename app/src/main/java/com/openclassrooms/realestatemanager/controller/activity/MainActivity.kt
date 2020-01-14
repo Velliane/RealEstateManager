@@ -10,10 +10,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.adapters.ListAdapter
 import com.openclassrooms.realestatemanager.injections.Injection
+import com.openclassrooms.realestatemanager.model.Property
 import com.openclassrooms.realestatemanager.view_model.PropertyViewModel
 
 class MainActivity : AppCompatActivity(), View.OnClickListener{
@@ -25,6 +30,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener{
     private lateinit var drawerMenu: NavigationView
     /** ViewModel */
     private lateinit var propertyViewModel: PropertyViewModel
+    /** RecyclerView Adapter */
+    private lateinit var adapter: ListAdapter
+    /** RecyclerView */
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,11 +43,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener{
         toolbar = findViewById(R.id.main_toolbar)
         drawerLayout = findViewById(R.id.main_drawer_container)
         drawerMenu = findViewById(R.id.main_drawer)
+        recyclerView = findViewById(R.id.fragment_list_recycler_view)
 
         configureToolbar()
         configureDrawerLayout()
         configureViewModel()
 
+        getListOfProperty()
     }
 
     override fun onClick(v: View?) {
@@ -93,11 +104,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener{
     }
 
     fun getListOfProperty(){
-        propertyViewModel.getAllProperty().observe(this, )
+        propertyViewModel.getAllProperty().observe(this, Observer<List<Property>> { updateView() })
     }
 
     fun updateView(){
-
+        adapter = ListAdapter(this)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
     }
 
 
