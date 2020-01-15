@@ -1,137 +1,194 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-
         <TextView
             android:id="@+id/edit_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:layout_marginBottom="15dp"
             android:text="@string/add_property_title"
             android:textAlignment="center"
             android:textSize="35dp"
-            android:background="@color/colorPrimary"/>
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <RadioButton
+            android:id="@+id/edit_on_sale_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="On Sale"
+            app:layout_constraintEnd_toStartOf="@id/edit_sold_btn"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_title" />
+
+        <RadioButton
+            android:id="@+id/edit_sold_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/edit_on_sale_btn"
+            app:layout_constraintTop_toBottomOf="@id/edit_title" />
+
 
         <!-- Type of the property -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/custom_type_container"
+            style="@style/TextInputLayoutStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/edit_title"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/custom_price_container"
-            app:layout_constraintBottom_toTopOf="@id/custom_surface_container"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:hint="@string/type"
-            style="@style/TextInputLayoutStyle">
+            app:layout_constraintBottom_toTopOf="@id/custom_surface_container"
+            app:layout_constraintEnd_toStartOf="@id/custom_price_container"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_on_sale_btn">
 
-<!--            <com.google.android.material.textfield.TextInputEditText-->
-<!--                android:id="@+id/edit_type"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content" />-->
+            <!--            <com.google.android.material.textfield.TextInputEditText-->
+            <!--                android:id="@+id/edit_type"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content" />-->
 
             <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                 android:id="@+id/edit_type"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Price -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/custom_price_container"
+            style="@style/TextInputLayoutStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/edit_title"
-            app:layout_constraintStart_toEndOf="@+id/custom_type_container"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/custom_rooms_container"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:hint="@string/price"
-            style="@style/TextInputLayoutStyle">
+            app:layout_constraintBottom_toTopOf="@id/custom_rooms_container"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/custom_type_container"
+            app:layout_constraintTop_toBottomOf="@id/edit_sold_btn">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"/>
+                android:inputType="number" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Surface -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/custom_surface_container"
+            style="@style/TextInputLayoutStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/custom_type_container"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/custom_rooms_container"
-            app:layout_constraintBottom_toTopOf="@id/custom_description_container"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:hint="@string/surface"
-            style="@style/TextInputLayoutStyle">
+            app:layout_constraintBottom_toTopOf="@id/custom_description_container"
+            app:layout_constraintEnd_toStartOf="@id/custom_rooms_container"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/custom_type_container">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_surface"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"/>
+                android:inputType="number" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Number of rooms -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/custom_rooms_container"
+            style="@style/TextInputLayoutStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/custom_price_container"
-            app:layout_constraintStart_toEndOf="@id/custom_surface_container"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/custom_description_container"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:hint="@string/number_of_rooms"
-            style="@style/TextInputLayoutStyle">
+            app:layout_constraintBottom_toTopOf="@id/custom_description_container"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/custom_surface_container"
+            app:layout_constraintTop_toBottomOf="@id/custom_price_container">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_rooms"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"/>
+                android:inputType="number" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/custom_description_container"
+            style="@style/TextInputLayoutStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/custom_surface_container"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
+            android:layout_marginBottom="20dp"
             android:hint="@string/description"
-            style="@style/TextInputLayoutStyle">
+            app:layout_constraintBottom_toTopOf="@id/edit_title_location"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/custom_surface_container">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textMultiLine"/>
+                android:inputType="textMultiLine" />
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <TextView
+            android:id="@+id/edit_title_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Location"
+            android:textAlignment="center"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/address"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/custom_description_container" />
+
+
+        <include
+            android:id="@+id/address"
+            layout="@layout/custom_address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_title_location" />
+
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/edit_save_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:src="@drawable/action_add"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

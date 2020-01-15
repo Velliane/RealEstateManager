@@ -1,7 +1,9 @@
 package com.openclassrooms.realestatemanager.controller.activity
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -17,39 +19,40 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.navigation.NavigationView
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.adapters.ListAdapter
+import com.openclassrooms.realestatemanager.controller.fragment.ListFragment
 import com.openclassrooms.realestatemanager.injections.Injection
 import com.openclassrooms.realestatemanager.model.Property
+import com.openclassrooms.realestatemanager.utils.getScreenOrientation
 import com.openclassrooms.realestatemanager.view_model.PropertyViewModel
 
-class MainActivity : AppCompatActivity(), View.OnClickListener{
+class MainActivity : AppCompatActivity(), View.OnClickListener, ListAdapter.OnItemClickListener {
 
     /** Toolbar*/
     private lateinit var toolbar: Toolbar
     /** Drawer */
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var drawerMenu: NavigationView
-    /** ViewModel */
-    private lateinit var propertyViewModel: PropertyViewModel
-    /** RecyclerView Adapter */
-    private lateinit var adapter: ListAdapter
-    /** RecyclerView */
-    private lateinit var recyclerView: RecyclerView
+    /** Boolean isTablet */
+    private var isTablet: Boolean = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        isTablet = getScreenOrientation(resources.configuration.orientation)
+
         //--Views--//
         toolbar = findViewById(R.id.main_toolbar)
         drawerLayout = findViewById(R.id.main_drawer_container)
         drawerMenu = findViewById(R.id.main_drawer)
-        recyclerView = findViewById(R.id.fragment_list_recycler_view)
 
         configureToolbar()
         configureDrawerLayout()
-        configureViewModel()
 
-        getListOfProperty()
+        showFragment()
+
+
     }
 
     override fun onClick(v: View?) {
@@ -57,7 +60,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener{
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item?.itemId){
+        when (item?.itemId) {
             R.id.toolbar_menu_add -> {
                 val intent = Intent(this, EditActivity::class.java)
                 startActivity(intent)
@@ -90,27 +93,28 @@ class MainActivity : AppCompatActivity(), View.OnClickListener{
         toogle.syncState()
     }
 
-    private fun configureViewModel() {
-        val viewModelFactory = Injection.provideViewModelFactory(this)
-        propertyViewModel = ViewModelProviders.of(this, viewModelFactory).get(PropertyViewModel::class.java)
-    }
+
 
     //-- FRAGMENT --//
     private fun addFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
-                .replace(R.id.container, fragment, fragment.javaClass.simpleName)
+                .replace(R.id.fragment_container, fragment, fragment.javaClass.simpleName)
                 .commit()
 
     }
 
-    fun getListOfProperty(){
-        propertyViewModel.getAllProperty().observe(this, Observer<List<Property>> { updateView() })
+    private fun showFragment(){
+        val fragment = ListFragment.newInstance()
+        addFragment(fragment)
     }
 
-    fun updateView(){
-        adapter = ListAdapter(this)
-        recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(this)
+    override fun onResume() {
+        super.onResume()
+        isTablet = getScreenOrientation(resources.configuration.orientation)
+    }
+
+    override fun onItemClicked(id: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 

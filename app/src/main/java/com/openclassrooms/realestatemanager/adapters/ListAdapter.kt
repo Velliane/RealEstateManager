@@ -10,14 +10,23 @@ import androidx.recyclerview.widget.RecyclerView
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.model.Property
 
-class ListAdapter(private val context: Context) : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
+class ListAdapter(private val context: Context, private val listener: OnItemClickListener) : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
 
 
     private var data: List<Property> = ArrayList()
+    private lateinit var onItemClickListener: OnItemClickListener
+    private lateinit var mContext: Context
+
+    interface OnItemClickListener {
+        fun onItemClicked(id: Int)
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.item_list, parent, false)
+        mContext = context
+        onItemClickListener = listener
         return ListViewHolder(view)
     }
 
@@ -36,7 +45,10 @@ class ListAdapter(private val context: Context) : RecyclerView.Adapter<ListAdapt
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
         if (data.isNotEmpty()) {
-            holder.bind(data.get(position))
+            holder.type.setText("TYPE")
+            holder.price.setText("150000")
+            holder.location.setText("Unknown")
+            //holder.bind(data.get(position))
         } else {
             holder.type.setText("TYPE")
             holder.price.setText("150000")
@@ -54,12 +66,16 @@ class ListAdapter(private val context: Context) : RecyclerView.Adapter<ListAdapt
 
         fun bind(property: Property) {
             if (property != null) {
-                type.setText(property.price)
+                //type.setText(property.price)
                 price.setText(property.price)
-                location.setText("Unknown")
+                //location.setText("Unknown")
+                itemView.setOnClickListener {
+                    onItemClickListener.onItemClicked(property.id_property)
+                }
             }
         }
-
     }
+
 }
+
 
