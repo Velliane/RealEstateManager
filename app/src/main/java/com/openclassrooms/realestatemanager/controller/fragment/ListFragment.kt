@@ -36,6 +36,7 @@ class ListFragment: Fragment(), ListAdapter.OnItemClickListener {
 
         recyclerView = view.findViewById(R.id.fragment_list_recycler_view)
         recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.HORIZONTAL))
+        recyclerView.layoutManager = LinearLayoutManager(activity!!.applicationContext)
         adapter = context?.let { ListAdapter(it, this) }!!
 
         configureViewModel()
@@ -58,7 +59,6 @@ class ListFragment: Fragment(), ListAdapter.OnItemClickListener {
      */
     private fun updateView(properties: List<Property>) {
         recyclerView.adapter = adapter
-        recyclerView.layoutManager = LinearLayoutManager(context)
         adapter.setData(properties)
         adapter.notifyDataSetChanged()
     }
@@ -75,7 +75,9 @@ class ListFragment: Fragment(), ListAdapter.OnItemClickListener {
      * When click on an item of the RecyclerView
      */
     override fun onItemClicked(id: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val fragment = DetailsFragment.newInstance()
+        activity!!.supportFragmentManager.beginTransaction().replace(R.id.container_fragment_list, fragment).commit()
+
     }
 
 }

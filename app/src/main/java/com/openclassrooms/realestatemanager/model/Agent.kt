@@ -9,5 +9,7 @@ data class Agent (
         @PrimaryKey(autoGenerate = true)
         var id_agent: Int,
 
-        var name: String
+        var name: String,
+        var email: String,
+        var photo: String
 )

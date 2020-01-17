@@ -12,11 +12,11 @@ class DetailsFragment: Fragment() {
 
     companion object{
 
-        fun newInstance(id: Int): DetailsFragment{
+        fun newInstance(): DetailsFragment{
             val fragment = DetailsFragment()
-            val args = Bundle()
-            args.putInt(Constants.PROPERTY_ID, id)
-            fragment.arguments = args
+//            val args = Bundle()
+//            args.putInt(Constants.PROPERTY_ID, id)
+//            fragment.arguments = args
             return fragment
         }
     }

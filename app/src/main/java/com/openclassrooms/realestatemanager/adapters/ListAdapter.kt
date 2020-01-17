@@ -36,24 +36,22 @@ class ListAdapter(private val context: Context, private val listener: OnItemClic
     }
 
     override fun getItemCount(): Int {
-        return if (data.isNotEmpty()) {
-            data.size
-        } else {
-            10
-        }
+//        return if (data.isNotEmpty()) {
+//            data.size
+//        } else {
+            return 10
+        //}
     }
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        if (data.isNotEmpty()) {
-            holder.type.setText("TYPE")
-            holder.price.setText("150000")
-            holder.location.setText("Unknown")
-            //holder.bind(data.get(position))
-        } else {
-            holder.type.setText("TYPE")
-            holder.price.setText("150000")
-            holder.location.setText("Unknown")
-        }
+        //if (data.isNotEmpty()) {
+            //holder.bind(data[position])
+        //} else {
+        //}
+        holder.price.text = "150000"
+        holder.type.text = "House"
+        holder.location.text = "Unknown"
+
     }
 
     inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -66,7 +64,7 @@ class ListAdapter(private val context: Context, private val listener: OnItemClic
 
         fun bind(property: Property) {
             if (property != null) {
-                //type.setText(property.price)
+                type.setText(property.type)
                 price.setText(property.price)
                 //location.setText("Unknown")
                 itemView.setOnClickListener {

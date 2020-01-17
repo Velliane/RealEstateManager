@@ -4,17 +4,33 @@
     android:layout_height="match_parent"
     android:weightSum="10">
 
-    <include
-        layout="@layout/fragment_list"
+    <FrameLayout
+        android:id="@+id/container_fragment_list"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="3"/>
+        android:layout_weight="3.5">
 
-    <include
-        layout="@layout/fragment_details"
+        <include
+            android:id="@+id/fragment_list"
+            layout="@layout/fragment_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/container_fragment_details"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="7"/>
+        android:layout_weight="6.5">
+
+        <include
+            android:id="@+id/fragment_details"
+            layout="@layout/fragment_details"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
 
 
 </LinearLayout>

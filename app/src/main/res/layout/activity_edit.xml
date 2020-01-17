@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="400dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -138,9 +138,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="20dp"
             android:hint="@string/description"
-            app:layout_constraintBottom_toTopOf="@id/edit_title_location"
+            app:layout_constraintBottom_toTopOf="@id/custom_bedrooms_nbr_container"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/custom_surface_container">
@@ -150,6 +149,51 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Number of bedrooms -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/custom_bedrooms_nbr_container"
+            style="@style/TextInputLayoutStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@id/edit_title_location"
+            app:layout_constraintEnd_toStartOf="@id/custom_bathrooms_nbr_container"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/custom_description_container">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_bedrooms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:hint="Number of bedrooms"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Number of rooms -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/custom_bathrooms_nbr_container"
+            style="@style/TextInputLayoutStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@id/edit_title_location"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/custom_bedrooms_nbr_container"
+            app:layout_constraintTop_toBottomOf="@id/custom_description_container">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_bathrooms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:hint="Number of bathrooms"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -164,7 +208,7 @@
             app:layout_constraintBottom_toTopOf="@id/address"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/custom_description_container" />
+            app:layout_constraintTop_toBottomOf="@id/custom_bedrooms_nbr_container" />
 
 
         <include
@@ -174,10 +218,33 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/edit_title_photos"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edit_title_location" />
+
+        <TextView
+            android:id="@+id/edit_title_photos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Photos"
+            android:textAlignment="center"
+            android:textSize="25dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/edit_add_photos"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/address" />
+
+        <ImageView
+            android:id="@+id/edit_add_photos"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:background="@color/colorAccent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_title_photos"/>
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

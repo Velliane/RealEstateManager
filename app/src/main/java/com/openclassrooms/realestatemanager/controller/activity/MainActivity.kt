@@ -1,31 +1,27 @@
 package com.openclassrooms.realestatemanager.controller.activity
 
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.adapters.ListAdapter
+import com.openclassrooms.realestatemanager.controller.fragment.DetailsFragment
 import com.openclassrooms.realestatemanager.controller.fragment.ListFragment
-import com.openclassrooms.realestatemanager.injections.Injection
-import com.openclassrooms.realestatemanager.model.Property
+import com.openclassrooms.realestatemanager.controller.fragment.MapViewFragment
 import com.openclassrooms.realestatemanager.utils.getScreenOrientation
-import com.openclassrooms.realestatemanager.view_model.PropertyViewModel
 
-class MainActivity : AppCompatActivity(), View.OnClickListener, ListAdapter.OnItemClickListener {
+
+class MainActivity : AppCompatActivity(), View.OnClickListener, ListAdapter.OnItemClickListener, BottomNavigationView.OnNavigationItemSelectedListener {
 
     /** Toolbar*/
     private lateinit var toolbar: Toolbar
@@ -33,24 +29,33 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ListAdapter.OnIt
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var drawerMenu: NavigationView
     /** Boolean isTablet */
-    private var isTablet: Boolean = false
+    private var isLandscape: Boolean = false
+    /**Bottom Navigation View */
+    private lateinit var bottomNavigationView: BottomNavigationView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        isTablet = getScreenOrientation(resources.configuration.orientation)
+        //-- Check the screen orientation --//
+        isLandscape = getScreenOrientation(resources.configuration.orientation)
 
-        //--Views--//
+        //-- Views --//
         toolbar = findViewById(R.id.main_toolbar)
         drawerLayout = findViewById(R.id.main_drawer_container)
         drawerMenu = findViewById(R.id.main_drawer)
+        bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation)
+        bottomNavigationView.setOnNavigationItemSelectedListener(this)
 
+        //-- Configuration --//
         configureToolbar()
         configureDrawerLayout()
 
-        showFragment()
+        bottomNavigationView.selectedItemId = R.id.action_list_view
+        //-- Show Fragments --//
+        showListFragment()
+        showDetailsFragment()
 
 
     }
@@ -59,6 +64,25 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ListAdapter.OnIt
         // TODO
     }
 
+    override fun onItemClicked(id: Int) {
+        //TODO
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_list_view -> {
+                showListFragment()
+                return true
+            }
+            R.id.action_map_view -> {
+                showMapFragment()
+                return true
+            }
+        }
+        return false
+    }
+
+    //-- TOOLBAR MENU --//
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.toolbar_menu_add -> {
@@ -75,6 +99,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ListAdapter.OnIt
         return true
     }
 
+
     //-- CONFIGURATION --//
     private fun configureToolbar() {
         setSupportActionBar(toolbar)
@@ -88,33 +113,51 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ListAdapter.OnIt
                 R.string.main_drawer_open,
                 R.string.main_drawer_close
         )
-        toogle.drawerArrowDrawable.color = resources.getColor(R.color.colorAccent)
+        toogle.drawerArrowDrawable.color = ContextCompat.getColor(this, R.color.colorAccent)
         drawerLayout.addDrawerListener(toogle)
         toogle.syncState()
     }
 
 
-
-    //-- FRAGMENT --//
-    private fun addFragment(fragment: Fragment) {
+    //-- FRAGMENTS --//
+    private fun addFragment(fragment: Fragment, container: Int) {
         supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, fragment, fragment.javaClass.simpleName)
+                .replace(container, fragment, fragment.javaClass.simpleName)
                 .commit()
 
     }
 
-    private fun showFragment(){
-        val fragment = ListFragment.newInstance()
-        addFragment(fragment)
+    private fun showListFragment() {
+        val fragment = supportFragmentManager.findFragmentById(R.id.fragment_list)
+        if (fragment == null) {
+            val listFragment = ListFragment.newInstance()
+            addFragment(listFragment, R.id.container_fragment_list)
+        }
     }
 
+    private fun showDetailsFragment() {
+        val fragment = supportFragmentManager.findFragmentById(R.id.fragment_details)
+        if (fragment == null && isLandscape) {
+            val detailsFragment = DetailsFragment.newInstance()
+            addFragment(detailsFragment, R.id.container_fragment_details)
+        }
+    }
+
+    private fun showMapFragment() {
+        val mapFragment = MapViewFragment.newInstance()
+        addFragment(mapFragment, R.id.container_fragment_list)
+
+    }
+
+    //-- LIFE CYCLE --//
     override fun onResume() {
         super.onResume()
-        isTablet = getScreenOrientation(resources.configuration.orientation)
-    }
-
-    override fun onItemClicked(id: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        isLandscape = getScreenOrientation(resources.configuration.orientation)
+        if (bottomNavigationView.selectedItemId == R.id.action_map_view) {
+            showMapFragment()
+        } else {
+            showListFragment()
+        }
     }
 
 

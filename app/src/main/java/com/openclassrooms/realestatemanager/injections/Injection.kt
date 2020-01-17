@@ -10,12 +10,12 @@ class Injection {
 
     companion object{
 
-        fun providePropertyDataSource(context: Context): PropertyDataRepository {
+        private fun providePropertyDataSource(context: Context): PropertyDataRepository {
             val database = PropertyDatabase.getInstance(context)
             return PropertyDataRepository(database.propertyDao())
         }
 
-        fun provideExecutor(): Executor {
+        private fun provideExecutor(): Executor {
             return Executors.newSingleThreadExecutor()
         }
 
