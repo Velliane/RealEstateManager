@@ -14,6 +14,7 @@ import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.adapters.ListAdapter
 import com.openclassrooms.realestatemanager.injections.Injection
 import com.openclassrooms.realestatemanager.model.Property
+import com.openclassrooms.realestatemanager.utils.getScreenOrientation
 import com.openclassrooms.realestatemanager.view_model.PropertyViewModel
 
 class ListFragment: Fragment(), ListAdapter.OnItemClickListener {
@@ -63,20 +64,22 @@ class ListFragment: Fragment(), ListAdapter.OnItemClickListener {
         adapter.notifyDataSetChanged()
     }
 
-
     //-- CONFIGURATION --//
     private fun configureViewModel() {
         val viewModelFactory = context?.let { Injection.provideViewModelFactory(it) }
         propertyViewModel = ViewModelProviders.of(this, viewModelFactory).get(PropertyViewModel::class.java)
     }
 
-
     /**
      * When click on an item of the RecyclerView
      */
     override fun onItemClicked(id: Int) {
-        val fragment = DetailsFragment.newInstance()
-        activity!!.supportFragmentManager.beginTransaction().replace(R.id.container_fragment_list, fragment).commit()
+        val fragment = DetailsFragment.newInstance(id)
+        if(!getScreenOrientation(activity!!.resources.configuration.orientation)){
+            activity!!.supportFragmentManager.beginTransaction().replace(R.id.container_fragment_list, fragment).commit()
+        }else{
+            activity!!.supportFragmentManager.beginTransaction().replace(R.id.container_fragment_details, fragment).commit()
+        }
 
     }
 

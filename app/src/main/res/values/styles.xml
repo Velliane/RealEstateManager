@@ -21,4 +21,10 @@
         <item name="boxStrokeColor">@color/text_input_box_stroke</item>
     </style>
 
+    <style name="SignInScreen" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:textColorPrimary">@color/colorAccent</item>
+        <item name="android:textColorSecondary">@color/colorPrimary</item>
+    </style>
 </resources>

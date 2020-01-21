@@ -36,21 +36,22 @@ class ListAdapter(private val context: Context, private val listener: OnItemClic
     }
 
     override fun getItemCount(): Int {
-//        return if (data.isNotEmpty()) {
-//            data.size
-//        } else {
-            return 10
-        //}
+        return if (data.isNotEmpty()) {
+            data.size
+        } else {
+             10
+        }
     }
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        //if (data.isNotEmpty()) {
-            //holder.bind(data[position])
-        //} else {
-        //}
-        holder.price.text = "150000"
-        holder.type.text = "House"
-        holder.location.text = "Unknown"
+        if (data.isNotEmpty()) {
+            holder.bind(data[position])
+        } else {
+            holder.price.text = "150000"
+            holder.type.text = "House"
+            holder.location.text = "Unknown"
+        }
+
 
     }
 
@@ -63,13 +64,11 @@ class ListAdapter(private val context: Context, private val listener: OnItemClic
 
 
         fun bind(property: Property) {
-            if (property != null) {
-                type.setText(property.type)
-                price.setText(property.price)
-                //location.setText("Unknown")
-                itemView.setOnClickListener {
-                    onItemClickListener.onItemClicked(property.id_property)
-                }
+            type.text = property.type
+            price.text = property.price.toString()
+            //location.setText("Unknown")
+            itemView.setOnClickListener {
+                onItemClickListener.onItemClicked(property.id_property)
             }
         }
     }

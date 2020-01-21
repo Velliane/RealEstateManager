@@ -3,4 +3,10 @@
     <!-- PhotosSize -->
     <dimen name="list_photo_height">110dp</dimen>
     <dimen name="list_photo_width">110dp</dimen>
+
+    <!-- HomeIcon Size -->
+    <dimen name="home_icon_height">350dp</dimen>
+    <dimen name="home_icon_width">350dp</dimen>
+    <dimen name="home_txt_size">20sp</dimen>
+    <dimen name="home_progress_size">30dp</dimen>
 </resources>

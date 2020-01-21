@@ -18,6 +18,7 @@ import com.openclassrooms.realestatemanager.adapters.ListAdapter
 import com.openclassrooms.realestatemanager.controller.fragment.DetailsFragment
 import com.openclassrooms.realestatemanager.controller.fragment.ListFragment
 import com.openclassrooms.realestatemanager.controller.fragment.MapViewFragment
+import com.openclassrooms.realestatemanager.controller.view.AddressSelector
 import com.openclassrooms.realestatemanager.utils.getScreenOrientation
 
 
@@ -68,6 +69,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ListAdapter.OnIt
         //TODO
     }
 
+    //-- BOTTOM NAVIGATION MENU --//
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.action_list_view -> {
@@ -86,7 +88,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ListAdapter.OnIt
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.toolbar_menu_add -> {
-                val intent = Intent(this, EditActivity::class.java)
+                val intent = Intent(this, EditAddActivity::class.java)
                 startActivity(intent)
                 return true
             }
@@ -124,7 +126,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ListAdapter.OnIt
         supportFragmentManager.beginTransaction()
                 .replace(container, fragment, fragment.javaClass.simpleName)
                 .commit()
-
     }
 
     private fun showListFragment() {
@@ -138,15 +139,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ListAdapter.OnIt
     private fun showDetailsFragment() {
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment_details)
         if (fragment == null && isLandscape) {
-            val detailsFragment = DetailsFragment.newInstance()
+            val detailsFragment = DetailsFragment.newInstance(0)
             addFragment(detailsFragment, R.id.container_fragment_details)
         }
     }
 
     private fun showMapFragment() {
-        val mapFragment = MapViewFragment.newInstance()
-        addFragment(mapFragment, R.id.container_fragment_list)
-
+        val mapViewFragment = MapViewFragment.newInstance()
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.container_fragment_list, mapViewFragment, mapViewFragment.javaClass.simpleName)
+                .commit()
     }
 
     //-- LIFE CYCLE --//
@@ -160,5 +162,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ListAdapter.OnIt
         }
     }
 
-
+    override fun onBackPressed() {
+        //super.onBackPressed()
+        val fragment = supportFragmentManager.findFragmentById(R.id.fragment_details)
+        if (fragment == null && !isLandscape) {
+            showListFragment()
+        }
+    }
 }

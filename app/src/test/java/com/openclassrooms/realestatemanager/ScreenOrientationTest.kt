@@ -8,12 +8,14 @@ import org.junit.Test
 class ScreenOrientationTest {
 
     @Test
-    fun testGetScreenOrientation(){
-
+    fun getScreenOrientation_Portrait() {
         val orientation: Int = Configuration.ORIENTATION_PORTRAIT
         assertEquals(false, getScreenOrientation(orientation))
+    }
 
-        val orientation2: Int = Configuration.ORIENTATION_LANDSCAPE
-        assertEquals(true, getScreenOrientation(orientation2))
+    @Test
+    fun getScreenOrientation_Landscape() {
+        val orientation: Int = Configuration.ORIENTATION_LANDSCAPE
+        assertEquals(true, getScreenOrientation(orientation))
     }
 }

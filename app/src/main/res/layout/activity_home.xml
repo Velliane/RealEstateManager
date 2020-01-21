@@ -4,12 +4,37 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#00FFFFFF"
     tools:context=".controller.activity.HomeActivity">
 
-    <include
-        android:id="@+id/activity_home_toolbar"
-        layout="@layout/toolbar"/>
+    <ImageView
+        android:id="@+id/home_icon"
+        android:layout_width="@dimen/home_icon_width"
+        android:layout_height="@dimen/home_icon_height"
+        android:background="@drawable/home_icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:contentDescription="@string/application_s_logo" />
 
+    <ProgressBar
+        android:id="@+id/home_progress"
+        android:layout_width="@dimen/home_icon_width"
+        android:layout_height="@dimen/home_progress_size"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/home_icon"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:indeterminate="true"/>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/home_progress"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="@dimen/home_txt_size"
+        android:text="@string/looking_for_more_property_in_sale_please_wait"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

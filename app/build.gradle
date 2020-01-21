@@ -2,6 +2,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 28
@@ -12,6 +13,9 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+
+        resValue "string", "api_key_google", API_GOOGLE_REAL_ESTATE_MANAGER
     }
     buildTypes {
         release {
@@ -55,4 +59,11 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
     implementation 'com.google.android.libraries.places:places:2.1.0'
     implementation 'com.google.maps.android:android-maps-utils:0.4.4'
+
+    // FIREBASE
+    implementation 'com.google.firebase:firebase-analytics:17.2.2'
+    implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
+    implementation 'com.google.firebase:firebase-auth:19.2.0'
+    implementation 'com.google.firebase:firebase-core:17.2.2'
+
 }

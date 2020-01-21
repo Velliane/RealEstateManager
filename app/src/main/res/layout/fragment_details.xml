@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Medias -->
     <TextView
         android:id="@+id/detail_title_media"
         android:layout_width="match_parent"
@@ -28,6 +29,7 @@
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         tools:listitem="@layout/item_photos"/>
 
+    <!-- Description -->
     <TextView
         android:id="@+id/detail_title_description"
         android:layout_width="match_parent"
@@ -46,6 +48,45 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/detail_title_description"
-        android:text="Description"/>
+        android:text="Description"
+        android:inputType="textMultiLine"/>
 
+    <!-- Surface and number of rooms -->
+    <TextView
+        android:id="@+id/details_title_surface"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Surface : "
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/details_description"
+        app:layout_constraintEnd_toStartOf="@id/details_title_nbr_rooms"/>
+
+    <TextView
+        android:id="@+id/details_surface"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/details_title_surface"
+        app:layout_constraintTop_toBottomOf="@id/details_description"
+        android:text="85 m²"/>
+
+    <TextView
+        android:id="@+id/details_title_nbr_rooms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/details_title_surface"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/details_description"
+        android:text="Number of rooms : "/>
+
+    <TextView
+        android:id="@+id/details_nbr_rooms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/details_title_nbr_rooms"
+        app:layout_constraintTop_toBottomOf="@id/details_description"
+        android:text="5"/>
+
+    <!-- Number of bedrooms and bathrooms -->
+
+    <!-- Location -->
 </androidx.constraintlayout.widget.ConstraintLayout>

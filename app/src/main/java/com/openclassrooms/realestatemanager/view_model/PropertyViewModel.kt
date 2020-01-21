@@ -20,7 +20,7 @@ class PropertyViewModel(private val propertyDataRepository: PropertyDataReposito
         executor.execute { propertyDataRepository.updateProperty(property) }
     }
 
-    fun getPropertyFromId(id_property: Int){
-        executor.execute { propertyDataRepository.getPropertyFromId(id_property) }
+    fun getPropertyFromId(id_property: Int): LiveData<Property>{
+        return propertyDataRepository.getPropertyFromId(id_property)
     }
 }

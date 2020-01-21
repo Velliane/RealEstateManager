@@ -1,10 +1,7 @@
 package com.openclassrooms.realestatemanager.database.dao
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.openclassrooms.realestatemanager.model.Property
 
 /**
@@ -17,12 +14,12 @@ interface PropertyDao {
     @Query("SELECT * FROM Property")
     fun getAllProperties(): LiveData<List<Property>>
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addProperty(property: Property): Long
 
     @Update
     fun updateProperty(property: Property): Int
 
     @Query("SELECT * FROM Property WHERE id_property = :id_property")
-    fun getPropertyFromId(id_property: Int): Int
+    fun getPropertyFromId(id_property: Int): LiveData<Property>
 }

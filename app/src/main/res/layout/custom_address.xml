@@ -14,6 +14,7 @@
         style="@style/TextInputLayoutStyle">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_address_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Nbr"
@@ -30,6 +31,7 @@
         style="@style/TextInputLayoutStyle">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_address_street"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Street"
@@ -46,6 +48,7 @@
         style="@style/TextInputLayoutStyle">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_address_zip_code"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Zip Code"
@@ -62,6 +65,7 @@
         style="@style/TextInputLayoutStyle">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_address_city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="City"
@@ -79,6 +83,7 @@
         style="@style/TextInputLayoutStyle">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_address_country"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Country"
