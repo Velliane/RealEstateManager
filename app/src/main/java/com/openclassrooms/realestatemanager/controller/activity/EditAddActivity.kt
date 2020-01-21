@@ -84,7 +84,7 @@ class EditAddActivity: AppCompatActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v){
             saveBtn -> {
-                val property = Property(0, autocompleteType.text.toString(), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), null, null, description.text.toString())
+                val property = Property(0, autocompleteType.text.toString(), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), null, null, description.text.toString(), true)
                 propertyViewModel.addProperty(property)
                 Snackbar.make(layout, "Save complete", Snackbar.LENGTH_SHORT).show()
                 finish()
