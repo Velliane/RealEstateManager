@@ -3,7 +3,7 @@ package com.openclassrooms.realestatemanager.view_model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.openclassrooms.realestatemanager.model.Property
-import com.openclassrooms.realestatemanager.repositories.PropertyDataRepository
+import com.openclassrooms.realestatemanager.database.repositories.PropertyDataRepository
 import java.util.concurrent.Executor
 
 class PropertyViewModel(private val propertyDataRepository: PropertyDataRepository, private val executor: Executor) : ViewModel() {

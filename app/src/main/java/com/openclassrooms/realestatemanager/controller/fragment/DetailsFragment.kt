@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.injections.Injection
+import com.openclassrooms.realestatemanager.view_model.injections.Injection
 import com.openclassrooms.realestatemanager.model.Property
 import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.view_model.PropertyViewModel
@@ -49,7 +49,7 @@ class DetailsFragment: Fragment() {
 
     //-- CONFIGURATION --//
     private fun configureViewModel() {
-        val viewModelFactory = context?.let { Injection.provideViewModelFactory(it) }
+        val viewModelFactory = context?.let { Injection.providePropertyViewModelFactory(it) }
         propertyViewModel = ViewModelProviders.of(this, viewModelFactory).get(PropertyViewModel::class.java)
     }
 

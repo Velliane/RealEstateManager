@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- HomeIcon Size -->
+    <dimen name="home_icon_height">230dp</dimen>
+    <dimen name="home_icon_width">230dp</dimen>
+    <dimen name="home_txt_size">14sp</dimen>
+    <dimen name="home_progress_size">17dp</dimen>
+</resources>

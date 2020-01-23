@@ -2,7 +2,7 @@ package com.openclassrooms.realestatemanager.database.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.openclassrooms.realestatemanager.model.Agent
+import com.openclassrooms.realestatemanager.model.User
 
 
 /**
@@ -10,17 +10,17 @@ import com.openclassrooms.realestatemanager.model.Agent
  */
 
 @Dao
-interface AgentDao {
+interface UserDao {
 
-    @Query("SELECT * FROM Agent")
-    fun getAllAgents(): LiveData<List<Agent>>
+    @Query("SELECT * FROM User")
+    fun getAllUsers(): LiveData<List<User>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addAgent(agent: Agent): Long
+    fun addUser(user: User): Long
 
     @Update
-    fun updateAgent(agent: Agent): Int
+    fun updateUser(user: User): Int
 
-    @Query("SELECT * FROM Agent WHERE id_agent = :id_agent")
-    fun getAgentById(id_agent: Int): Int
+    @Query("SELECT * FROM User WHERE userId = :userId")
+    fun getUserById(userId: String): LiveData<User>
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PhotosSize -->
-    <dimen name="list_photo_height">130dp</dimen>
-    <dimen name="list_photo_width">130dp</dimen>
+    <dimen name="list_photo_height">120dp</dimen>
+    <dimen name="list_photo_width">100dp</dimen>
 
     <!-- HomeIcon Size -->
     <dimen name="home_icon_height">300dp</dimen>

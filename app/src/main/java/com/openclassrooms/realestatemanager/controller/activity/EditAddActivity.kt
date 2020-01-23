@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.controller.activity
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -11,9 +12,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.controller.view.AddressSelector
-import com.openclassrooms.realestatemanager.injections.Injection
+import com.openclassrooms.realestatemanager.view_model.injections.Injection
 import com.openclassrooms.realestatemanager.model.Property
+import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.view_model.PropertyViewModel
 
 class EditAddActivity: AppCompatActivity(), View.OnClickListener {
@@ -50,24 +51,7 @@ class EditAddActivity: AppCompatActivity(), View.OnClickListener {
         autocompleteType.setAdapter(adapter)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putCharSequence("KEY_TEXT_PRICE", price.text)
-        outState.putCharSequence("KEY_TEXT_SURFACE", surface.text)
-        outState.putCharSequence("KEY_TEXT_ROOMS", rooms.text)
-        outState.putCharSequence("KEY_TEXT_DESCRIPTION", description.text)
-    }
 
-    private fun getSaveInstanceState(savedInstanceState: Bundle?){
-        if(savedInstanceState != null){
-            val priceTxt = savedInstanceState.getCharSequence("KEY_TEXT_PRICE")
-            price.setText(priceTxt)
-            val surfaceTxt = savedInstanceState.getCharSequence("KEY_TEXT_SURFACE")
-            surface.setText(surfaceTxt)
-            val roomsTxt = savedInstanceState.getCharSequence("KEY_TEXT_ROOMS")
-            rooms.setText(roomsTxt)
-        }
-    }
 
     private fun bindViews(){
         autocompleteType = findViewById(R.id.edit_type)
@@ -75,6 +59,9 @@ class EditAddActivity: AppCompatActivity(), View.OnClickListener {
         surface = findViewById(R.id.edit_surface)
         rooms = findViewById(R.id.edit_rooms)
         description = findViewById(R.id.edit_description)
+        numberBathrooms = findViewById(R.id.edit_bathrooms)
+        numberBedrooms = findViewById(R.id.edit_bedrooms)
+
         layout = findViewById(R.id.edit_container)
 
         saveBtn = findViewById(R.id.edit_save_btn)
@@ -95,8 +82,35 @@ class EditAddActivity: AppCompatActivity(), View.OnClickListener {
     //-- Configuration --//
 
     private fun configureViewModel() {
-        val viewModelFactory = Injection.provideViewModelFactory(this)
+        val viewModelFactory = Injection.providePropertyViewModelFactory(this)
         propertyViewModel = ViewModelProviders.of(this, viewModelFactory).get(PropertyViewModel::class.java)
+    }
+
+    //-- Save Instance --//
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putCharSequence(Constants.KEY_TEXT_PRICE, price.text)
+        outState.putCharSequence(Constants.KEY_TEXT_SURFACE, surface.text)
+        outState.putCharSequence(Constants.KEY_TEXT_ROOMS, rooms.text)
+        outState.putCharSequence(Constants.KEY_TEXT_DESCRIPTION, description.text)
+        outState.putCharSequence(Constants.KEY_TEXT_BEDROOMS, numberBedrooms.text)
+        outState.putCharSequence(Constants.KEY_TEXT_BATHROOMS, numberBathrooms.text)
+    }
+
+    private fun getSaveInstanceState(savedInstanceState: Bundle?){
+        if(savedInstanceState != null){
+            setText(price, Constants.KEY_TEXT_PRICE, savedInstanceState)
+            setText(surface, Constants.KEY_TEXT_SURFACE, savedInstanceState)
+            setText(rooms, Constants.KEY_TEXT_ROOMS, savedInstanceState)
+            setText(description, Constants.KEY_TEXT_DESCRIPTION, savedInstanceState)
+            setText(numberBedrooms, Constants.KEY_TEXT_BEDROOMS, savedInstanceState)
+            setText(numberBathrooms, Constants.KEY_TEXT_BATHROOMS, savedInstanceState)
+        }
+    }
+
+    private fun setText(view: TextView, key: String, savedInstanceState: Bundle?){
+        val text = savedInstanceState?.getCharSequence(key)
+        view.text = text
     }
 
 }

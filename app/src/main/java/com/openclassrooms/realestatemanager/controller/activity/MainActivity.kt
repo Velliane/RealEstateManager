@@ -5,12 +5,20 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.firebase.ui.auth.AuthUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.openclassrooms.realestatemanager.R
@@ -19,10 +27,15 @@ import com.openclassrooms.realestatemanager.controller.fragment.DetailsFragment
 import com.openclassrooms.realestatemanager.controller.fragment.ListFragment
 import com.openclassrooms.realestatemanager.controller.fragment.MapViewFragment
 import com.openclassrooms.realestatemanager.controller.view.AddressSelector
+import com.openclassrooms.realestatemanager.model.User
+import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.utils.getScreenOrientation
+import com.openclassrooms.realestatemanager.view_model.UserViewModel
+import com.openclassrooms.realestatemanager.view_model.injections.Injection
+import org.w3c.dom.Text
 
 
-class MainActivity : AppCompatActivity(), View.OnClickListener, ListAdapter.OnItemClickListener, BottomNavigationView.OnNavigationItemSelectedListener {
+class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemClickListener, BottomNavigationView.OnNavigationItemSelectedListener, NavigationView.OnNavigationItemSelectedListener {
 
     /** Toolbar*/
     private lateinit var toolbar: Toolbar
@@ -33,6 +46,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ListAdapter.OnIt
     private var isLandscape: Boolean = false
     /**Bottom Navigation View */
     private lateinit var bottomNavigationView: BottomNavigationView
+    /** UserViewModel */
+    private lateinit var userViewModel: UserViewModel
+    /** Header Views */
+    private lateinit var photo: ImageView
+    private lateinit var name: TextView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,14 +62,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ListAdapter.OnIt
 
         //-- Views --//
         toolbar = findViewById(R.id.main_toolbar)
+        setSupportActionBar(toolbar)
         drawerLayout = findViewById(R.id.main_drawer_container)
         drawerMenu = findViewById(R.id.main_drawer)
         bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation)
         bottomNavigationView.setOnNavigationItemSelectedListener(this)
 
         //-- Configuration --//
-        configureToolbar()
         configureDrawerLayout()
+        configureDrawer()
+        configureUserViewModel()
 
         bottomNavigationView.selectedItemId = R.id.action_list_view
         //-- Show Fragments --//
@@ -69,9 +89,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ListAdapter.OnIt
         //TODO
     }
 
-    //-- BOTTOM NAVIGATION MENU --//
+    //-- BOTTOM NAVIGATION AND DRAWER MENU --//
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            //-- Bottom navigation --//
             R.id.action_list_view -> {
                 showListFragment()
                 return true
@@ -79,6 +100,25 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ListAdapter.OnIt
             R.id.action_map_view -> {
                 showMapFragment()
                 return true
+            }
+            //-- Drawer --//
+            R.id.drawer_menu_settings -> {
+                TODO()
+            }
+            R.id.drawer_menu_logout -> {
+                if(Utils.isInternetAvailable(this)){
+                    logOut()
+                }else{
+                    AlertDialog.Builder(this).setTitle("You are not connected")
+                            .setMessage("Beware, you are currently not connected to Internet. If you logout, you will need to be connected again to login. Do you want to continue?")
+                            .setPositiveButton("Yes, I want to logout anyway"){dialog, which ->
+                                logOut()
+                            }
+                            .setNegativeButton("Cancel"){dialog, which ->
+                               dialog.dismiss()
+                            }
+                            .create().show()
+                }
             }
         }
         return false
@@ -101,11 +141,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ListAdapter.OnIt
         return true
     }
 
-
     //-- CONFIGURATION --//
-    private fun configureToolbar() {
-        setSupportActionBar(toolbar)
-    }
 
     private fun configureDrawerLayout() {
         val toogle = ActionBarDrawerToggle(
@@ -120,6 +156,34 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ListAdapter.OnIt
         toogle.syncState()
     }
 
+    private fun configureDrawer(){
+        drawerMenu.setNavigationItemSelectedListener(this)
+
+        val view = drawerMenu.getHeaderView(0)
+        photo = view.findViewById(R.id.header_photo)
+        name = view.findViewById(R.id.header_name)
+
+        //-- Update Views with user's info --//
+        if(Utils.isInternetAvailable(this)){
+                if (getCurrentUser().photoUrl != null) {
+                    Glide.with(this).load(getCurrentUser().photoUrl).apply(RequestOptions.circleCropTransform()).centerCrop().into(photo)
+                }
+                name.text = getCurrentUser().displayName
+
+        }else{
+            userViewModel.getUserById(getCurrentUser().uid).observe(this, Observer<User> {
+                if (it.photo != null) {
+                    Glide.with(this).load(it.photo).apply(RequestOptions.circleCropTransform()).centerCrop().into(photo)
+                }
+                name.text = it.name
+            })
+        }
+    }
+
+    private fun configureUserViewModel(){
+        val viewModelFactory = Injection.provideUserViewModelFactory(this)
+        userViewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel::class.java)
+    }
 
     //-- FRAGMENTS --//
     private fun addFragment(fragment: Fragment, container: Int) {
@@ -139,7 +203,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ListAdapter.OnIt
     private fun showDetailsFragment() {
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment_details)
         if (fragment == null && isLandscape) {
-            val detailsFragment = DetailsFragment.newInstance(0)
+            val detailsFragment = DetailsFragment.newInstance(1)
             addFragment(detailsFragment, R.id.container_fragment_details)
         }
     }
@@ -167,6 +231,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ListAdapter.OnIt
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment_details)
         if (fragment == null && !isLandscape) {
             showListFragment()
+        }
+    }
+
+    //-- LOGOUT --//
+    private fun logOut(){
+        AuthUI.getInstance().signOut(this).addOnCompleteListener{
+            startActivity(Intent(this, LoginActivity::class.java))
         }
     }
 }

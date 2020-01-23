@@ -5,10 +5,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.openclassrooms.realestatemanager.database.dao.PropertyDao
+import com.openclassrooms.realestatemanager.database.dao.UserDao
 import com.openclassrooms.realestatemanager.model.Property
+import com.openclassrooms.realestatemanager.model.User
 
 @Database(
-        entities = [Property::class],
+        entities = [Property::class, User::class],
         version = 1,
         exportSchema = false
 )
@@ -16,6 +18,7 @@ import com.openclassrooms.realestatemanager.model.Property
 abstract class PropertyDatabase : RoomDatabase() {
 
     abstract fun propertyDao(): PropertyDao
+    abstract fun userDao(): UserDao
 
     companion object {
         private var INSTANCE: PropertyDatabase? = null
