@@ -6,8 +6,10 @@ import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.utils.Utils
 
+/**
+ * Dispatcher : if user is currently connected to its Firebase Account, start MainActivity, else start LoginActivity
+ */
 class HomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,17 +19,12 @@ class HomeActivity : AppCompatActivity() {
 
         Handler().postDelayed({
             kotlin.run {
-                if(Utils.isInternetAvailable(this)){
                     val user = FirebaseAuth.getInstance().currentUser
                     if(user != null){
                         startActivity(Intent(this, MainActivity::class.java))
                     }else{
                         startActivity(Intent(this, LoginActivity::class.java))
                     }
-                }else{
-                    startActivity(Intent(this, MainActivity::class.java))
-                }
-
             }
         }, 2000)
     }

@@ -17,4 +17,5 @@ data class User (
         var email: String,
         @ColumnInfo(name = "photo")
         var photo: String?
+
 )

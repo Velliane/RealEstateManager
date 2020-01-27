@@ -10,12 +10,6 @@
         android:layout_height="match_parent"
         android:layout_weight="5">
 
-        <include
-            android:id="@+id/fragment_list"
-            layout="@layout/fragment_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
     </FrameLayout>
 
     <FrameLayout
@@ -23,12 +17,6 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_weight="5">
-
-        <include
-            android:id="@+id/fragment_details"
-            layout="@layout/fragment_details"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
 
     </FrameLayout>
 

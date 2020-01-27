@@ -28,13 +28,16 @@ import com.openclassrooms.realestatemanager.controller.fragment.ListFragment
 import com.openclassrooms.realestatemanager.controller.fragment.MapViewFragment
 import com.openclassrooms.realestatemanager.controller.view.AddressSelector
 import com.openclassrooms.realestatemanager.model.User
+import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.utils.getScreenOrientation
 import com.openclassrooms.realestatemanager.view_model.UserViewModel
 import com.openclassrooms.realestatemanager.view_model.injections.Injection
 import org.w3c.dom.Text
 
-
+/**
+ * The activity that contains ListFragment, MapViewFragment and DetailsFragment
+ */
 class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemClickListener, BottomNavigationView.OnNavigationItemSelectedListener, NavigationView.OnNavigationItemSelectedListener {
 
     /** Toolbar*/
@@ -77,15 +80,13 @@ class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemCli
         //-- Show Fragments --//
         showListFragment()
         showDetailsFragment()
-
-
     }
 
     override fun onClick(v: View?) {
         // TODO
     }
 
-    override fun onItemClicked(id: Int) {
+    override fun onItemClicked(id: String) {
         //TODO
     }
 
@@ -103,32 +104,25 @@ class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemCli
             }
             //-- Drawer --//
             R.id.drawer_menu_settings -> {
-                TODO()
+                startActivity(Intent(this, SettingsActivity::class.java))
             }
             R.id.drawer_menu_logout -> {
-                if(Utils.isInternetAvailable(this)){
                     logOut()
-                }else{
-                    AlertDialog.Builder(this).setTitle("You are not connected")
-                            .setMessage("Beware, you are currently not connected to Internet. If you logout, you will need to be connected again to login. Do you want to continue?")
-                            .setPositiveButton("Yes, I want to logout anyway"){dialog, which ->
-                                logOut()
-                            }
-                            .setNegativeButton("Cancel"){dialog, which ->
-                               dialog.dismiss()
-                            }
-                            .create().show()
-                }
             }
         }
         return false
     }
 
     //-- TOOLBAR MENU --//
+    /**
+     * When click on a Toolbar's item
+     * @param item: the item clicked
+     */
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.toolbar_menu_add -> {
                 val intent = Intent(this, EditAddActivity::class.java)
+                intent.putExtra(Constants.PROPERTY_ID, "")
                 startActivity(intent)
                 return true
             }
@@ -141,8 +135,15 @@ class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemCli
         return true
     }
 
-    //-- CONFIGURATION --//
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        menu?.findItem(R.id.toolbar_menu_modify)?.isVisible = false
+        return super.onPrepareOptionsMenu(menu)
+    }
 
+    //-- CONFIGURATION --//
+    /**
+     * Configure the layout that contain the DrawerMenu
+     */
     private fun configureDrawerLayout() {
         val toogle = ActionBarDrawerToggle(
                 this,
@@ -156,6 +157,9 @@ class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemCli
         toogle.syncState()
     }
 
+    /**
+     * Configure the DrawerMenu, add a header
+     */
     private fun configureDrawer(){
         drawerMenu.setNavigationItemSelectedListener(this)
 
@@ -165,12 +169,14 @@ class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemCli
 
         //-- Update Views with user's info --//
         if(Utils.isInternetAvailable(this)){
+            //-- If connected to internet, get user's information from Firebase --//
                 if (getCurrentUser().photoUrl != null) {
                     Glide.with(this).load(getCurrentUser().photoUrl).apply(RequestOptions.circleCropTransform()).centerCrop().into(photo)
                 }
                 name.text = getCurrentUser().displayName
 
         }else{
+            //-- If not connected, get users' information from Room --//
             userViewModel.getUserById(getCurrentUser().uid).observe(this, Observer<User> {
                 if (it.photo != null) {
                     Glide.with(this).load(it.photo).apply(RequestOptions.circleCropTransform()).centerCrop().into(photo)
@@ -200,10 +206,12 @@ class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemCli
         }
     }
 
+    /**
+     * If screen's orientation is landscape, show DetailsFragment
+     */
     private fun showDetailsFragment() {
-        val fragment = supportFragmentManager.findFragmentById(R.id.fragment_details)
-        if (fragment == null && isLandscape) {
-            val detailsFragment = DetailsFragment.newInstance(1)
+        if (isLandscape) {
+            val detailsFragment = DetailsFragment.newInstance("")
             addFragment(detailsFragment, R.id.container_fragment_details)
         }
     }
@@ -228,8 +236,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemCli
 
     override fun onBackPressed() {
         //super.onBackPressed()
-        val fragment = supportFragmentManager.findFragmentById(R.id.fragment_details)
-        if (fragment == null && !isLandscape) {
+        if (!isLandscape) {
             showListFragment()
         }
     }

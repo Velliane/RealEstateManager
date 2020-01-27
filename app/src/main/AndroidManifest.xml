@@ -5,8 +5,8 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="false"
@@ -16,9 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-
+        <activity android:name=".controller.activity.SettingsActivity"></activity>
         <!-- Activities -->
-        <activity android:name=".controller.activity.BaseActivity"/>
+        <activity android:name=".controller.activity.BaseActivity" />
         <activity android:name=".controller.activity.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,15 +30,11 @@
         <activity android:name=".controller.activity.MainActivity" />
         <activity
             android:name=".controller.activity.EditAddActivity"
-            android:theme="@style/DialogTheme" />
-
-
-        <!-- Provider -->
+            android:theme="@style/DialogTheme" /> <!-- Provider -->
         <provider
             android:name=".provider.PropertyContentProvider"
             android:authorities="com.openclassrooms.realestatemanager.provider"
             android:exported="true" />
-
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.controller.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -57,6 +58,14 @@ class ListFragment: Fragment(), ListAdapter.OnItemClickListener {
         return view
     }
 
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        if(!getScreenOrientation(resources.configuration.orientation)){
+            menu.findItem(R.id.toolbar_menu_modify).isVisible = false
+        }
+        super.onPrepareOptionsMenu(menu)
+    }
+
     /**
      * Observe the LiveData from PropertyViewModel to get the list of all the properties saved in the RoomDatabase
      */
@@ -95,7 +104,7 @@ class ListFragment: Fragment(), ListAdapter.OnItemClickListener {
     /**
      * When click on an item of the RecyclerView
      */
-    override fun onItemClicked(id: Int) {
+    override fun onItemClicked(id: String) {
         val fragment = DetailsFragment.newInstance(id)
         if(!getScreenOrientation(activity!!.resources.configuration.orientation)){
             activity!!.supportFragmentManager.beginTransaction().replace(R.id.container_fragment_list, fragment).commit()

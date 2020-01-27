@@ -21,5 +21,5 @@ interface PropertyDao {
     fun updateProperty(property: Property): Int
 
     @Query("SELECT * FROM Property WHERE id_property = :id_property")
-    fun getPropertyFromId(id_property: Int): LiveData<Property>
+    fun getPropertyFromId(id_property: String): LiveData<Property>
 }

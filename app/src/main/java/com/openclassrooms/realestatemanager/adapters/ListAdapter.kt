@@ -18,7 +18,7 @@ class ListAdapter(private val context: Context, private val listener: OnItemClic
     private lateinit var mContext: Context
 
     interface OnItemClickListener {
-        fun onItemClicked(id: Int)
+        fun onItemClicked(id: String)
     }
 
 

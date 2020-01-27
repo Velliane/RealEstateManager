@@ -6,19 +6,13 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity
-//(
-//        foreignKeys = [ForeignKey(
-//                entity = Address::class,
-//                parentColumns = arrayOf("id_address"),
-//                childColumns = arrayOf("address_id")
-//        )]
-//)
+
 
 data class Property(
 
-        @PrimaryKey(autoGenerate = true)
+        @PrimaryKey
         @ColumnInfo (name = "id_property")
-        var id_property: Int,
+        var id_property: String,
 
         @ColumnInfo (name = "type")
         var type: String,

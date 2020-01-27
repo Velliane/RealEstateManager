@@ -38,8 +38,8 @@ public class Utils {
     /**
      * Vérification de la connexion réseau
      * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
-     * @param context
-     * @return
+     * @param context The context
+     * @return true if Connected, false if not connected
      */
     public static Boolean isInternetAvailable(Context context){
 //        WifiManager wifi = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);

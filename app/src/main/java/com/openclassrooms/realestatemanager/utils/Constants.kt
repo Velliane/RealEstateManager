@@ -20,6 +20,8 @@ class Constants {
 
         // FIRESTORE COLLECTIONS
         const val COLLECTION_USERS = "users"
+        const val COLLECTION_PROPERTIES = "properties"
+        const val COLLECTION_ADDRESS = "address"
 
         // SHARED PREFERENCES
         const val SHARED_PREFERENCES = "SHARED_PREFERENCES"

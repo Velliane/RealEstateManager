@@ -71,4 +71,5 @@ dependencies {
     // TESTING
     androidTestCompile "android.arch.core:core-testing:1.1.1"
 
+    implementation 'com.android.support:cardview-v7:28.1.1'
 }

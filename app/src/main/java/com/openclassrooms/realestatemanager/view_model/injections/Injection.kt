@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.view_model.injections
 
 import android.content.Context
 import com.openclassrooms.realestatemanager.database.PropertyDatabase
+import com.openclassrooms.realestatemanager.database.repositories.AddressDataRepository
 import com.openclassrooms.realestatemanager.database.repositories.PropertyDataRepository
 import com.openclassrooms.realestatemanager.database.repositories.UserDataRepository
 import java.util.concurrent.Executor
@@ -21,14 +22,20 @@ class Injection {
             return UserDataRepository(database.userDao())
         }
 
+        private fun provideAddressDataSource(context: Context): AddressDataRepository {
+            val database = PropertyDatabase.getInstance(context)
+            return AddressDataRepository(database.addressDao())
+        }
+
         private fun provideExecutor(): Executor {
             return Executors.newSingleThreadExecutor()
         }
 
         fun providePropertyViewModelFactory(context: Context): PropertyViewModelFactory {
             val propertyDataRepository = providePropertyDataSource(context)
+            val addressDataRepository = provideAddressDataSource(context)
             val executor = provideExecutor()
-            return PropertyViewModelFactory(propertyDataRepository, executor)
+            return PropertyViewModelFactory(propertyDataRepository, addressDataRepository,  executor)
         }
 
         fun provideUserViewModelFactory(context: Context): UserViewModelFactory {
