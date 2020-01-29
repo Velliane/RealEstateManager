@@ -1,14 +1,18 @@
 package com.openclassrooms.realestatemanager.adapters
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.model.Property
+import com.openclassrooms.realestatemanager.utils.Constants
+import com.openclassrooms.realestatemanager.utils.getScreenOrientation
 
 class ListAdapter(private val context: Context, private val listener: OnItemClickListener) : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
 
@@ -16,6 +20,8 @@ class ListAdapter(private val context: Context, private val listener: OnItemClic
     private var data: List<Property> = ArrayList()
     private lateinit var onItemClickListener: OnItemClickListener
     private lateinit var mContext: Context
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var idSaved: String
 
     interface OnItemClickListener {
         fun onItemClicked(id: String)
@@ -27,6 +33,10 @@ class ListAdapter(private val context: Context, private val listener: OnItemClic
         val view = inflater.inflate(R.layout.item_list, parent, false)
         mContext = context
         onItemClickListener = listener
+        sharedPreferences = context.getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE)
+
+        idSaved = sharedPreferences.getString(Constants.PREF_ID_PROPERTY, "")
+
         return ListViewHolder(view)
     }
 
@@ -39,7 +49,7 @@ class ListAdapter(private val context: Context, private val listener: OnItemClic
         return if (data.isNotEmpty()) {
             data.size
         } else {
-             10
+            10
         }
     }
 
@@ -61,9 +71,19 @@ class ListAdapter(private val context: Context, private val listener: OnItemClic
         var type: TextView = itemView.findViewById(R.id.item_type)
         var location: TextView = itemView.findViewById(R.id.item_location)
         var price: TextView = itemView.findViewById(R.id.item_price)
+        var container: ConstraintLayout = itemView.findViewById(R.id.item_list_container)
 
 
         fun bind(property: Property) {
+            if (getScreenOrientation(context.resources.configuration.orientation)) {
+                if (idSaved == property.id_property) {
+                    container.setBackgroundColor(context.resources.getColor(R.color.drawer_color))
+                } else {
+                    container.setBackgroundColor(context.resources.getColor(R.color.quantum_white_100))
+                }
+            }else{
+                container.setBackgroundColor(context.resources.getColor(R.color.quantum_white_100))
+            }
             type.text = property.type
             price.text = property.price.toString()
             //location.setText("Unknown")

@@ -16,7 +16,7 @@ interface AddressDao {
     @Update
     fun updateAddress(address: Address): Int
 
-    @Query("SELECT * FROM Address WHERE idUser= :idUser")
-    fun getAddressOfOneProperty(idUser: Int): LiveData<Address>
+    @Query("SELECT * FROM Address WHERE idProperty= :idProperty")
+    fun getAddressOfOneProperty(idProperty: String): LiveData<Address>
 
 }

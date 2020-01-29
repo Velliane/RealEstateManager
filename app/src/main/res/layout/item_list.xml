@@ -11,6 +11,7 @@
     app:contentPadding="2dp">
 
 <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/item_list_container"
     android:layout_width="match_parent"
     android:layout_height="@dimen/list_photo_height"
     android:orientation="horizontal"

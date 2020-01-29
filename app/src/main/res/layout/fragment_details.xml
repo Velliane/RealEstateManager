@@ -63,7 +63,8 @@
         android:background="@drawable/details_surface"
         app:layout_constraintEnd_toStartOf="@id/details_title_surface"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/details_description" />
+        app:layout_constraintTop_toBottomOf="@id/details_description"
+        app:layout_constraintBottom_toTopOf="@id/details_bed_container"/>
 
     <TextView
         android:id="@+id/details_title_surface"
@@ -72,7 +73,8 @@
         android:text="Surface : "
         app:layout_constraintEnd_toStartOf="@id/details_surface"
         app:layout_constraintStart_toEndOf="@id/details_surface_img"
-        app:layout_constraintTop_toBottomOf="@id/details_description" />
+        app:layout_constraintTop_toBottomOf="@id/details_description"
+        app:layout_constraintBottom_toTopOf="@id/details_bed_container" />
 
     <TextView
         android:id="@+id/details_surface"
@@ -81,7 +83,8 @@
         android:text="85 m²"
         app:layout_constraintEnd_toStartOf="@id/details_rooms_img"
         app:layout_constraintStart_toEndOf="@id/details_title_surface"
-        app:layout_constraintTop_toBottomOf="@id/details_description" />
+        app:layout_constraintTop_toBottomOf="@id/details_description"
+        app:layout_constraintBottom_toTopOf="@id/details_bed_container" />
 
     <ImageView
         android:id="@+id/details_rooms_img"
@@ -90,7 +93,8 @@
         android:background="@drawable/details_rooms"
         app:layout_constraintStart_toEndOf="@id/details_surface"
         app:layout_constraintEnd_toStartOf="@id/details_title_nbr_rooms"
-        app:layout_constraintTop_toBottomOf="@id/details_description" />
+        app:layout_constraintTop_toBottomOf="@id/details_description"
+        app:layout_constraintBottom_toTopOf="@id/details_bed_container" />
 
     <TextView
         android:id="@+id/details_title_nbr_rooms"
@@ -99,7 +103,8 @@
         android:text="Number of rooms : "
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/details_title_surface"
-        app:layout_constraintTop_toBottomOf="@id/details_description" />
+        app:layout_constraintTop_toBottomOf="@id/details_description"
+        app:layout_constraintBottom_toTopOf="@id/details_bed_container"/>
 
     <TextView
         android:id="@+id/details_nbr_rooms"
@@ -108,7 +113,8 @@
         android:text="5"
         app:layout_constraintStart_toEndOf="@id/details_title_nbr_rooms"
         app:layout_constraintTop_toBottomOf="@id/details_description"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/details_bed_container"/>
 
     <!-- Number of bedrooms and bathrooms -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -118,7 +124,8 @@
         android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/details_title_surface">
+        app:layout_constraintTop_toBottomOf="@id/details_title_surface"
+        app:layout_constraintBottom_toTopOf="@id/details_bath_container">
 
         <ImageView
             android:id="@+id/details_bedrooms_img"
@@ -157,7 +164,8 @@
         android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/details_bed_container">
+        app:layout_constraintTop_toBottomOf="@id/details_bed_container"
+        app:layout_constraintBottom_toTopOf="@id/details_map">
 
         <ImageView
             android:id="@+id/details_bathrooms_img"
@@ -190,4 +198,36 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Location -->
+
+    <TextView
+        android:id="@+id/details_title_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/details_bath_container"
+        app:layout_constraintBottom_toTopOf="@id/details_address"
+        app:layout_constraintEnd_toStartOf="@id/details_map"
+        android:padding="5dp"
+        android:text="Address"
+        android:textSize="23dp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/details_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/details_title_address"
+        app:layout_constraintEnd_toStartOf="@id/details_map"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:textAlignment="center"
+        android:text="4 allée des Bleuets \n 71500 Louhans \n France"/>
+
+    <ImageView
+        android:id="@+id/details_map"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:layout_constraintTop_toBottomOf="@id/details_bath_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

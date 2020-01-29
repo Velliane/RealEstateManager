@@ -15,11 +15,15 @@
     <string name="number_of_rooms">Number of rooms</string>
     <string name="description">Description</string>
     <string name="add_property_title">Add a property</string>
-
     <style name="edit_property_title">Edit a property</style>
+    <string name="type_apartment">Apartment</string>
+    <string name="type_house">House</string>
 
+    <!-- Home -->
     <string name="title_activity_maps">Map</string>
-    <string name="looking_for_more_property_in_sale_please_wait">Looking for more property in sale, please wait...</string>
+    <string name="looking_for_more_property_in_sale_please_wait">Looking for more property in sale, please wait…</string>
     <string name="application_s_logo">Application\'s logo</string>
+
+
 
 </resources>

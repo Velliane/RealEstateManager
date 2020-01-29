@@ -1,6 +1,8 @@
 package com.openclassrooms.realestatemanager.controller.activity
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -54,6 +56,8 @@ class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemCli
     /** Header Views */
     private lateinit var photo: ImageView
     private lateinit var name: TextView
+    /** Shared Preferences */
+    private lateinit var sharedPreferences: SharedPreferences
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +66,9 @@ class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemCli
 
         //-- Check the screen orientation --//
         isLandscape = getScreenOrientation(resources.configuration.orientation)
+
+        //-- Get Shared Preferences --//
+        sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE)
 
         //-- Views --//
         toolbar = findViewById(R.id.main_toolbar)
@@ -73,8 +80,8 @@ class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemCli
 
         //-- Configuration --//
         configureDrawerLayout()
-        configureDrawer()
         configureUserViewModel()
+        configureDrawer()
 
         bottomNavigationView.selectedItemId = R.id.action_list_view
         //-- Show Fragments --//
@@ -177,7 +184,8 @@ class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemCli
 
         }else{
             //-- If not connected, get users' information from Room --//
-            userViewModel.getUserById(getCurrentUser().uid).observe(this, Observer<User> {
+            val id = sharedPreferences.getString(Constants.PREF_ID_USER, "")
+            userViewModel.getUserById(id!!).observe(this, Observer<User> {
                 if (it.photo != null) {
                     Glide.with(this).load(it.photo).apply(RequestOptions.circleCropTransform()).centerCrop().into(photo)
                 }
@@ -211,7 +219,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemCli
      */
     private fun showDetailsFragment() {
         if (isLandscape) {
-            val detailsFragment = DetailsFragment.newInstance("")
+            val detailsFragment = DetailsFragment.newInstance()
             addFragment(detailsFragment, R.id.container_fragment_details)
         }
     }

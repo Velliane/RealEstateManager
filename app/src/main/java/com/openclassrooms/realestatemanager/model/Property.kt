@@ -28,6 +28,8 @@ data class Property(
         var bed_nbr: Int?,
         @ColumnInfo (name = "description")
         var description: String?,
+        @ColumnInfo(name = "address")
+        var address: String?,
 
         @ColumnInfo (name = "in_sale")
         var  in_sale: Boolean

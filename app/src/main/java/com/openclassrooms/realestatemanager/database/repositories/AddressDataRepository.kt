@@ -14,11 +14,11 @@ class AddressDataRepository(private val addressDao: AddressDao) {
         return addressDao.addAddress(address)
     }
 
-    fun udpateAddress(address: Address): Int{
+    fun updateAddress(address: Address): Int{
         return addressDao.updateAddress(address)
     }
 
-    fun getAddressOfOneProperty(idUser: Int): LiveData<Address>{
-        return addressDao.getAddressOfOneProperty(idUser)
+    fun getAddressOfOneProperty(idProperty: String): LiveData<Address>{
+        return addressDao.getAddressOfOneProperty(idProperty)
     }
 }

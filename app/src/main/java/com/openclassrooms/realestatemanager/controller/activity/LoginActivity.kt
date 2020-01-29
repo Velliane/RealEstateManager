@@ -21,6 +21,9 @@ import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.view_model.UserViewModel
 import com.openclassrooms.realestatemanager.view_model.injections.Injection
 
+/**
+ * This Activity allows the user to create an account or log in with his email, using Firebase Authentication
+ */
 class LoginActivity : BaseActivity(), View.OnClickListener{
 
     private lateinit var connexionBtn: Button

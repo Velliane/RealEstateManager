@@ -6,9 +6,9 @@ import androidx.room.ForeignKey.CASCADE
 @Entity
 (
         foreignKeys = [ForeignKey(
-                entity = User::class,
-                parentColumns = arrayOf("userId"),
-                childColumns = arrayOf("idUser"),
+                entity = Property::class,
+                parentColumns = arrayOf("id_property"),
+                childColumns = arrayOf("idProperty"),
                 onDelete = CASCADE)]
 )
 
@@ -29,7 +29,7 @@ data class Address (
         @ColumnInfo(name = "country")
         var country: String,
 
-        @ColumnInfo(name = "idUser")
-        var idUser: Int
+        @ColumnInfo(name = "idProperty")
+        var idProperty: String
 
 )

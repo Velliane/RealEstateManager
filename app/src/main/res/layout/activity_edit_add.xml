@@ -2,7 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="400dp">
+    android:layout_height="400dp"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/edit_container"
@@ -54,11 +55,6 @@
             app:layout_constraintEnd_toStartOf="@id/custom_price_container"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edit_on_sale_btn">
-
-            <!--            <com.google.android.material.textfield.TextInputEditText-->
-            <!--                android:id="@+id/edit_type"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content" />-->
 
             <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                 android:id="@+id/edit_type"
@@ -241,11 +237,22 @@
             android:id="@+id/edit_add_photos"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:background="@color/colorAccent"
+            android:src="@drawable/action_add"
+            android:background="@color/drawer_color"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/edit_list_photos"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edit_title_photos"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/edit_list_photos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintStart_toEndOf="@id/edit_add_photos"
+            app:layout_constraintTop_toBottomOf="@id/edit_title_photos"
+            tools:listitem="@layout/item_photos" />
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -253,10 +260,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
-            android:src="@drawable/action_add"
+            android:src="@drawable/action_save"
+            app:layout_constraintTop_toBottomOf="@id/edit_add_photos"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/edit_delete_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:src="@drawable/action_delete"
+            app:layout_constraintTop_toBottomOf="@id/edit_add_photos"
+            app:layout_constraintEnd_toStartOf="@id/edit_save_btn"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
