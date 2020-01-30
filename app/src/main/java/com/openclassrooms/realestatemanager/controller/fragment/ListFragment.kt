@@ -67,10 +67,10 @@ class ListFragment: Fragment(), ListAdapter.OnItemClickListener {
 
 
     override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
         if(!getScreenOrientation(resources.configuration.orientation)){
             menu.findItem(R.id.toolbar_menu_modify).isVisible = false
         }
-        super.onPrepareOptionsMenu(menu)
     }
 
     /**

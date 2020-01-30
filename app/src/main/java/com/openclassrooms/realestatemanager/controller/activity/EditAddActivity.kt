@@ -60,7 +60,7 @@ class EditAddActivity : AppCompatActivity(), View.OnClickListener {
         setContentView(R.layout.activity_edit_add)
         setFinishOnTouchOutside(false)
 
-        typeList= listOf(getString(R.string.type_apartment), getString(R.string.type_house))
+        typeList= listOf("Apartment", "House", "Loft")
 
         AndroidThreeTen.init(this)
         bindViews()
@@ -90,6 +90,9 @@ class EditAddActivity : AppCompatActivity(), View.OnClickListener {
         propertyViewModel.getPropertyFromId(id).observe(this, Observer<Property> {
             updateViewsWithRoomData(it)
         })
+        propertyViewModel.getAddressOfOnePorperty(id).observe(this, Observer<Address> {
+            updateAddressWithRoomData(it)
+        })
     }
 
     /**
@@ -99,7 +102,7 @@ class EditAddActivity : AppCompatActivity(), View.OnClickListener {
         when (v) {
             saveBtn -> {
                 val address = Address(0, number.text.toString().toInt(), street.text.toString(), zipCode.text.toString(), city.text.toString(), country.text.toString(), propertyId)
-                val property = Property(propertyId, autocompleteType.text.toString(), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), null, null, description.text.toString(), setAddressToString(address), true)
+                val property = Property(propertyId, autocompleteType.text.toString(), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), numberBedrooms.text.toString().toInt(), numberBathrooms.text.toString().toInt(), description.text.toString(), setAddressToString(address), true)
 
                 propertyViewModel.addProperty(property)
                 propertyViewModel.addAddress(address)
@@ -176,6 +179,14 @@ class EditAddActivity : AppCompatActivity(), View.OnClickListener {
         description.setText(property.description)
         numberBedrooms.setText(property.bed_nbr.toString())
         numberBathrooms.setText(property.bath_nbr.toString())
+    }
+
+    private fun updateAddressWithRoomData(address: Address){
+        number.setText(address.number.toString())
+        street.setText(address.street)
+        zipCode.setText(address.zip_code)
+        city.setText(address.city)
+        country.setText(address.country)
     }
 
 }

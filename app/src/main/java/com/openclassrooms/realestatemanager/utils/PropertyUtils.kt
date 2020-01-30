@@ -11,10 +11,11 @@ fun setAddressToString(address: Address): String {
     val country = address.country
     val addressTxt = StringBuilder("")
     addressTxt.append(number)
-    addressTxt.append(street)
+    addressTxt.append(" $street")
+    addressTxt.append("\n")
     addressTxt.append(zipCode)
-    addressTxt.append(city)
-    addressTxt.append("/n")
+    addressTxt.append(" $city")
+    addressTxt.append("\n")
     addressTxt.append(country)
     return addressTxt.toString()
 }

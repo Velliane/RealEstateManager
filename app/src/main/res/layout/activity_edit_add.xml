@@ -30,7 +30,7 @@
             android:text="On Sale"
             app:layout_constraintEnd_toStartOf="@id/edit_sold_btn"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_title" />
+            app:layout_constraintTop_toBottomOf="@id/edit_title"/>
 
         <RadioButton
             android:id="@+id/edit_sold_btn"
@@ -43,6 +43,9 @@
 
 
         <!-- Type of the property -->
+
+        <!-- Price -->
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/custom_type_container"
             style="@style/TextInputLayoutStyle"
@@ -62,7 +65,6 @@
                 android:layout_height="wrap_content" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Price -->
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/custom_price_container"
             style="@style/TextInputLayoutStyle"
@@ -166,8 +168,8 @@
                 android:id="@+id/edit_bedrooms"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="number"
-                android:hint="Number of bedrooms"/>
+                android:hint="Number of bedrooms"
+                android:inputType="number" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -220,6 +222,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edit_title_location" />
 
+
         <TextView
             android:id="@+id/edit_title_photos"
             android:layout_width="match_parent"
@@ -228,31 +231,37 @@
             android:textAlignment="center"
             android:textSize="25dp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/edit_add_photos"
+            app:layout_constraintBottom_toTopOf="@+id/edit_container_photo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/address" />
 
-        <ImageView
-            android:id="@+id/edit_add_photos"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:src="@drawable/action_add"
-            android:background="@color/drawer_color"
+        <LinearLayout
+            android:id="@+id/edit_container_photo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/edit_list_photos"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_title_photos"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_title_photos">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/edit_list_photos"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintStart_toEndOf="@id/edit_add_photos"
-            app:layout_constraintTop_toBottomOf="@id/edit_title_photos"
-            tools:listitem="@layout/item_photos" />
+            <ImageView
+                android:id="@+id/edit_add_photos"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:src="@drawable/action_add"
+                android:layout_gravity="center_vertical"
+                android:background="@color/drawer_color"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/edit_list_photos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                tools:listitem="@layout/item_photos"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+        </LinearLayout>
+
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -261,7 +270,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
             android:src="@drawable/action_save"
-            app:layout_constraintTop_toBottomOf="@id/edit_add_photos"
+            app:layout_constraintTop_toBottomOf="@id/edit_container_photo"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -271,7 +280,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="15dp"
             android:src="@drawable/action_delete"
-            app:layout_constraintTop_toBottomOf="@id/edit_add_photos"
+            app:layout_constraintTop_toBottomOf="@id/edit_container_photo"
             app:layout_constraintEnd_toStartOf="@id/edit_save_btn"
             app:layout_constraintBottom_toBottomOf="parent"/>
 

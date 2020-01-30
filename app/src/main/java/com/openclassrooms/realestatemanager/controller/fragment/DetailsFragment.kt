@@ -118,14 +118,14 @@ class DetailsFragment: Fragment() {
     }
 
     private fun setMapsImage(address: Address){
-        val key = context!!.getString(R.string.google_api_key)
+        val key = context!!.getString(R.string.api_key_google)
         propertyViewModel.getLatLng(address, "country:FR",key).observe(this, Observer<Geocode> {
             if(it != null) {
                 val lat = it.results!![0].geometry!!.location!!.lat
                 val lng = it.results!![0].geometry!!.location!!.lng
                 val url = "$lat,$lng"
                 val url2 = "https://maps.googleapis.com/maps/api/staticmap?zoom=13&size=300x300&maptype=roadmap\n" +
-                        "&key=AIzaSyA0bXW5NTZ3xt6oEeQlSg1QO___i6n-FXI&markers=color:blue%7Clabel:S%7C$lat,$lng"
+                        "&key=$key&markers=color:blue%7Clabel:S%7C$lat,$lng"
                 Glide.with(this).load(url2).into(map)
             }
         })

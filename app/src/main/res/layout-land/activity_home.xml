@@ -34,6 +34,7 @@
         app:layout_constraintTop_toBottomOf="@id/home_progress"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:textAlignment="center"
         android:textSize="@dimen/home_txt_size"
         android:text="@string/looking_for_more_property_in_sale_please_wait"/>
 

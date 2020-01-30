@@ -1,233 +1,275 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Medias -->
-    <TextView
-        android:id="@+id/detail_title_media"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:text="Media"
-        android:textSize="25dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/detail_photos"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/detail_title_media"
-        tools:listitem="@layout/item_photos" />
-
-    <!-- Description -->
-    <TextView
-        android:id="@+id/detail_title_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:text="Description"
-        android:textSize="23dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/detail_photos" />
-
-    <TextView
-        android:id="@+id/details_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:padding="5dp"
-        android:text="Description"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/detail_title_description" />
-
-    <!-- Surface and number of rooms -->
-    <ImageView
-        android:id="@+id/details_surface_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:background="@drawable/details_surface"
-        app:layout_constraintEnd_toStartOf="@id/details_title_surface"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/details_description"
-        app:layout_constraintBottom_toTopOf="@id/details_bed_container"/>
-
-    <TextView
-        android:id="@+id/details_title_surface"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Surface : "
-        app:layout_constraintEnd_toStartOf="@id/details_surface"
-        app:layout_constraintStart_toEndOf="@id/details_surface_img"
-        app:layout_constraintTop_toBottomOf="@id/details_description"
-        app:layout_constraintBottom_toTopOf="@id/details_bed_container" />
-
-    <TextView
-        android:id="@+id/details_surface"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="85 m²"
-        app:layout_constraintEnd_toStartOf="@id/details_rooms_img"
-        app:layout_constraintStart_toEndOf="@id/details_title_surface"
-        app:layout_constraintTop_toBottomOf="@id/details_description"
-        app:layout_constraintBottom_toTopOf="@id/details_bed_container" />
-
-    <ImageView
-        android:id="@+id/details_rooms_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/details_rooms"
-        app:layout_constraintStart_toEndOf="@id/details_surface"
-        app:layout_constraintEnd_toStartOf="@id/details_title_nbr_rooms"
-        app:layout_constraintTop_toBottomOf="@id/details_description"
-        app:layout_constraintBottom_toTopOf="@id/details_bed_container" />
-
-    <TextView
-        android:id="@+id/details_title_nbr_rooms"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Number of rooms : "
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/details_title_surface"
-        app:layout_constraintTop_toBottomOf="@id/details_description"
-        app:layout_constraintBottom_toTopOf="@id/details_bed_container"/>
-
-    <TextView
-        android:id="@+id/details_nbr_rooms"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="5"
-        app:layout_constraintStart_toEndOf="@id/details_title_nbr_rooms"
-        app:layout_constraintTop_toBottomOf="@id/details_description"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/details_bed_container"/>
-
-    <!-- Number of bedrooms and bathrooms -->
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/details_bed_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/details_title_surface"
-        app:layout_constraintBottom_toTopOf="@id/details_bath_container">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Medias -->
+        <TextView
+            android:id="@+id/detail_title_media"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="@string/details_title_media"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/detail_photos"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/detail_photos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/detail_title_media"
+            tools:listitem="@layout/item_photos" />
+
+        <!-- Description -->
+        <TextView
+            android:id="@+id/detail_title_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="@string/details_title_description"
+            android:textSize="23sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/details_description"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/detail_photos" />
+
+        <TextView
+            android:id="@+id/details_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="@string/details_title_description"
+            app:layout_constraintBottom_toTopOf="@id/details_surface_container"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/detail_title_description" />
+
+        <!-- Surface and number of rooms -->
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/details_surface_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/details_bed_container"
+            app:layout_constraintEnd_toStartOf="@id/details_rooms_container"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/details_description">
+
+            <ImageView
+                android:id="@+id/details_surface_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:background="@drawable/details_surface"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/details_title_surface"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/details_surface_icon_description" />
+
+            <TextView
+                android:id="@+id/details_title_surface"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/details_surface_title"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/details_surface"
+                app:layout_constraintStart_toEndOf="@id/details_surface_img"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/details_surface"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/details_surface"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/details_title_surface"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/details_rooms_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@id/details_bed_container"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/details_surface_container"
+            app:layout_constraintTop_toBottomOf="@id/details_description">
+
+            <ImageView
+                android:id="@+id/details_rooms_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/details_rooms"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/details_title_nbr_rooms"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/details_rooms_icon_description" />
+
+            <TextView
+                android:id="@+id/details_title_nbr_rooms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Number of rooms : "
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/details_rooms_img"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/details_nbr_rooms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/details_rooms_number"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/details_title_nbr_rooms"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <!-- Number of bedrooms and bathrooms -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/details_bed_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:layout_constraintBottom_toTopOf="@id/details_bath_container"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/details_surface_container">
+
+            <ImageView
+                android:id="@+id/details_bedrooms_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/details_bed"
+                app:layout_constraintEnd_toStartOf="@id/details_title_bedrooms"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/details_bedroom_icon_description" />
+
+            <TextView
+                android:id="@+id/details_title_bedrooms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Number of bedrooms : "
+                app:layout_constraintEnd_toStartOf="@id/details_bedrooms"
+                app:layout_constraintStart_toEndOf="@id/details_bedrooms_img"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/details_bedrooms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/details_title_bedrooms"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/details_bath_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            app:layout_constraintBottom_toTopOf="@id/details_map"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/details_bed_container">
+
+            <ImageView
+                android:id="@+id/details_bathrooms_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="15dp"
+                android:background="@drawable/details_bath"
+                app:layout_constraintEnd_toStartOf="@id/details_title_bathrooms"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/details_title_bathrooms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Number of bathrooms : "
+                app:layout_constraintEnd_toStartOf="@id/details_bathrooms"
+                app:layout_constraintStart_toEndOf="@id/details_bathrooms_img"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/details_bathrooms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/details_title_bathrooms"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Location -->
+
+        <TextView
+            android:id="@+id/details_title_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Address"
+            android:textSize="23sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/details_address"
+            app:layout_constraintEnd_toStartOf="@id/details_map"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/details_bath_container" />
+
+        <TextView
+            android:id="@+id/details_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minLines="3"
+            android:text="N/C"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/details_map"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/details_title_address" />
 
         <ImageView
-            android:id="@+id/details_bedrooms_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="15dp"
-            android:background="@drawable/details_bed"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/details_title_bedrooms"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-        <TextView
-            android:id="@+id/details_title_bedrooms"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Number of bedrooms : "
-            app:layout_constraintStart_toEndOf="@id/details_bedrooms_img"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/details_bedrooms"/>
-
-        <TextView
-            android:id="@+id/details_bedrooms"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="2"
-            app:layout_constraintStart_toEndOf="@id/details_title_bedrooms"
+            android:id="@+id/details_map"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="@id/details_title_address" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/details_bath_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/details_bed_container"
-        app:layout_constraintBottom_toTopOf="@id/details_map">
-
-        <ImageView
-            android:id="@+id/details_bathrooms_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="15dp"
-            android:background="@drawable/details_bath"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/details_title_bathrooms"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-        <TextView
-            android:id="@+id/details_title_bathrooms"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Number of bathrooms : "
-            app:layout_constraintStart_toEndOf="@id/details_bathrooms_img"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/details_bathrooms"/>
-
-        <TextView
-            android:id="@+id/details_bathrooms"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="2"
-            app:layout_constraintStart_toEndOf="@id/details_title_bathrooms"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!-- Location -->
-
-    <TextView
-        android:id="@+id/details_title_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/details_bath_container"
-        app:layout_constraintBottom_toTopOf="@id/details_address"
-        app:layout_constraintEnd_toStartOf="@id/details_map"
-        android:padding="5dp"
-        android:text="Address"
-        android:textSize="23dp"
-        android:textStyle="bold"/>
-
-    <TextView
-        android:id="@+id/details_address"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/details_title_address"
-        app:layout_constraintEnd_toStartOf="@id/details_map"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:textAlignment="center"
-        android:text="4 allée des Bleuets \n 71500 Louhans \n France"/>
-
-    <ImageView
-        android:id="@+id/details_map"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        app:layout_constraintTop_toBottomOf="@id/details_bath_container"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

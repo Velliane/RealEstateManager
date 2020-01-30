@@ -24,6 +24,14 @@
     <string name="looking_for_more_property_in_sale_please_wait">Nous recherchons de nouveau bien mis en vente…veuillez patienter…</string>
     <string name="application_s_logo">Logo de l\'application</string>
     <string name="title_activity_maps">Carte</string>
+    <string name="details_title_media">Media</string>
+    <string name="details_title_description">Description</string>
+    <string name="details_surface_icon_description">Surface\'s icon</string>
+    <string name="details_surface_title">Surface :</string>
+    <string name="details_surface">85 m²</string>
+    <string name="details_rooms_icon_description">Rooms\'s icon</string>
+    <string name="details_rooms_number">N/C</string>
+    <string name="details_bedroom_icon_description">Bedroom\'s icon</string>
 
 
 </resources>
