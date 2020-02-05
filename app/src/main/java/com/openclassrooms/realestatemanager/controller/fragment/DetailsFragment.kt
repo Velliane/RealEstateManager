@@ -24,7 +24,7 @@ import com.openclassrooms.realestatemanager.view_model.PropertyViewModel
 /**
  * Show the information of the property selected in the ListFragment
  */
-class DetailsFragment: Fragment() {
+class DetailsFragment: BaseFragment() {
 
     /** ViewModel */
     private lateinit var propertyViewModel: PropertyViewModel
@@ -61,7 +61,7 @@ class DetailsFragment: Fragment() {
         propertyId = sharedPreferences.getString(Constants.PREF_ID_PROPERTY, "")
 
         bindViews(view)
-        configureViewModel()
+        propertyViewModel = configurePropertyViewModel()
         getPropertyFromId(propertyId)
         getAddressOfProperty(propertyId)
 
@@ -69,10 +69,6 @@ class DetailsFragment: Fragment() {
     }
 
     //-- CONFIGURATION --//
-    private fun configureViewModel() {
-        val viewModelFactory = context?.let { Injection.providePropertyViewModelFactory(it) }
-        propertyViewModel = ViewModelProviders.of(this, viewModelFactory).get(PropertyViewModel::class.java)
-    }
 
     private fun bindViews(view: View){
         descrption = view.findViewById(R.id.details_description)
@@ -130,6 +126,7 @@ class DetailsFragment: Fragment() {
             }
         })
     }
+
     /**
      * Update the views with the data found
      */

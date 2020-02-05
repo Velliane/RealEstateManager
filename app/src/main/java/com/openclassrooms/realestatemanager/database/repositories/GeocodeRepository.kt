@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.database.repositories
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.openclassrooms.realestatemanager.model.geocode.Geocode
 import com.openclassrooms.realestatemanager.utils.GooglePlacesAPI
@@ -11,7 +12,7 @@ class GeocodeRepository {
 
     private val retrofit = GooglePlacesAPI.retrofit.create(GooglePlacesAPI::class.java)
 
-    fun getLatLng(address: String, countryCode: String, key: String): MutableLiveData<Geocode>{
+    fun getLatLng(address: String, countryCode: String, key: String): LiveData<Geocode> {
 
         val data = MutableLiveData<Geocode>()
         retrofit.getLatLng(address, countryCode, key).enqueue(object : Callback<Geocode> {

@@ -46,7 +46,7 @@ class PropertyViewModel(private val propertyDataRepository: PropertyDataReposito
         executor.execute { addressDataRepository.updateAddress(address) }
     }
 
-    fun getLatLng(address: Address, countryCode: String, key: String): MutableLiveData<Geocode> {
+    fun getLatLng(address: Address, countryCode: String, key: String): LiveData<Geocode> {
         val txt = setAddressToString(address)
         return geocodeRepository.getLatLng(txt, countryCode, key)
     }

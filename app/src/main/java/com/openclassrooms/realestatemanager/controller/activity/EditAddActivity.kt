@@ -9,6 +9,7 @@ import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.work.Data
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
@@ -19,6 +20,7 @@ import com.openclassrooms.realestatemanager.model.Address
 import com.openclassrooms.realestatemanager.view_model.injections.Injection
 import com.openclassrooms.realestatemanager.model.Property
 import com.openclassrooms.realestatemanager.utils.Constants
+import com.openclassrooms.realestatemanager.utils.NotificationWorker
 import com.openclassrooms.realestatemanager.utils.setAddressToString
 import com.openclassrooms.realestatemanager.view_model.PropertyViewModel
 import org.threeten.bp.LocalDateTime
@@ -28,7 +30,7 @@ import org.threeten.bp.LocalDateTime
  * If adding, create an Id with LocalDate.now() and save it in PropertyDatabase and Firestore
  * If editing, get the data from the Database with the Id get from the intent, and update it in PropertyDatabase and Firestore
  */
-class EditAddActivity : AppCompatActivity(), View.OnClickListener {
+class EditAddActivity : BaseActivity(), View.OnClickListener {
 
     /** AutoCompleteTextView Type */
     private lateinit var autocompleteType: AppCompatAutoCompleteTextView
@@ -107,6 +109,8 @@ class EditAddActivity : AppCompatActivity(), View.OnClickListener {
                 propertyViewModel.addProperty(property)
                 propertyViewModel.addAddress(address)
 
+                val data = Data.Builder().putString(Constants.DATA_USER_NAME, getCurrentUser().displayName).build()
+                NotificationWorker.configureNotification(data)
                 createProperty(propertyId, autocompleteType.text.toString(), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), 0, 0, description.text.toString(), true, setAddressToString(address))
                 Snackbar.make(layout, "Save complete", Snackbar.LENGTH_SHORT).show()
                 finish()

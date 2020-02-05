@@ -4,6 +4,9 @@ import android.content.pm.PackageManager
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
+import com.openclassrooms.realestatemanager.view_model.PropertyViewModel
+import com.openclassrooms.realestatemanager.view_model.injections.Injection
 
 open class BaseFragment: Fragment() {
 
@@ -35,5 +38,13 @@ open class BaseFragment: Fragment() {
                 return
             }
         }
+    }
+
+    /**
+     * Configure PropertyViewModel
+     */
+    open fun configurePropertyViewModel(): PropertyViewModel{
+        val viewModelFactory = context?.let { Injection.providePropertyViewModelFactory(it) }
+        return ViewModelProviders.of(this, viewModelFactory).get(PropertyViewModel::class.java)
     }
 }

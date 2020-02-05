@@ -29,7 +29,7 @@ import com.openclassrooms.realestatemanager.view_model.PropertyViewModel
  * - if orientation is landscape : the fragment DetailsFragment is update with the details of the property clicked
  */
 
-class ListFragment: Fragment(), ListAdapter.OnItemClickListener {
+class ListFragment: BaseFragment(), ListAdapter.OnItemClickListener {
 
     /** RecyclerView */
     private lateinit var recyclerView: RecyclerView
@@ -54,12 +54,12 @@ class ListFragment: Fragment(), ListAdapter.OnItemClickListener {
         recyclerView = view.findViewById(R.id.fragment_list_recycler_view)
         recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.HORIZONTAL))
         recyclerView.layoutManager = LinearLayoutManager(activity!!.applicationContext)
-        adapter = context?.let { ListAdapter(it, this) }!!
+        adapter =  ListAdapter(this)
         noDataTxt = view.findViewById(R.id.fragment_list_no_data)
 
         sharedPreferences = activity!!.getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE)
 
-        configureViewModel()
+        propertyViewModel = configurePropertyViewModel()
         getListOfProperty()
 
         return view
@@ -99,22 +99,16 @@ class ListFragment: Fragment(), ListAdapter.OnItemClickListener {
 
     }
 
-    //-- CONFIGURATION --//
-    /**
-     * Configure the PropertyViewModel
-     */
-    private fun configureViewModel() {
-        val viewModelFactory = context?.let { Injection.providePropertyViewModelFactory(it) }
-        propertyViewModel = ViewModelProviders.of(this, viewModelFactory).get(PropertyViewModel::class.java)
-    }
 
     /**
      * When click on an item of the RecyclerView
      */
-    override fun onItemClicked(id: String) {
+    override fun onItemClicked(id: String, position: Int) {
         val fragment = DetailsFragment.newInstance()
         sharedPreferences.edit().putString(Constants.PREF_ID_PROPERTY, id).apply()
+        adapter.getItemViewType(position)
         adapter.notifyDataSetChanged()
+
         if(!getScreenOrientation(activity!!.resources.configuration.orientation)){
             activity!!.supportFragmentManager.beginTransaction().replace(R.id.container_fragment_list, fragment).commit()
         }else{

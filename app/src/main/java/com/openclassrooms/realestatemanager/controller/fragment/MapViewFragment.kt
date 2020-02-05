@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
@@ -12,6 +13,9 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.model.Address
+import com.openclassrooms.realestatemanager.model.Property
+import com.openclassrooms.realestatemanager.view_model.PropertyViewModel
 import java.lang.Exception
 
 class MapViewFragment : BaseFragment(), OnMapReadyCallback {
@@ -26,6 +30,8 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback {
     private var googleMap: GoogleMap? = null
     /** FusedLocation */
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    /** ViewModel */
+    private lateinit var propertyViewModel: PropertyViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_map_view, container, false)
@@ -34,6 +40,7 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         Places.initialize(requireActivity(), context!!.getString(R.string.api_key_google))
 
+        propertyViewModel = configurePropertyViewModel()
         return view
     }
 
@@ -74,7 +81,24 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback {
                 googleMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 15F))
                 val markerOptions = MarkerOptions().position(lastLocation).title("Test")
                 googleMap!!.addMarker(markerOptions)
+
+                getListOfProperty()
             }
         }, null)
+    }
+
+    private fun getListOfProperty(){
+        propertyViewModel.getAllProperty().observe(this, Observer<List<Property>> { list ->
+            for(property in list){
+                propertyViewModel.getAddressOfOnePorperty(property.id_property).observe(this, Observer<Address> {address ->
+                    propertyViewModel.getLatLng(address, "country:FR", context!!.resources.getString(R.string.api_key_google)).observe(this, Observer {
+                        val result = it.results!![0]
+                        val location = LatLng(result.geometry!!.location!!.lat!!, result.geometry!!.location!!.lng!!)
+                        val markerOptions = MarkerOptions().position(location).title(property.price.toString())
+                        googleMap!!.addMarker(markerOptions)
+                    })
+                })
+            }
+        })
     }
 }

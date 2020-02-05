@@ -70,15 +70,8 @@ class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemCli
         //-- Get Shared Preferences --//
         sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE)
 
-        //-- Views --//
-        toolbar = findViewById(R.id.main_toolbar)
-        setSupportActionBar(toolbar)
-        drawerLayout = findViewById(R.id.main_drawer_container)
-        drawerMenu = findViewById(R.id.main_drawer)
-        bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation)
-        bottomNavigationView.setOnNavigationItemSelectedListener(this)
-
         //-- Configuration --//
+        bindViews()
         configureDrawerLayout()
         configureUserViewModel()
         configureDrawer()
@@ -93,7 +86,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemCli
         // TODO
     }
 
-    override fun onItemClicked(id: String) {
+    override fun onItemClicked(id: String, position: Int) {
         //TODO
     }
 
@@ -148,6 +141,15 @@ class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemCli
     }
 
     //-- CONFIGURATION --//
+
+    private fun bindViews(){
+        toolbar = findViewById(R.id.main_toolbar)
+        setSupportActionBar(toolbar)
+        drawerLayout = findViewById(R.id.main_drawer_container)
+        drawerMenu = findViewById(R.id.main_drawer)
+        bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation)
+        bottomNavigationView.setOnNavigationItemSelectedListener(this)
+    }
     /**
      * Configure the layout that contain the DrawerMenu
      */
@@ -218,9 +220,11 @@ class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemCli
      * If screen's orientation is landscape, show DetailsFragment
      */
     private fun showDetailsFragment() {
+        val detailsFragment = DetailsFragment.newInstance()
         if (isLandscape) {
-            val detailsFragment = DetailsFragment.newInstance()
             addFragment(detailsFragment, R.id.container_fragment_details)
+        }else{
+            supportFragmentManager.beginTransaction().remove(detailsFragment)
         }
     }
 
@@ -237,8 +241,10 @@ class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemCli
         isLandscape = getScreenOrientation(resources.configuration.orientation)
         if (bottomNavigationView.selectedItemId == R.id.action_map_view) {
             showMapFragment()
+            showDetailsFragment()
         } else {
             showListFragment()
+            showDetailsFragment()
         }
     }
 

@@ -1,7 +1,5 @@
 package com.openclassrooms.realestatemanager.adapters
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,31 +9,23 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.model.Property
-import com.openclassrooms.realestatemanager.utils.Constants
-import com.openclassrooms.realestatemanager.utils.getScreenOrientation
 
-class ListAdapter(private val context: Context, private val listener: OnItemClickListener) : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
+class ListAdapter(private val listener: OnItemClickListener) : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
 
 
     private var data: List<Property> = ArrayList()
     private lateinit var onItemClickListener: OnItemClickListener
-    private lateinit var mContext: Context
-    private lateinit var sharedPreferences: SharedPreferences
-    private lateinit var idSaved: String
+
 
     interface OnItemClickListener {
-        fun onItemClicked(id: String)
+        fun onItemClicked(id: String, position: Int)
     }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.item_list, parent, false)
-        mContext = context
         onItemClickListener = listener
-        sharedPreferences = context.getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE)
-
-        idSaved = sharedPreferences.getString(Constants.PREF_ID_PROPERTY, "")
 
         return ListViewHolder(view)
     }
@@ -75,20 +65,12 @@ class ListAdapter(private val context: Context, private val listener: OnItemClic
 
 
         fun bind(property: Property) {
-            if (getScreenOrientation(context.resources.configuration.orientation)) {
-                if (idSaved == property.id_property) {
-                    container.setBackgroundColor(context.resources.getColor(R.color.drawer_color))
-                } else {
-                    container.setBackgroundColor(context.resources.getColor(R.color.quantum_white_100))
-                }
-            }else{
-                container.setBackgroundColor(context.resources.getColor(R.color.quantum_white_100))
-            }
+
             type.text = property.type
             price.text = property.price.toString()
             //location.setText("Unknown")
             itemView.setOnClickListener {
-                onItemClickListener.onItemClicked(property.id_property)
+                onItemClickListener.onItemClicked(property.id_property, adapterPosition)
             }
         }
     }
