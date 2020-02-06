@@ -4,19 +4,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.net.PlacesClient
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.model.Address
 import com.openclassrooms.realestatemanager.model.Property
 import com.openclassrooms.realestatemanager.view_model.PropertyViewModel
-import java.lang.Exception
 
 class MapViewFragment : BaseFragment(), OnMapReadyCallback {
 
@@ -90,7 +87,7 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback {
     private fun getListOfProperty(){
         propertyViewModel.getAllProperty().observe(this, Observer<List<Property>> { list ->
             for(property in list){
-                propertyViewModel.getAddressOfOnePorperty(property.id_property).observe(this, Observer<Address> {address ->
+                propertyViewModel.getAddressOfOneProperty(property.id_property).observe(this, Observer<Address> { address ->
                     propertyViewModel.getLatLng(address, "country:FR", context!!.resources.getString(R.string.api_key_google)).observe(this, Observer {
                         val result = it.results!![0]
                         val location = LatLng(result.geometry!!.location!!.lat!!, result.geometry!!.location!!.lng!!)

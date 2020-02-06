@@ -1,9 +1,7 @@
 package com.openclassrooms.realestatemanager.api
 
 import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.*
 import com.openclassrooms.realestatemanager.model.Property
 import com.openclassrooms.realestatemanager.utils.Constants
 
@@ -14,6 +12,10 @@ fun getPropertiesCollection(): CollectionReference {
 fun createProperty(id_property: String, type: String, price: Int, surface: Int, rooms_nbr: Int, bath_nbr: Int, bed_nbr: Int, description: String, in_sale: Boolean, address:String): Task<Void>{
     val newProperty = Property(id_property, type, price, surface, rooms_nbr, bath_nbr, bed_nbr, description, address, in_sale)
     return getPropertiesCollection().document(id_property).set(newProperty)
+}
+
+fun getAllProperties(): Task<QuerySnapshot> {
+ return getPropertiesCollection().get()
 }
 
 fun getProperty(id_property: Int): Task<DocumentSnapshot> {

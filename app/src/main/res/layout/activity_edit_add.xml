@@ -250,6 +250,7 @@
                 android:layout_height="150dp"
                 android:src="@drawable/action_add"
                 android:layout_gravity="center_vertical"
+                android:layout_marginStart="15dp"
                 android:background="@color/drawer_color"/>
 
             <androidx.recyclerview.widget.RecyclerView

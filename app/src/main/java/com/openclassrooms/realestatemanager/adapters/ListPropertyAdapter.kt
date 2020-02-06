@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.model.Property
 
-class ListAdapter(private val listener: OnItemClickListener) : RecyclerView.Adapter<ListAdapter.ListViewHolder>() {
+class ListPropertyAdapter(private val listener: OnItemClickListener) : RecyclerView.Adapter<ListPropertyAdapter.ListViewHolder>() {
 
 
     private var data: List<Property> = ArrayList()

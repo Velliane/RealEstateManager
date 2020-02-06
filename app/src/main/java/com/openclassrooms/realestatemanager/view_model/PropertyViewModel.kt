@@ -34,7 +34,7 @@ class PropertyViewModel(private val propertyDataRepository: PropertyDataReposito
         executor.execute { addressDataRepository.addAddress(address) }
     }
 
-    fun getAddressOfOnePorperty(id_property: String): LiveData<Address> {
+    fun getAddressOfOneProperty(id_property: String): LiveData<Address> {
         return addressDataRepository.getAddressOfOneProperty(id_property)
     }
 

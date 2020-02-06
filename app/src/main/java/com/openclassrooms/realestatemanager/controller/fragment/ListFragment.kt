@@ -8,15 +8,12 @@ import android.view.Menu
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.adapters.ListAdapter
-import com.openclassrooms.realestatemanager.view_model.injections.Injection
+import com.openclassrooms.realestatemanager.adapters.ListPropertyAdapter
 import com.openclassrooms.realestatemanager.model.Property
 import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.getScreenOrientation
@@ -29,14 +26,14 @@ import com.openclassrooms.realestatemanager.view_model.PropertyViewModel
  * - if orientation is landscape : the fragment DetailsFragment is update with the details of the property clicked
  */
 
-class ListFragment: BaseFragment(), ListAdapter.OnItemClickListener {
+class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener {
 
     /** RecyclerView */
     private lateinit var recyclerView: RecyclerView
     /** ViewModel */
     private lateinit var propertyViewModel: PropertyViewModel
     /** RecyclerView Adapter */
-    private lateinit var adapter: ListAdapter
+    private lateinit var adapter: ListPropertyAdapter
     /** No Data TextView */
     private lateinit var noDataTxt: TextView
     /** Shared Preferences */
@@ -54,7 +51,7 @@ class ListFragment: BaseFragment(), ListAdapter.OnItemClickListener {
         recyclerView = view.findViewById(R.id.fragment_list_recycler_view)
         recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.HORIZONTAL))
         recyclerView.layoutManager = LinearLayoutManager(activity!!.applicationContext)
-        adapter =  ListAdapter(this)
+        adapter =  ListPropertyAdapter(this)
         noDataTxt = view.findViewById(R.id.fragment_list_no_data)
 
         sharedPreferences = activity!!.getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE)

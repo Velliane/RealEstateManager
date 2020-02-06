@@ -1,20 +1,26 @@
 package com.openclassrooms.realestatemanager.controller.activity
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatAutoCompleteTextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.RecyclerView
 import androidx.work.Data
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.adapters.PhotosAdapter
 import com.openclassrooms.realestatemanager.api.createProperty
 import com.openclassrooms.realestatemanager.model.Address
 import com.openclassrooms.realestatemanager.view_model.injections.Injection
@@ -24,6 +30,8 @@ import com.openclassrooms.realestatemanager.utils.NotificationWorker
 import com.openclassrooms.realestatemanager.utils.setAddressToString
 import com.openclassrooms.realestatemanager.view_model.PropertyViewModel
 import org.threeten.bp.LocalDateTime
+import pub.devrel.easypermissions.EasyPermissions
+import java.net.URI
 
 /**
  * Add or Edit a Property
@@ -32,9 +40,8 @@ import org.threeten.bp.LocalDateTime
  */
 class EditAddActivity : BaseActivity(), View.OnClickListener {
 
-    /** AutoCompleteTextView Type */
+    /** Views */
     private lateinit var autocompleteType: AppCompatAutoCompleteTextView
-    /** TextInputEditText */
     private lateinit var price: TextInputEditText
     private lateinit var surface: TextInputEditText
     private lateinit var rooms: TextInputEditText
@@ -46,16 +53,23 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
     private lateinit var zipCode: TextInputEditText
     private lateinit var city: TextInputEditText
     private lateinit var country: TextInputEditText
-    /** FAB */
+    private lateinit var layout: ConstraintLayout
     private lateinit var saveBtn: FloatingActionButton
+    private lateinit var addPhotoBtn: ImageView
+
     /** ViewModel */
     private lateinit var propertyViewModel: PropertyViewModel
-    /** Constraint Layout */
-    private lateinit var layout: ConstraintLayout
     /** Property Id from DetailsFragment */
     private var propertyId: String = ""
     /** List of Type for Autocomplete */
     private var typeList: List<String> = ArrayList()
+    /** URI of selected image*/
+    private lateinit var uriImage: Uri
+    /** Image List */
+    private var imageList= ArrayList<Uri>()
+    /** RecyclerView */
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var photosAdapter: PhotosAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +81,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         AndroidThreeTen.init(this)
         bindViews()
         getSaveInstanceState(savedInstanceState)
+        photosAdapter = PhotosAdapter(this)
         configureViewModel()
 
         //-- Get Property id from intent --//
@@ -92,7 +107,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         propertyViewModel.getPropertyFromId(id).observe(this, Observer<Property> {
             updateViewsWithRoomData(it)
         })
-        propertyViewModel.getAddressOfOnePorperty(id).observe(this, Observer<Address> {
+        propertyViewModel.getAddressOfOneProperty(id).observe(this, Observer<Address> {
             updateAddressWithRoomData(it)
         })
     }
@@ -114,6 +129,39 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
                 createProperty(propertyId, autocompleteType.text.toString(), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), 0, 0, description.text.toString(), true, setAddressToString(address))
                 Snackbar.make(layout, "Save complete", Snackbar.LENGTH_SHORT).show()
                 finish()
+            }
+            addPhotoBtn -> {
+                    if(!EasyPermissions.hasPermissions(this, Constants.PERMS)) {
+                        EasyPermissions.requestPermissions(this, "Permission", Constants.RC_PERMISSION_FILES_STORAGE, Constants.PERMS)
+                        return
+                    }
+                selectAnImageFromThePhone()
+            }
+        }
+    }
+
+    private fun selectAnImageFromThePhone(){
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(intent, Constants.RC_CHOOSE_IMAGE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        loadImage(requestCode, resultCode, data)
+    }
+
+    private fun loadImage(requestCode: Int, resultCode: Int, data: Intent?){
+        if(requestCode == Constants.RC_CHOOSE_IMAGE){
+            if(resultCode == Activity.RESULT_OK){
+                uriImage = data!!.data!!
+                imageList.add(uriImage)
+
+                recyclerView.adapter = photosAdapter
+                photosAdapter.setData(imageList)
+                photosAdapter.notifyDataSetChanged()
+
+            }else{
+                //
             }
         }
     }
@@ -140,6 +188,9 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         zipCode = findViewById(R.id.edit_address_zip_code)
         city = findViewById(R.id.edit_address_city)
         country = findViewById(R.id.edit_address_country)
+        addPhotoBtn = findViewById(R.id.edit_add_photos)
+        addPhotoBtn.setOnClickListener(this)
+        recyclerView = findViewById(R.id.edit_list_photos)
     }
 
     //-- SAVE INSTANCE --//

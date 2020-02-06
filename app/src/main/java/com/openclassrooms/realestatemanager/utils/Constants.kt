@@ -9,6 +9,12 @@ class Constants {
 
         // REQUEST CODE
         const val RC_SIGN_IN = 1
+        const val RC_PERMISSION_LOCATION = 2
+        const val RC_PERMISSION_FILES_STORAGE = 3
+        const val RC_CHOOSE_IMAGE = 4
+
+        // PERMISSIONS
+        const val PERMS = android.Manifest.permission.READ_EXTERNAL_STORAGE
 
         // KEY FOR SAVE INSTANCE
         const val KEY_TEXT_PRICE = "KEY_TEXT_PRICE"
@@ -30,6 +36,8 @@ class Constants {
 
         // NOTIFICATION DATA
         const val DATA_USER_NAME = "DATA_USER_NAME"
+
+
     }
 }
 

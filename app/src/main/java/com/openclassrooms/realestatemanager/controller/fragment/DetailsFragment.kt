@@ -7,14 +7,11 @@ import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.controller.activity.EditAddActivity
 import com.openclassrooms.realestatemanager.model.Address
-import com.openclassrooms.realestatemanager.view_model.injections.Injection
 import com.openclassrooms.realestatemanager.model.Property
 import com.openclassrooms.realestatemanager.model.geocode.Geocode
 import com.openclassrooms.realestatemanager.utils.Constants
@@ -107,7 +104,7 @@ class DetailsFragment: BaseFragment() {
     }
 
     private fun getAddressOfProperty(id: String){
-        propertyViewModel.getAddressOfOnePorperty(id).observe(this, Observer<Address> {
+        propertyViewModel.getAddressOfOneProperty(id).observe(this, Observer<Address> {
             updateAddress(it)
             setMapsImage(it)
         })

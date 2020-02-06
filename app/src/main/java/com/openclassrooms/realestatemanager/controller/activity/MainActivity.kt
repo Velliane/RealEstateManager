@@ -10,8 +10,6 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -24,23 +22,21 @@ import com.firebase.ui.auth.AuthUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.adapters.ListAdapter
+import com.openclassrooms.realestatemanager.adapters.ListPropertyAdapter
 import com.openclassrooms.realestatemanager.controller.fragment.DetailsFragment
 import com.openclassrooms.realestatemanager.controller.fragment.ListFragment
 import com.openclassrooms.realestatemanager.controller.fragment.MapViewFragment
-import com.openclassrooms.realestatemanager.controller.view.AddressSelector
 import com.openclassrooms.realestatemanager.model.User
 import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.utils.getScreenOrientation
 import com.openclassrooms.realestatemanager.view_model.UserViewModel
 import com.openclassrooms.realestatemanager.view_model.injections.Injection
-import org.w3c.dom.Text
 
 /**
  * The activity that contains ListFragment, MapViewFragment and DetailsFragment
  */
-class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemClickListener, BottomNavigationView.OnNavigationItemSelectedListener, NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : BaseActivity(), View.OnClickListener, ListPropertyAdapter.OnItemClickListener, BottomNavigationView.OnNavigationItemSelectedListener, NavigationView.OnNavigationItemSelectedListener {
 
     /** Toolbar*/
     private lateinit var toolbar: Toolbar
@@ -75,20 +71,24 @@ class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemCli
         configureDrawerLayout()
         configureUserViewModel()
         configureDrawer()
-
         bottomNavigationView.selectedItemId = R.id.action_list_view
+
         //-- Show Fragments --//
         showListFragment()
-        showDetailsFragment()
+
+
+        if (isLandscape) {
+            val detailsFragment = DetailsFragment.newInstance()
+            supportFragmentManager.beginTransaction().replace(R.id.container_fragment_details, detailsFragment, "DETAILS").commit()
+        } else {
+            val fragment = supportFragmentManager.findFragmentByTag("DETAILS")
+            if (fragment != null) {
+                supportFragmentManager.beginTransaction().remove(fragment).commit()
+            }
+        }
+
     }
 
-    override fun onClick(v: View?) {
-        // TODO
-    }
-
-    override fun onItemClicked(id: String, position: Int) {
-        //TODO
-    }
 
     //-- BOTTOM NAVIGATION AND DRAWER MENU --//
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -107,7 +107,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemCli
                 startActivity(Intent(this, SettingsActivity::class.java))
             }
             R.id.drawer_menu_logout -> {
-                    logOut()
+                logOut()
             }
         }
         return false
@@ -141,8 +141,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemCli
     }
 
     //-- CONFIGURATION --//
-
-    private fun bindViews(){
+    private fun bindViews() {
         toolbar = findViewById(R.id.main_toolbar)
         setSupportActionBar(toolbar)
         drawerLayout = findViewById(R.id.main_drawer_container)
@@ -150,6 +149,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemCli
         bottomNavigationView = findViewById(R.id.activity_main_bottom_navigation)
         bottomNavigationView.setOnNavigationItemSelectedListener(this)
     }
+
     /**
      * Configure the layout that contain the DrawerMenu
      */
@@ -169,7 +169,7 @@ class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemCli
     /**
      * Configure the DrawerMenu, add a header
      */
-    private fun configureDrawer(){
+    private fun configureDrawer() {
         drawerMenu.setNavigationItemSelectedListener(this)
 
         val view = drawerMenu.getHeaderView(0)
@@ -177,14 +177,14 @@ class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemCli
         name = view.findViewById(R.id.header_name)
 
         //-- Update Views with user's info --//
-        if(Utils.isInternetAvailable(this)){
+        if (Utils.isInternetAvailable(this)) {
             //-- If connected to internet, get user's information from Firebase --//
-                if (getCurrentUser().photoUrl != null) {
-                    Glide.with(this).load(getCurrentUser().photoUrl).apply(RequestOptions.circleCropTransform()).centerCrop().into(photo)
-                }
-                name.text = getCurrentUser().displayName
+            if (getCurrentUser().photoUrl != null) {
+                Glide.with(this).load(getCurrentUser().photoUrl).apply(RequestOptions.circleCropTransform()).centerCrop().into(photo)
+            }
+            name.text = getCurrentUser().displayName
 
-        }else{
+        } else {
             //-- If not connected, get users' information from Room --//
             val id = sharedPreferences.getString(Constants.PREF_ID_USER, "")
             userViewModel.getUserById(id!!).observe(this, Observer<User> {
@@ -196,69 +196,65 @@ class MainActivity : BaseActivity(), View.OnClickListener, ListAdapter.OnItemCli
         }
     }
 
-    private fun configureUserViewModel(){
+    private fun configureUserViewModel() {
         val viewModelFactory = Injection.provideUserViewModelFactory(this)
         userViewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel::class.java)
     }
 
     //-- FRAGMENTS --//
-    private fun addFragment(fragment: Fragment, container: Int) {
+    private fun addFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
-                .replace(container, fragment, fragment.javaClass.simpleName)
+                .replace(R.id.container_fragment_list, fragment)
                 .commit()
+
+//                supportFragmentManager.beginTransaction()
+//                .replace(container, fragment, fragment.javaClass.simpleName.toString())
+//                .commit()
     }
 
     private fun showListFragment() {
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment_list)
         if (fragment == null) {
             val listFragment = ListFragment.newInstance()
-            addFragment(listFragment, R.id.container_fragment_list)
-        }
-    }
-
-    /**
-     * If screen's orientation is landscape, show DetailsFragment
-     */
-    private fun showDetailsFragment() {
-        val detailsFragment = DetailsFragment.newInstance()
-        if (isLandscape) {
-            addFragment(detailsFragment, R.id.container_fragment_details)
-        }else{
-            supportFragmentManager.beginTransaction().remove(detailsFragment)
+            addFragment(listFragment)
         }
     }
 
     private fun showMapFragment() {
         val mapViewFragment = MapViewFragment.newInstance()
-        supportFragmentManager.beginTransaction()
-                .replace(R.id.container_fragment_list, mapViewFragment, mapViewFragment.javaClass.simpleName)
-                .commit()
+        addFragment(mapViewFragment)
     }
+
 
     //-- LIFE CYCLE --//
     override fun onResume() {
         super.onResume()
         isLandscape = getScreenOrientation(resources.configuration.orientation)
-        if (bottomNavigationView.selectedItemId == R.id.action_map_view) {
-            showMapFragment()
-            showDetailsFragment()
-        } else {
-            showListFragment()
-            showDetailsFragment()
+        if (isLandscape) {
+            if (bottomNavigationView.selectedItemId == R.id.action_map_view) {
+                showMapFragment()
+            }
         }
     }
 
     override fun onBackPressed() {
-        //super.onBackPressed()
         if (!isLandscape) {
             showListFragment()
         }
     }
 
     //-- LOGOUT --//
-    private fun logOut(){
-        AuthUI.getInstance().signOut(this).addOnCompleteListener{
+    private fun logOut() {
+        AuthUI.getInstance().signOut(this).addOnCompleteListener {
             startActivity(Intent(this, LoginActivity::class.java))
         }
+    }
+
+    override fun onClick(v: View?) {
+        // TODO
+    }
+
+    override fun onItemClicked(id: String, position: Int) {
+        //TODO
     }
 }
