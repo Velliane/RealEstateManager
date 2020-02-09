@@ -1,6 +1,6 @@
 package com.openclassrooms.realestatemanager.utils
 
-import com.openclassrooms.realestatemanager.model.geocode.Geocode
+import com.openclassrooms.realestatemanager.property.model.geocode.Geocode
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

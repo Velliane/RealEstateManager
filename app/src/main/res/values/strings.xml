@@ -7,6 +7,9 @@
     <string name="toolbar_search">Search</string>
     <string name="main_drawer_open">Open navigation drawer</string>
     <string name="main_drawer_close">Close navigation drawer</string>
+    <string name="settings">Settings</string>
+    <string name="simulator">Simulator</string>
+    <string name="logout">LogOut</string>
 
     <!-- Property -->
     <string name="type">Type</string>
@@ -18,11 +21,6 @@
     <style name="edit_property_title">Edit a property</style>
     <string name="type_apartment">Apartment</string>
     <string name="type_house">House</string>
-
-    <!-- Home -->
-    <string name="title_activity_maps">Map</string>
-    <string name="looking_for_more_property_in_sale_please_wait">Looking for more property in sale, please wait…</string>
-    <string name="application_s_logo">Application\'s logo</string>
     <string name="details_title_media">Media</string>
     <string name="details_title_description">Description</string>
     <string name="details_surface_icon_description">Surface\'s icon</string>
@@ -31,6 +29,17 @@
     <string name="details_rooms_icon_description">Rooms\'s icon</string>
     <string name="details_rooms_number">N/C</string>
     <string name="details_bedroom_icon_description">Bedroom\'s icon</string>
+    <string name="details_number_of_rooms">Number of rooms :</string>
+    <string name="details_number_of_bedrooms">Number of bedrooms :</string>
+    <string name="details_number_bedrooms">2</string>
+    <string name="details_number_of_bathrooms">Number of bathrooms :</string>
+    <string name="details_number_bathrooms">2</string>
+    <string name="details_address">Address</string>
+
+    <!-- Home -->
+    <string name="title_activity_maps">Map</string>
+    <string name="looking_for_more_property_in_sale_please_wait">Looking for more property in sale, please wait…</string>
+    <string name="application_s_logo">Application\'s logo</string>
 
 
 </resources>

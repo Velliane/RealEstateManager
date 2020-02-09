@@ -17,20 +17,20 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".controller.activity.SettingsActivity"></activity>
+        <activity android:name="com.openclassrooms.realestatemanager.settings.SettingsActivity"></activity>
         <!-- Activities -->
-        <activity android:name=".controller.activity.BaseActivity" />
-        <activity android:name=".controller.activity.HomeActivity">
+        <activity android:name="com.openclassrooms.realestatemanager.BaseActivity" />
+        <activity android:name=".dispatcher.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".controller.activity.LoginActivity" />
-        <activity android:name=".controller.activity.MainActivity" />
+        <activity android:name=".login.LoginActivity" />
+        <activity android:name="com.openclassrooms.realestatemanager.property.show.MainActivity" />
         <activity
-            android:name=".controller.activity.EditAddActivity"
+            android:name="com.openclassrooms.realestatemanager.property.add_edit.EditAddActivity"
             android:theme="@style/DialogTheme" /> <!-- Provider -->
         <provider
             android:name=".provider.PropertyContentProvider"

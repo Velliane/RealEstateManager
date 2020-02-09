@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        tools:context="com.openclassrooms.realestatemanager.controller.activity.MainActivity">
+        tools:context=".property.show.MainActivity">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/activity_main_bottom_navigation"
@@ -52,7 +52,7 @@
         android:id="@+id/main_drawer"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:background="@color/drawer_color"
+        android:background="@android:color/white"
         android:layout_gravity="start"
         app:headerLayout="@layout/header"
         app:menu="@menu/drawer_menu"

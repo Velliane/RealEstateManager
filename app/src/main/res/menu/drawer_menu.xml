@@ -4,14 +4,21 @@
 
     <item
         android:id="@+id/drawer_menu_settings"
-        android:title="Settings"
+        android:title="@string/settings"
         android:icon="@drawable/drawer_settings"
         app:showAsAction="ifRoom"
         />
 
     <item
+        android:id="@+id/drawer_menu_simulator"
+        android:title="@string/simulator"
+        android:icon="@drawable/action_simulator"
+        app:showAsAction="ifRoom"
+        />
+
+    <item
         android:id="@+id/drawer_menu_logout"
-        android:title="LogOut"
+        android:title="@string/logout"
         android:icon="@drawable/drawer_logout"
         app:showAsAction="ifRoom"/>
 

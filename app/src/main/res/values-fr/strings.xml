@@ -8,6 +8,9 @@
     <string name="toolbar_search">Rechercher</string>
     <string name="main_drawer_open">Fermer le menu latéral</string>
     <string name="main_drawer_close">Ouvrir le menu latéral</string>
+    <string name="settings">Paramètres</string>
+    <string name="simulator">Simulateur de prêt</string>
+    <string name="logout">Déconnexion</string>
 
     <!-- Property -->
     <string name="type">Type</string>
@@ -19,19 +22,26 @@
     <string name="type_apartment">Appartement</string>
     <string name="type_house">Maison</string>
     <style name="edit_property_title">Editer un bien</style>
+    <string name="details_title_media">Media</string>
+    <string name="details_title_description">Description</string>
+    <string name="details_surface_icon_description">Icône de surface</string>
+    <string name="details_surface_title">Surface :</string>
+    <string name="details_surface">85 m²</string>
+    <string name="details_rooms_icon_description">Icône des pièces</string>
+    <string name="details_rooms_number">N/C</string>
+    <string name="details_bedroom_icon_description">Icône des chambres</string>
+    <string name="details_number_of_rooms">Nombre de pièces :</string>
+    <string name="details_number_of_bedrooms">Nombre de chambres :</string>
+    <string name="details_number_bedrooms">N/C</string>
+    <string name="details_number_of_bathrooms">Nombre de salles de bain :</string>
+    <string name="details_number_bathrooms">N/C</string>
+    <string name="details_address">Adresse</string>
+
 
     <!-- Home -->
     <string name="looking_for_more_property_in_sale_please_wait">Nous recherchons de nouveau bien mis en vente…veuillez patienter…</string>
     <string name="application_s_logo">Logo de l\'application</string>
     <string name="title_activity_maps">Carte</string>
-    <string name="details_title_media">Media</string>
-    <string name="details_title_description">Description</string>
-    <string name="details_surface_icon_description">Surface\'s icon</string>
-    <string name="details_surface_title">Surface :</string>
-    <string name="details_surface">85 m²</string>
-    <string name="details_rooms_icon_description">Rooms\'s icon</string>
-    <string name="details_rooms_number">N/C</string>
-    <string name="details_bedroom_icon_description">Bedroom\'s icon</string>
 
 
 </resources>
