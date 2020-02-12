@@ -5,11 +5,11 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "com.openclassrooms.realestatemanager"
         minSdkVersion 19
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -42,9 +42,11 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-
+    // KOTLIN
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.1.0'
+    // COROUTINES
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.2.1"
     // Material Design
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
@@ -55,6 +57,7 @@ dependencies {
     kapt 'android.arch.persistence.room:compiler:1.1.1'
     //VIEW MODEL & LIVE DATA
     implementation "android.arch.lifecycle:extensions:1.1.1"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
     // 310 ABP
     implementation 'com.jakewharton.threetenabp:threetenabp:1.2.1'
     // WORK MANAGER
@@ -65,7 +68,6 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
     implementation 'com.google.android.libraries.places:places:2.1.0'
     implementation 'com.google.maps.android:android-maps-utils:0.4.4'
-
     // FIREBASE
     implementation 'com.google.firebase:firebase-analytics:17.2.2'
     implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
@@ -73,7 +75,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:17.2.2'
     implementation 'com.firebaseui:firebase-ui-firestore:4.3.1'
     implementation 'com.google.firebase:firebase-storage:19.1.1'
-
     // RETROFIT
     implementation 'com.squareup.retrofit2:retrofit:2.6.2'
     implementation 'com.squareup.retrofit2:retrofit-mock:2.6.1'
@@ -86,9 +87,8 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     // Circle Image View
     implementation 'de.hdodenhof:circleimageview:3.0.0'
-
     //EASY PERMISSIONS
     implementation 'pub.devrel:easypermissions:1.1.1'
-
-    implementation 'com.android.support:cardview-v7:28.1.1'
+    // CARD VIEW
+    implementation 'com.android.support:cardview-v7:29.1.1'
 }

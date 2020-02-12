@@ -13,10 +13,6 @@ class PropertyDataRepository(private val propertyDao: PropertyDao) {
         return propertyDao.addProperty(property)
     }
 
-    fun updateProperty(property: Property): Int{
-        return propertyDao.updateProperty(property)
-    }
-
     fun getPropertyFromId(id_property: String): LiveData<Property>{
         return propertyDao.getPropertyFromId(id_property)
     }

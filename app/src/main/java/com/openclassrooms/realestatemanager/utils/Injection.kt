@@ -7,6 +7,8 @@ import com.openclassrooms.realestatemanager.property.data.geocode.GeocodeReposit
 import com.openclassrooms.realestatemanager.property.data.PropertyDataRepository
 import com.openclassrooms.realestatemanager.login.UserDataRepository
 import com.openclassrooms.realestatemanager.login.UserViewModelFactory
+import com.openclassrooms.realestatemanager.photos.PhotoDataRepository
+import com.openclassrooms.realestatemanager.photos.PhotoViewModelFactory
 import com.openclassrooms.realestatemanager.property.data.PropertyViewModelFactory
 import com.openclassrooms.realestatemanager.update_database.FirestoreDataRepository
 import com.openclassrooms.realestatemanager.update_database.FirestoreDataViewModelFactory
@@ -54,6 +56,11 @@ class Injection {
         fun provideFirestoreDataViewModelFactory(): FirestoreDataViewModelFactory {
             val firestoreDataRepository = FirestoreDataRepository()
             return  FirestoreDataViewModelFactory(firestoreDataRepository)
+        }
+
+        fun providePhotoDataViewModelFactory(): PhotoViewModelFactory {
+            val photoDataRepository = PhotoDataRepository()
+            return PhotoViewModelFactory(photoDataRepository)
         }
     }
 }

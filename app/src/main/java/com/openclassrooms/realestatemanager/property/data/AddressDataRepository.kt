@@ -13,10 +13,6 @@ class AddressDataRepository(private val addressDao: AddressDao) {
         return addressDao.addAddress(address)
     }
 
-    fun updateAddress(address: Address): Int{
-        return addressDao.updateAddress(address)
-    }
-
     fun getAddressOfOneProperty(idProperty: String): LiveData<Address>{
         return addressDao.getAddressOfOneProperty(idProperty)
     }

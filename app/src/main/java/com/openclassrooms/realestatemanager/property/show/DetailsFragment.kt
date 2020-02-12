@@ -55,7 +55,7 @@ class DetailsFragment: BaseFragment() {
         setHasOptionsMenu(true)
 
         sharedPreferences = activity!!.getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE)
-        propertyId = sharedPreferences.getString(Constants.PREF_ID_PROPERTY, "")
+        propertyId = sharedPreferences.getString(Constants.PREF_ID_PROPERTY, "")!!
 
         bindViews(view)
         propertyViewModel = configurePropertyViewModel()
@@ -120,6 +120,8 @@ class DetailsFragment: BaseFragment() {
                 val url2 = "https://maps.googleapis.com/maps/api/staticmap?zoom=13&size=300x300&maptype=roadmap\n" +
                         "&key=$key&markers=color:blue%7Clabel:S%7C$lat,$lng"
                 Glide.with(this).load(url2).into(map)
+            }else{
+                //TODO default image
             }
         })
     }

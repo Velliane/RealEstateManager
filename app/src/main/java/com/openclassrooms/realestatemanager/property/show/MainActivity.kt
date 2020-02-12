@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -24,16 +23,12 @@ import com.google.android.material.navigation.NavigationView
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.login.LoginActivity
 import com.openclassrooms.realestatemanager.login.User
-import com.openclassrooms.realestatemanager.utils.Constants
-import com.openclassrooms.realestatemanager.utils.Utils
-import com.openclassrooms.realestatemanager.utils.getScreenOrientation
 import com.openclassrooms.realestatemanager.login.UserViewModel
 import com.openclassrooms.realestatemanager.BaseActivity
 import com.openclassrooms.realestatemanager.property.add_edit.EditAddActivity
 import com.openclassrooms.realestatemanager.property.data.PropertyViewModel
 import com.openclassrooms.realestatemanager.settings.SettingsActivity
-import com.openclassrooms.realestatemanager.update_database.FirestoreDataViewModel
-import com.openclassrooms.realestatemanager.utils.Injection
+import com.openclassrooms.realestatemanager.utils.*
 
 /**
  * The activity that contains ListFragment, MapViewFragment and DetailsFragment
@@ -51,7 +46,6 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
     private lateinit var bottomNavigationView: BottomNavigationView
     /** ViewModel */
     private lateinit var userViewModel: UserViewModel
-    private lateinit var firestoreDataViewModel: FirestoreDataViewModel
     private lateinit var propertyViewModel: PropertyViewModel
     /** Header Views */
     private lateinit var photo: ImageView
@@ -73,6 +67,9 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
         bindViews()
         configureDrawerLayout()
         configureViewModel()
+//        if(savedInstanceState == null){
+//            propertyViewModel.updateDatabase(this)
+//        }
         configureDrawer()
         showFragments(savedInstanceState)
         bottomNavigationView.selectedItemId = R.id.action_list_view
@@ -189,8 +186,6 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
     private fun configureViewModel() {
         val viewModelFactory = Injection.provideUserViewModelFactory(this)
         userViewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel::class.java)
-        val firestoreDataViewModelFactory = Injection.provideFirestoreDataViewModelFactory()
-        firestoreDataViewModel = ViewModelProviders.of(this, firestoreDataViewModelFactory).get(FirestoreDataViewModel::class.java)
         val propertyViewModelFactory = Injection.providePropertyViewModelFactory(this)
         propertyViewModel = ViewModelProviders.of(this, propertyViewModelFactory).get(PropertyViewModel::class.java)
     }
@@ -254,11 +249,8 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
         }
     }
 
-    //-- UPDATE DATABASE --//
-    private fun updateRoomDatabase(){
-        val listFromFirestore = firestoreDataViewModel.getAllPropertyFromFirestore()
-        val listFromRoom = propertyViewModel.getAllProperty()
-    }
+
+
 
     //-- LOGOUT --//
     private fun logOut() {

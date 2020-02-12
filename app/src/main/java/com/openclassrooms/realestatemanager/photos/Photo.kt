@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.property
+package com.openclassrooms.realestatemanager.photos
 
 import android.net.Uri
 

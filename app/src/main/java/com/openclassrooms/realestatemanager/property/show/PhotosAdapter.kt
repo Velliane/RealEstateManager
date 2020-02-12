@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.property.Photo
+import com.openclassrooms.realestatemanager.photos.Photo
 
 class PhotosAdapter(private val context: Context): RecyclerView.Adapter<PhotosAdapter.PhotosViewHolder>() {
 

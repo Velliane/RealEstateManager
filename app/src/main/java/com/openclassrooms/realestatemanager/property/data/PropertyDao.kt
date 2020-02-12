@@ -17,9 +17,6 @@ interface PropertyDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addProperty(property: Property): Long
 
-    @Update
-    fun updateProperty(property: Property): Int
-
     @Query("SELECT * FROM Property WHERE id_property = :id_property")
     fun getPropertyFromId(id_property: String): LiveData<Property>
 }

@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <application
         android:allowBackup="false"
@@ -17,9 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name="com.openclassrooms.realestatemanager.settings.SettingsActivity"></activity>
-        <!-- Activities -->
-        <activity android:name="com.openclassrooms.realestatemanager.BaseActivity" />
+        <activity android:name=".search.SearchActivity"></activity>
+        <activity android:name=".settings.SettingsActivity" /> <!-- Activities -->
+        <activity android:name=".BaseActivity" />
         <activity android:name=".dispatcher.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,9 +29,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".login.LoginActivity" />
-        <activity android:name="com.openclassrooms.realestatemanager.property.show.MainActivity" />
+        <activity android:name=".property.show.MainActivity" />
         <activity
-            android:name="com.openclassrooms.realestatemanager.property.add_edit.EditAddActivity"
+            android:name=".property.add_edit.EditAddActivity"
             android:theme="@style/DialogTheme" /> <!-- Provider -->
         <provider
             android:name=".provider.PropertyContentProvider"

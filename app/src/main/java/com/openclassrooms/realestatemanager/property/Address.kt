@@ -2,7 +2,6 @@ package com.openclassrooms.realestatemanager.property
 
 import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
-import com.openclassrooms.realestatemanager.property.Property
 
 @Entity
 (
@@ -15,22 +14,22 @@ import com.openclassrooms.realestatemanager.property.Property
 
 data class Address (
 
-        @PrimaryKey (autoGenerate = true)
+        @PrimaryKey
         @ColumnInfo(name = "id_address")
-        var id_address: Int,
+        var id_address: String = "",
 
         @ColumnInfo(name = "number")
-        var number: Int?,
+        var number: Int? = 0,
         @ColumnInfo(name = "street")
-        var street: String?,
+        var street: String? = "",
         @ColumnInfo(name = "zip_code")
-        var zip_code: String?,
+        var zip_code: String? = "",
         @ColumnInfo(name = "city")
-        var city: String,
+        var city: String = "",
         @ColumnInfo(name = "country")
-        var country: String,
+        var country: String = "",
 
         @ColumnInfo(name = "idProperty")
-        var idProperty: String
+        var idProperty: String = ""
 
 )
