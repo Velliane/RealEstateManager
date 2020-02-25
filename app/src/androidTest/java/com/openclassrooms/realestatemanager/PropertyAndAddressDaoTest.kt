@@ -21,10 +21,10 @@ class PropertyAndAddressDaoTest {
 
     private lateinit var propertyDatabase: PropertyDatabase
     private val propertyId: String = "1"
-    private val property1 = Property(propertyId, "House", 256000, 95, 3, 1, 2, "Little house", "444", true)
-    private val property2 = Property("2", "House", 350000, 115, 4, 2, 3, "Big house", "55", true)
-    private val addressTest = Address(1, 4, "allée des Bleuets", "71500", "Louhans", "France", propertyId)
-    private val addresTest2 = Address(2, 22, "rue des Lilas", "01350", "Culoz", "France", "2")
+    private val property1 = Property(propertyId, "House", 256000, 95, 3, 1, 2, "Little house", true, "")
+    private val property2 = Property("2", "House", 350000, 115, 4, 2, 3, "Big house", true, "")
+    private val addressTest = Address("1", 4, "allée des Bleuets", "71500", "Louhans", "France", propertyId)
+    private val addresTest2 = Address("2", 22, "rue des Lilas", "01350", "Culoz", "France", "2")
 
     @Rule
     @JvmField

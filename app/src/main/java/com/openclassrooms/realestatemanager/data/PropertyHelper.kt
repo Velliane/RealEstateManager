@@ -17,8 +17,8 @@ open class PropertyHelper {
         }
 
 
-        open fun createProperty(id_property: String, type: String, price: Int, surface: Int, rooms_nbr: Int, bath_nbr: Int, bed_nbr: Int, description: String, in_sale: Boolean, dateTime: String): Task<Void>{
-            val newProperty = Property(id_property, type, price, surface, rooms_nbr, bath_nbr, bed_nbr, description, in_sale, dateTime)
+        open fun createProperty(id_property: String, newProperty: Property): Task<Void>{
+            //val newProperty = Property(id_property, type, price, surface, rooms_nbr, bath_nbr, bed_nbr, description, in_sale, dateTime)
             return getPropertiesCollection().document(id_property).set(newProperty)
         }
 

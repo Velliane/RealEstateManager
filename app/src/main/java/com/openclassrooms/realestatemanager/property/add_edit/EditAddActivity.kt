@@ -70,7 +70,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
     private lateinit var addPhotoBtn: MaterialButton
 
     /** ViewModel */
-    private lateinit var mainViewModel: MainViewModel
+    private lateinit var editDataViewModel: EditDataViewModel
     /** Property Id from DetailsFragment */
     private var propertyId: String = ""
     private var addressId: String = ""
@@ -124,10 +124,10 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
      * @param id The id of the property
      */
     private fun getDataFromDatabase(id: String) {
-        mainViewModel.getPropertyFromId(id).observe(this, Observer<Property> {
+        editDataViewModel.getPropertyFromId(id).observe(this, Observer<Property> {
             updateViewsWithRoomData(it)
         })
-        mainViewModel.getAddressOfOneProperty(id).observe(this, Observer<Address> {
+        editDataViewModel.getAddressOfOneProperty(id).observe(this, Observer<Address> {
             updateAddressWithRoomData(it)
         })
     }
@@ -138,20 +138,23 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v) {
             saveBtn -> {
-                if (propertyId == "") {
-                    propertyId = UUID.randomUUID().toString()
-                    addressId = UUID.randomUUID().toString()
-                }else{
-                    mainViewModel.getAddressOfOneProperty(propertyId).observe(this, Observer {
-                        addressId = it.id_address
-                    })
-                }
+                //bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, image.uri)
+                val property = Property(propertyId, autocompleteType.text.toString(), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), numberBedrooms.text.toString().toInt(), numberBathrooms.text.toString().toInt(), description.text.toString(), true, parseLocalDateTimeToString(LocalDateTime.now()))
+                editDataViewModel.save(propertyId, property,number.text.toString().toInt(), street.text.toString(), zipCode.text.toString(), city.text.toString(), country.text.toString(), imageList)
+//                if (propertyId == "") {
+//                    propertyId = UUID.randomUUID().toString()
+//                    addressId = UUID.randomUUID().toString()
+//                }else{
+//                    editDataViewModel.getAddressOfOneProperty(propertyId).observe(this, Observer {
+//                        addressId = it.id_address
+//                    })
+//                }
                 //-- Save Property and Address in Room --//
-                savePropertyAndAddressInRoom()
-                savePropertyAndAddressInFirestore()
+                //savePropertyAndAddressInRoom()
+                //savePropertyAndAddressInFirestore()
 
                 //-- Manage image --//
-                saveImageInExternalStorageAndFirestore()
+                //saveImageInExternalStorageAndFirestore()
 
                 sendNotification()
                 Snackbar.make(layout, "Save complete", Snackbar.LENGTH_SHORT).show()
@@ -173,15 +176,15 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
     //-- MANAGE PROPERTY AND ADDRESS --//
     private fun savePropertyAndAddressInRoom(){
         val property = Property(propertyId, autocompleteType.text.toString(), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), numberBedrooms.text.toString().toInt(), numberBathrooms.text.toString().toInt(), description.text.toString(), true, parseLocalDateTimeToString(LocalDateTime.now()))
-        mainViewModel.addProperty(property)
+        editDataViewModel.addProperty(property)
         val address = Address(addressId, number.text.toString().toInt(), street.text.toString(), zipCode.text.toString(), city.text.toString(), country.text.toString(), propertyId)
-        mainViewModel.addAddress(address)
+        editDataViewModel.addAddress(address)
 
     }
 
     private fun savePropertyAndAddressInFirestore(){
-        propertyHelper.createProperty(propertyId, autocompleteType.text.toString(), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), 0, 0, description.text.toString(), true, parseLocalDateTimeToString(LocalDateTime.now()))
-        addressHelper.createAddress(addressId, number.text.toString().toInt(), street.text.toString(), zipCode.text.toString(), city.text.toString(), country.text.toString(), propertyId)
+        //propertyHelper.createProperty(propertyId, autocompleteType.text.toString(), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), 0, 0, description.text.toString(), true, parseLocalDateTimeToString(LocalDateTime.now()))
+        //addressHelper.createAddress(addressId, number.text.toString().toInt(), street.text.toString(), zipCode.text.toString(), city.text.toString(), country.text.toString(), propertyId)
         val map = HashMap<String, List<String>>()
         map["property_id"] = listOf(propertyId)
         linkHelper.addLink(addressId, map)
@@ -240,14 +243,14 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
             if (imageList.isNotEmpty()) {
                 for (image in imageList) {
                     bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, image.uri)
-                    mainViewModel.savePhotos(bitmap, propertyId,  image.description!!, uriImage)
+                    editDataViewModel.savePhotos(bitmap, propertyId,  image.description!!, uriImage)
                 }
             } else {
                 requestPermission()
                 if (imageList.isNotEmpty()) {
                     for (image in imageList) {
                         bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, image.uri)
-                        mainViewModel.savePhotos(bitmap, propertyId,  image.description!!, uriImage)
+                        editDataViewModel.savePhotos(bitmap, propertyId,  image.description!!, uriImage)
                     }
                 }
             }
@@ -256,8 +259,8 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
 
     //-- CONFIGURATION --//
     private fun configureViewModel() {
-        val propertyViewModelFactory = Injection.provideMainViewModelFactory(this)
-        mainViewModel = ViewModelProviders.of(this, propertyViewModelFactory).get(MainViewModel::class.java)
+        val editDataViewModelFactory = Injection.provideEditDataViewModelFactory(this)
+        editDataViewModel = ViewModelProviders.of(this, editDataViewModelFactory).get(EditDataViewModel::class.java)
       }
 
     private fun bindViews() {

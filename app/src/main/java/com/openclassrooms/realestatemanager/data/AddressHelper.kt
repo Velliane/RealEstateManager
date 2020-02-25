@@ -12,8 +12,8 @@ open class AddressHelper {
         return FirebaseFirestore.getInstance().collection(Constants.COLLECTION_ADDRESS)
     }
 
-    open fun createAddress(id_address: String, number: Int, street: String, zip_code: String, city: String, country: String, id_property: String): Task<Void> {
-        val newAddress = Address(id_address, number, street, zip_code, city, country, id_property)
+    open fun createAddress(id_address: String, newAddress: Address): Task<Void> {
+        //val newAddress = Address(id_address, number, street, zip_code, city, country, id_property)
         return getAddressCollection().document(id_address).set(newAddress)
     }
 

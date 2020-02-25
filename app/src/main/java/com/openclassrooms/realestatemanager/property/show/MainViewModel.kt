@@ -35,9 +35,6 @@ class MainViewModel(private val context: Context, private val propertyDataReposi
         return propertyDataRepository.getAllProperties()
     }
 
-    fun addProperty(property: Property) {
-        executor.execute { propertyDataRepository.addProperty(property) }
-    }
 
     fun getPropertyFromId(id_property: String): LiveData<Property> {
         return propertyDataRepository.getPropertyFromId(id_property)
@@ -47,10 +44,6 @@ class MainViewModel(private val context: Context, private val propertyDataReposi
         return propertyDataRepository.searchInDatabase(query)
     }
 
-    //-- ADDRESS --//
-    fun addAddress(address: Address){
-        executor.execute { addressDataRepository.addAddress(address) }
-    }
 
     fun getAddressOfOneProperty(id_property: String): LiveData<Address> {
         return addressDataRepository.getAddressOfOneProperty(id_property)
@@ -73,69 +66,4 @@ class MainViewModel(private val context: Context, private val propertyDataReposi
         }
     }
 
-//    private suspend fun getAllPropertyFromFirestore(): List<Property> {
-//        return firestoreDataRepository.getAllPropertyFromFirestore()
-//    }
-//
-//    private suspend fun getAddressFromFirestore(id_property: String): Address{
-//           return  firestoreDataRepository.getAddressFromFirestore(id_property)
-//    }
-
-//    fun updateDatabase(mainActivity: MainActivity) {
-//        viewModelScope.launch {
-//            val listFromFirestore = getAllPropertyFromFirestore()
-//            getAllProperty().observe(mainActivity, Observer<List<Property>> {
-//                if (it.isEmpty()) {
-//                    for (propertyFromFirestore in listFromFirestore) {
-//                        addProperty(propertyFromFirestore)
-//                        viewModelScope.launch(Dispatchers.IO) {
-//                            saveAddress(propertyFromFirestore.id_property)
-//                        }
-//                    }
-//                } else {
-//                    for (propertyFromFirestore in listFromFirestore) {
-//                        var foundId = false
-//                        for (property in it) {
-//                            if (propertyFromFirestore.id_property == property.id_property) {
-//                                if (propertyFromFirestore.date != property.date) {
-//                                    val updatedProperty = compareByDate(property, propertyFromFirestore)
-//                                    addProperty(updatedProperty)
-//                                    viewModelScope.launch {
-//                                        saveAddress(updatedProperty.id_property)
-//                                    }
-//                                }
-//                                foundId = true
-//                                break
-//                            }
-//                        }
-//                        if (!foundId) {
-//                            addProperty(propertyFromFirestore)
-//                            viewModelScope.launch {
-//                                saveAddress(propertyFromFirestore.id_property)
-//                            }
-//                        }
-//                    }
-//                }
-//            })
-//        }
-//    }
-
-//    private suspend fun saveAddress(id_property: String) {
-//        val address = getAddressFromFirestore(id_property)
-//        addAddress(address)
-//    }
-
-    //-- PHOTOS --//
-    fun savePhotos(bitmap: Bitmap, id_property: String, description: String, uri: Uri){
-        saveImageToExternalStorage(bitmap, id_property, description)
-        saveImageToFirebase(uri, id_property, description)
-    }
-
-    private fun saveImageToExternalStorage(bitmap: Bitmap, id_property: String, description: String) {
-        photoDataRepository.saveImageToExternalStorage(bitmap, id_property, description, context)
-    }
-
-    private fun saveImageToFirebase(uri: Uri, id_property: String, description: String) {
-        photoDataRepository.saveImageToFirebase(uri, id_property, description)
-    }
 }
