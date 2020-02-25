@@ -16,7 +16,6 @@ import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.property.Property
 import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.getScreenOrientation
-import com.openclassrooms.realestatemanager.property.data.PropertyViewModel
 
 /**
  * Fragment that show the list of properties saved in the PropertyDatabase
@@ -30,7 +29,7 @@ class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener {
     /** RecyclerView */
     private lateinit var recyclerView: RecyclerView
     /** ViewModel */
-    private lateinit var propertyViewModel: PropertyViewModel
+    private lateinit var mainViewModel: MainViewModel
     /** RecyclerView Adapter */
     private lateinit var adapter: ListPropertyAdapter
     /** No Data TextView */
@@ -55,7 +54,7 @@ class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener {
 
         sharedPreferences = activity!!.getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE)
 
-        propertyViewModel = configurePropertyViewModel()
+        mainViewModel = configurePropertyViewModel()
         getListOfProperty()
 
         return view
@@ -73,7 +72,7 @@ class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener {
      * Observe the LiveData from PropertyViewModel to get the list of all the properties saved in the RoomDatabase
      */
     private fun getListOfProperty() {
-        propertyViewModel.getAllProperty().observe(this, Observer<List<Property>> {
+        mainViewModel.getAllProperty().observe(this, Observer<List<Property>> {
             updateView(it)
         })
     }

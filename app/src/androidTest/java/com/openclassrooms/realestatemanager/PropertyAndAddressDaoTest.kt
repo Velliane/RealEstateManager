@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
-import com.openclassrooms.realestatemanager.property.data.PropertyDatabase
+import com.openclassrooms.realestatemanager.data.database.PropertyDatabase
 import com.openclassrooms.realestatemanager.property.Address
 import com.openclassrooms.realestatemanager.property.Property
 import junit.framework.Assert.assertTrue

@@ -16,7 +16,6 @@ import com.openclassrooms.realestatemanager.property.Property
 import com.openclassrooms.realestatemanager.property.model.geocode.Geocode
 import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.setAddressToString
-import com.openclassrooms.realestatemanager.property.data.PropertyViewModel
 
 /**
  * Show the information of the property selected in the ListFragment
@@ -24,7 +23,7 @@ import com.openclassrooms.realestatemanager.property.data.PropertyViewModel
 class DetailsFragment: BaseFragment() {
 
     /** ViewModel */
-    private lateinit var propertyViewModel: PropertyViewModel
+    private lateinit var mainViewModel: MainViewModel
     /** Shared Preferences */
     private lateinit var sharedPreferences: SharedPreferences
     /** View */
@@ -58,7 +57,7 @@ class DetailsFragment: BaseFragment() {
         propertyId = sharedPreferences.getString(Constants.PREF_ID_PROPERTY, "")!!
 
         bindViews(view)
-        propertyViewModel = configurePropertyViewModel()
+        mainViewModel = configurePropertyViewModel()
         getPropertyFromId(propertyId)
         getAddressOfProperty(propertyId)
 
@@ -98,13 +97,13 @@ class DetailsFragment: BaseFragment() {
      * Get the property from the PropertyDatabase
      */
     private fun getPropertyFromId(id: String){
-        propertyViewModel.getPropertyFromId(id).observe(this, Observer<Property> {
+        mainViewModel.getPropertyFromId(id).observe(this, Observer<Property> {
             updateGeneralInfo(it)
         })
     }
 
     private fun getAddressOfProperty(id: String){
-        propertyViewModel.getAddressOfOneProperty(id).observe(this, Observer<Address> {
+        mainViewModel.getAddressOfOneProperty(id).observe(this, Observer<Address> {
             updateAddress(it)
             setMapsImage(it)
         })
@@ -112,7 +111,7 @@ class DetailsFragment: BaseFragment() {
 
     private fun setMapsImage(address: Address){
         val key = context!!.getString(R.string.api_key_google)
-        propertyViewModel.getLatLng(address, "country:FR",key).observe(this, Observer<Geocode> {
+        mainViewModel.getLatLng(address, "country:FR",key).observe(this, Observer<Geocode> {
             if(it != null) {
                 val lat = it.results!![0].geometry!!.location!!.lat
                 val lng = it.results!![0].geometry!!.location!!.lng

@@ -21,6 +21,7 @@
     <string name="add_property_title">Ajouter un bien</string>
     <string name="type_apartment">Appartement</string>
     <string name="type_house">Maison</string>
+    <string name="type_any">Tout</string>
     <style name="edit_property_title">Editer un bien</style>
     <string name="details_title_media">Media</string>
     <string name="details_title_description">Description</string>
@@ -43,5 +44,7 @@
     <string name="application_s_logo">Logo de l\'application</string>
     <string name="title_activity_maps">Carte</string>
 
+    <!-- Search -->
+    <string name="search_preview_rooms">entre %1$s et %2$s</string>
 
 </resources>

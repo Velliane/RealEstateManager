@@ -91,4 +91,6 @@ dependencies {
     implementation 'pub.devrel:easypermissions:1.1.1'
     // CARD VIEW
     implementation 'com.android.support:cardview-v7:29.1.1'
+    implementation 'com.appyvet:materialrangebar:1.4.7'
+    implementation 'com.crystal:crystalrangeseekbar:1.1.3'
 }

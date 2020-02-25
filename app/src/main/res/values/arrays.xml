@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="priceRange">
+        <item>0</item>
+        <item>100k</item>
+        <item>200k</item>
+        <item>300k</item>
+        <item>400k</item>
+        <item>500k</item>
+        <item>750k</item>
+        <item>1000k</item>
+        <item>1500k</item>
+        <item>2000k</item>
+    </string-array>
+
+    <string-array name="roomsRange">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+    </string-array>
+</resources>

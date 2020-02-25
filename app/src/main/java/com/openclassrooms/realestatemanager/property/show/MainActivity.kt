@@ -26,7 +26,7 @@ import com.openclassrooms.realestatemanager.login.User
 import com.openclassrooms.realestatemanager.login.UserViewModel
 import com.openclassrooms.realestatemanager.BaseActivity
 import com.openclassrooms.realestatemanager.property.add_edit.EditAddActivity
-import com.openclassrooms.realestatemanager.property.data.PropertyViewModel
+import com.openclassrooms.realestatemanager.search.SearchActivity
 import com.openclassrooms.realestatemanager.settings.SettingsActivity
 import com.openclassrooms.realestatemanager.utils.*
 
@@ -46,7 +46,7 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
     private lateinit var bottomNavigationView: BottomNavigationView
     /** ViewModel */
     private lateinit var userViewModel: UserViewModel
-    private lateinit var propertyViewModel: PropertyViewModel
+    private lateinit var mainViewModel: MainViewModel
     /** Header Views */
     private lateinit var photo: ImageView
     private lateinit var name: TextView
@@ -68,13 +68,13 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
         configureDrawerLayout()
         configureViewModel()
 //        if(savedInstanceState == null){
-//            propertyViewModel.updateDatabase(this)
-//        }
+        mainViewModel.updateDatabase()
+
         configureDrawer()
         showFragments(savedInstanceState)
         bottomNavigationView.selectedItemId = R.id.action_list_view
-
     }
+
 
     //-- BOTTOM NAVIGATION AND DRAWER MENU --//
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -110,6 +110,10 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
                 val intent = Intent(this, EditAddActivity::class.java)
                 intent.putExtra(Constants.PROPERTY_ID, "")
                 startActivity(intent)
+                return true
+            }
+            R.id.toolbar_menu_search -> {
+                startActivity(Intent(this, SearchActivity::class.java))
                 return true
             }
         }
@@ -186,8 +190,8 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
     private fun configureViewModel() {
         val viewModelFactory = Injection.provideUserViewModelFactory(this)
         userViewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel::class.java)
-        val propertyViewModelFactory = Injection.providePropertyViewModelFactory(this)
-        propertyViewModel = ViewModelProviders.of(this, propertyViewModelFactory).get(PropertyViewModel::class.java)
+        val propertyViewModelFactory = Injection.provideMainViewModelFactory(this)
+        mainViewModel = ViewModelProviders.of(this, propertyViewModelFactory).get(MainViewModel::class.java)
     }
 
 
@@ -249,8 +253,16 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
         }
     }
 
-
-
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        if(requestCode == 2){
+//            if(resultCode == Activity.RESULT_OK){
+//                val bundle = intent.getBundleExtra("List property")
+//                val list = ArrayList<Property>()
+//                list.addAll(bundle.getParcelableArrayList("List property")!!)
+//            }
+//        }
+//        super.onActivityResult(requestCode, resultCode, data)
+//    }
 
     //-- LOGOUT --//
     private fun logOut() {

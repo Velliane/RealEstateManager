@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.property.data.geocode
+package com.openclassrooms.realestatemanager.property.show.geocode_model
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

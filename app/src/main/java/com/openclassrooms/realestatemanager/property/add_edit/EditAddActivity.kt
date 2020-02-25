@@ -28,16 +28,20 @@ import com.google.android.material.textfield.TextInputEditText
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.openclassrooms.realestatemanager.BaseActivity
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.property.data.PropertyViewModel
+import com.openclassrooms.realestatemanager.data.AddressHelper
+import com.openclassrooms.realestatemanager.data.LinkHelper
+import com.openclassrooms.realestatemanager.data.PropertyHelper
+import com.openclassrooms.realestatemanager.property.show.MainViewModel
 import com.openclassrooms.realestatemanager.property.Address
 import com.openclassrooms.realestatemanager.photos.Photo
 import com.openclassrooms.realestatemanager.property.Property
-import com.openclassrooms.realestatemanager.property.data.AddressHelper
-import com.openclassrooms.realestatemanager.property.data.PropertyHelper
 import com.openclassrooms.realestatemanager.property.show.PhotosAdapter
 import com.openclassrooms.realestatemanager.utils.*
 import org.threeten.bp.LocalDateTime
 import pub.devrel.easypermissions.EasyPermissions
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 /**
  * Add or Edit a Property
@@ -66,9 +70,10 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
     private lateinit var addPhotoBtn: MaterialButton
 
     /** ViewModel */
-    private lateinit var propertyViewModel: PropertyViewModel
+    private lateinit var mainViewModel: MainViewModel
     /** Property Id from DetailsFragment */
     private var propertyId: String = ""
+    private var addressId: String = ""
     /** List of Type for Autocomplete */
     private var typeList: List<String> = ArrayList()
     /** URI of selected image*/
@@ -84,6 +89,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
     private lateinit var photosAdapter: PhotosAdapter
     private lateinit var propertyHelper: PropertyHelper
     private lateinit var addressHelper: AddressHelper
+    private lateinit var linkHelper: LinkHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -93,6 +99,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         typeList = listOf("Apartment", "House", "Loft")
         propertyHelper = PropertyHelper()
         addressHelper = AddressHelper()
+        linkHelper = LinkHelper()
         AndroidThreeTen.init(this)
         bindViews()
         getSaveInstanceState(savedInstanceState)
@@ -100,9 +107,10 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         configureViewModel()
 
         //-- Get Property id from intent --//
-        propertyId = intent.getStringExtra(Constants.PROPERTY_ID)
+        propertyId = intent.getStringExtra(Constants.PROPERTY_ID)!!
         if (propertyId != "") {
             getDataFromDatabase(propertyId)
+            // get address
         }
 
         //-- Set Autocomplete --//
@@ -116,10 +124,10 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
      * @param id The id of the property
      */
     private fun getDataFromDatabase(id: String) {
-        propertyViewModel.getPropertyFromId(id).observe(this, Observer<Property> {
+        mainViewModel.getPropertyFromId(id).observe(this, Observer<Property> {
             updateViewsWithRoomData(it)
         })
-        propertyViewModel.getAddressOfOneProperty(id).observe(this, Observer<Address> {
+        mainViewModel.getAddressOfOneProperty(id).observe(this, Observer<Address> {
             updateAddressWithRoomData(it)
         })
     }
@@ -130,75 +138,84 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v) {
             saveBtn -> {
-
                 if (propertyId == "") {
-                    propertyId = LocalDateTime.now().withNano(0).toString()
+                    propertyId = UUID.randomUUID().toString()
+                    addressId = UUID.randomUUID().toString()
+                }else{
+                    mainViewModel.getAddressOfOneProperty(propertyId).observe(this, Observer {
+                        addressId = it.id_address
+                    })
                 }
-                val property = Property(propertyId, autocompleteType.text.toString(), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), numberBedrooms.text.toString().toInt(), numberBathrooms.text.toString().toInt(), description.text.toString(), true, parseLocalDateTimeToString(LocalDateTime.now()))
-                propertyViewModel.addProperty(property)
-                val addressId = property.id_property + "address"
-                val address = Address(addressId, number.text.toString().toInt(), street.text.toString(), zipCode.text.toString(), city.text.toString(), country.text.toString(), property.id_property)
-                propertyViewModel.addAddress(address)
+                //-- Save Property and Address in Room --//
+                savePropertyAndAddressInRoom()
+                savePropertyAndAddressInFirestore()
 
-                //save photos
-                if (checkPermission()) {
-                    if (imageList.isNotEmpty()) {
-                        for (image in imageList) {
-                            bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, image.uri)
-                            propertyViewModel.saveImageToExternalStorage(bitmap, property.id_property, image.description.toString(), this)
-                            propertyViewModel.saveImageToFirebase(image.uri!!, property.id_property, image.description!!)
-                        }
-                    } else {
-                        requestPermission()
-                        if (imageList.isNotEmpty()) {
-                            for (image in imageList) {
-                                bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, image.uri)
-                                propertyViewModel.saveImageToExternalStorage(bitmap, property.id_property, image.description.toString(), this)
-                                propertyViewModel.saveImageToFirebase(image.uri!!, property.id_property, image.description!!)
-                            }
-                        }
-                    }
+                //-- Manage image --//
+                saveImageInExternalStorageAndFirestore()
 
-
-                }
-
-                val data = Data.Builder().putString(Constants.DATA_USER_NAME, getCurrentUser().displayName).build()
-                NotificationWorker.configureNotification(data)
-                propertyHelper.createProperty(propertyId, autocompleteType.text.toString(), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), 0, 0, description.text.toString(), true, parseLocalDateTimeToString(LocalDateTime.now()))
-                addressHelper.createAddress(propertyId, address)
+                sendNotification()
                 Snackbar.make(layout, "Save complete", Snackbar.LENGTH_SHORT).show()
                 finish()
             }
             addPhotoImg -> {
+                //-- Ask permission and let user select an image from his phone --//
                 if (!EasyPermissions.hasPermissions(this, Constants.PERMS)) {
                     EasyPermissions.requestPermissions(this, "Permission", Constants.RC_PERMISSION_FILES_STORAGE, Constants.PERMS)
                     return
                 }
                 selectAnImageFromThePhone()
             }
-            addPhotoBtn -> {
-                val photo = Photo()
-                desImage = addPhotoTxt.text.toString()
-                if (uriImage != null && desImage != "") {
-                    photo.uri = uriImage
-                    photo.description = desImage
 
-                    imageList.add(photo)
-                    recyclerView.adapter = photosAdapter
-                    photosAdapter.setData(imageList)
-                    photosAdapter.notifyDataSetChanged()
-                } else if (desImage == "") {
-                    Snackbar.make(layout, "Please write a description", Snackbar.LENGTH_SHORT).show()
-                } else {
-                    Snackbar.make(layout, "Please select an image and write a description", Snackbar.LENGTH_SHORT).show()
-                }
-            }
+            addPhotoBtn -> addImageToListAndShowIt()
         }
     }
 
+    //-- MANAGE PROPERTY AND ADDRESS --//
+    private fun savePropertyAndAddressInRoom(){
+        val property = Property(propertyId, autocompleteType.text.toString(), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), numberBedrooms.text.toString().toInt(), numberBathrooms.text.toString().toInt(), description.text.toString(), true, parseLocalDateTimeToString(LocalDateTime.now()))
+        mainViewModel.addProperty(property)
+        val address = Address(addressId, number.text.toString().toInt(), street.text.toString(), zipCode.text.toString(), city.text.toString(), country.text.toString(), propertyId)
+        mainViewModel.addAddress(address)
+
+    }
+
+    private fun savePropertyAndAddressInFirestore(){
+        propertyHelper.createProperty(propertyId, autocompleteType.text.toString(), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), 0, 0, description.text.toString(), true, parseLocalDateTimeToString(LocalDateTime.now()))
+        addressHelper.createAddress(addressId, number.text.toString().toInt(), street.text.toString(), zipCode.text.toString(), city.text.toString(), country.text.toString(), propertyId)
+        val map = HashMap<String, List<String>>()
+        map["property_id"] = listOf(propertyId)
+        linkHelper.addLink(addressId, map)
+    }
+
+
+    //-- NOTIFICATION --//
+    private fun sendNotification(){
+        val data = Data.Builder().putString(Constants.DATA_USER_NAME, getCurrentUser().displayName).build()
+        NotificationWorker.configureNotification(data)
+    }
+
+    //-- MANAGE IMAGE --//
     private fun selectAnImageFromThePhone() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, Constants.RC_CHOOSE_IMAGE)
+    }
+
+    private fun addImageToListAndShowIt(){
+        val photo = Photo()
+        desImage = addPhotoTxt.text.toString()
+        if (uriImage != null && desImage != "") {
+            photo.uri = uriImage
+            photo.description = desImage
+
+            imageList.add(photo)
+            recyclerView.adapter = photosAdapter
+            photosAdapter.setData(imageList)
+            photosAdapter.notifyDataSetChanged()
+        } else if (desImage == "") {
+            Snackbar.make(layout, "Please write a description", Snackbar.LENGTH_SHORT).show()
+        } else {
+            Snackbar.make(layout, "Please select an image and write a description", Snackbar.LENGTH_SHORT).show()
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -210,19 +227,37 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         if (requestCode == Constants.RC_CHOOSE_IMAGE) {
             if (resultCode == Activity.RESULT_OK) {
                 uriImage = data!!.data!!
-
                 Glide.with(this).load(uriImage).into(addPhotoImg)
                 addPhotoBtn.visibility = View.VISIBLE
             } else {
-                //
+                //TODO error message
+            }
+        }
+    }
+
+    private fun saveImageInExternalStorageAndFirestore(){
+        if (checkPermission()) {
+            if (imageList.isNotEmpty()) {
+                for (image in imageList) {
+                    bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, image.uri)
+                    mainViewModel.savePhotos(bitmap, propertyId,  image.description!!, uriImage)
+                }
+            } else {
+                requestPermission()
+                if (imageList.isNotEmpty()) {
+                    for (image in imageList) {
+                        bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, image.uri)
+                        mainViewModel.savePhotos(bitmap, propertyId,  image.description!!, uriImage)
+                    }
+                }
             }
         }
     }
 
     //-- CONFIGURATION --//
     private fun configureViewModel() {
-        val propertyViewModelFactory = Injection.providePropertyViewModelFactory(this)
-        propertyViewModel = ViewModelProviders.of(this, propertyViewModelFactory).get(PropertyViewModel::class.java)
+        val propertyViewModelFactory = Injection.provideMainViewModelFactory(this)
+        mainViewModel = ViewModelProviders.of(this, propertyViewModelFactory).get(MainViewModel::class.java)
       }
 
     private fun bindViews() {
@@ -300,7 +335,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         country.setText(address.country)
     }
 
-    // Request WRITE_EXTERNAL_STORAGE permission //
+    //-- Request WRITE_EXTERNAL_STORAGE permission --//
     private fun checkPermission(): Boolean {
         return ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
     }

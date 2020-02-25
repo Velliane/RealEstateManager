@@ -1,7 +1,8 @@
-package com.openclassrooms.realestatemanager.property.data
+package com.openclassrooms.realestatemanager.data
 
 import androidx.lifecycle.LiveData
 import com.openclassrooms.realestatemanager.property.Address
+import com.openclassrooms.realestatemanager.data.database.AddressDao
 
 class AddressDataRepository(private val addressDao: AddressDao) {
 

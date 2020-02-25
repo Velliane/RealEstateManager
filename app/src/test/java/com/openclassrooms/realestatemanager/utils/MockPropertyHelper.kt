@@ -4,7 +4,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.QuerySnapshot
-import com.openclassrooms.realestatemanager.property.data.PropertyHelper
+import com.openclassrooms.realestatemanager.data.PropertyHelper
 import retrofit2.mock.BehaviorDelegate
 
 class MockPropertyHelper(private val delegate: BehaviorDelegate<PropertyHelper>): PropertyHelper(){

@@ -16,7 +16,6 @@ import com.google.android.libraries.places.api.Places
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.property.Address
 import com.openclassrooms.realestatemanager.property.Property
-import com.openclassrooms.realestatemanager.property.data.PropertyViewModel
 import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.getScreenOrientation
 
@@ -33,7 +32,7 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerCl
     /** FusedLocation */
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     /** ViewModel */
-    private lateinit var propertyViewModel: PropertyViewModel
+    private lateinit var mainViewModel: MainViewModel
     /** Shared Preferences */
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -44,7 +43,7 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerCl
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         Places.initialize(requireActivity(), context!!.getString(R.string.api_key_google))
         sharedPreferences = activity!!.getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE)
-        propertyViewModel = configurePropertyViewModel()
+        mainViewModel = configurePropertyViewModel()
         return view
     }
 
@@ -93,10 +92,10 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerCl
     }
 
     private fun getListOfProperty() {
-        propertyViewModel.getAllProperty().observe(this, Observer<List<Property>> { list ->
+        mainViewModel.getAllProperty().observe(this, Observer<List<Property>> { list ->
             for (property in list) {
-                propertyViewModel.getAddressOfOneProperty(property.id_property).observe(this, Observer<Address> { address ->
-                    propertyViewModel.getLatLng(address, "country:FR", context!!.resources.getString(R.string.api_key_google)).observe(this, Observer {
+                mainViewModel.getAddressOfOneProperty(property.id_property).observe(this, Observer<Address> { address ->
+                    mainViewModel.getLatLng(address, "country:FR", context!!.resources.getString(R.string.api_key_google)).observe(this, Observer {
                         val result = it.results!![0]
                         val location = LatLng(result.geometry!!.location!!.lat!!, result.geometry!!.location!!.lng!!)
                         val markerOptions = MarkerOptions().position(location).title(property.price.toString())

@@ -1,17 +1,17 @@
 package com.openclassrooms.realestatemanager.utils
 
 import android.content.Context
-import com.openclassrooms.realestatemanager.property.data.PropertyDatabase
-import com.openclassrooms.realestatemanager.property.data.AddressDataRepository
-import com.openclassrooms.realestatemanager.property.data.geocode.GeocodeRepository
-import com.openclassrooms.realestatemanager.property.data.PropertyDataRepository
+import com.openclassrooms.realestatemanager.data.database.PropertyDatabase
+import com.openclassrooms.realestatemanager.data.AddressDataRepository
+import com.openclassrooms.realestatemanager.property.show.geocode_model.GeocodeRepository
+import com.openclassrooms.realestatemanager.data.PropertyDataRepository
 import com.openclassrooms.realestatemanager.login.UserDataRepository
 import com.openclassrooms.realestatemanager.login.UserViewModelFactory
 import com.openclassrooms.realestatemanager.photos.PhotoDataRepository
-import com.openclassrooms.realestatemanager.photos.PhotoViewModelFactory
-import com.openclassrooms.realestatemanager.property.data.PropertyViewModelFactory
-import com.openclassrooms.realestatemanager.update_database.FirestoreDataRepository
-import com.openclassrooms.realestatemanager.update_database.FirestoreDataViewModelFactory
+import com.openclassrooms.realestatemanager.property.add_edit.EditDataViewModelFactory
+import com.openclassrooms.realestatemanager.property.show.MainViewModelFactory
+import com.openclassrooms.realestatemanager.data.FirestoreDataRepository
+import com.openclassrooms.realestatemanager.data.database.PropertyDao
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
@@ -34,17 +34,24 @@ class Injection {
             return AddressDataRepository(database.addressDao())
         }
 
+        private fun provideFirestoreDataSource(context: Context): FirestoreDataRepository{
+            val database = PropertyDatabase.getInstance(context)
+            return FirestoreDataRepository(database.propertyDao(), database.addressDao())
+        }
+
 
         private fun provideExecutor(): Executor {
             return Executors.newSingleThreadExecutor()
         }
 
-        fun providePropertyViewModelFactory(context: Context): PropertyViewModelFactory {
+        fun provideMainViewModelFactory(context: Context): MainViewModelFactory {
             val propertyDataRepository = providePropertyDataSource(context)
             val addressDataRepository = provideAddressDataSource(context)
             val executor = provideExecutor()
             val geocodeRepository = GeocodeRepository()
-            return PropertyViewModelFactory(propertyDataRepository, addressDataRepository, geocodeRepository, executor)
+            val firestoreDataRepository = provideFirestoreDataSource(context)
+            val photoDataRepository = PhotoDataRepository()
+            return MainViewModelFactory(context, propertyDataRepository, addressDataRepository, geocodeRepository, firestoreDataRepository, photoDataRepository, executor)
         }
 
         fun provideUserViewModelFactory(context: Context): UserViewModelFactory {
@@ -53,14 +60,13 @@ class Injection {
             return UserViewModelFactory(userDataRepository, executor)
         }
 
-        fun provideFirestoreDataViewModelFactory(): FirestoreDataViewModelFactory {
-            val firestoreDataRepository = FirestoreDataRepository()
-            return  FirestoreDataViewModelFactory(firestoreDataRepository)
+        fun provideEditDataViewModelFactory(context: Context): EditDataViewModelFactory {
+            val propertyDataRepository = providePropertyDataSource(context)
+            val addressDataRepository = provideAddressDataSource(context)
+            val executor = provideExecutor()
+            val photoDataRepository = PhotoDataRepository()
+            return EditDataViewModelFactory(context, propertyDataRepository, addressDataRepository, photoDataRepository, executor)
         }
 
-        fun providePhotoDataViewModelFactory(): PhotoViewModelFactory {
-            val photoDataRepository = PhotoDataRepository()
-            return PhotoViewModelFactory(photoDataRepository)
-        }
     }
 }
