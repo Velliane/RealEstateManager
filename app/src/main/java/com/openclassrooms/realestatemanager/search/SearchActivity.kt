@@ -1,15 +1,14 @@
 package com.openclassrooms.realestatemanager.search
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProviders
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.utils.constructQueryResearch
+import com.openclassrooms.realestatemanager.utils.Injection
 import kotlinx.android.synthetic.main.activity_search.*
 
 
@@ -20,53 +19,52 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var rangeRooms: CrystalRangeSeekbar
     private lateinit var roomsPreview: TextView
 
+    /** ViewModel */
+    private lateinit var searchViewModel: SearchViewModel
+
+    private var roomsMinValue = 1
+    private var roomsMaxValue = 8
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
+        title = getString(R.string.search_button)
 
-        spinnerPrice = findViewById(R.id.search_spinner_price)
-        spinnerPrice.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getPriceRangeList())
-        spinnerType = findViewById(R.id.search_spinner_type)
-        spinnerType.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, getTypesList())
+        //-- Configure ViewModel --//
+        val searchViewModelFactory = Injection.provideSearchViewModel(this)
+        searchViewModel = ViewModelProviders.of(this, searchViewModelFactory).get(SearchViewModel::class.java)
 
-        rangeRooms = findViewById(R.id.search_rooms_seek_bar)
-        roomsPreview = findViewById(R.id.rooms_view)
-        rangeRooms.setOnRangeSeekbarChangeListener { minValue, maxValue ->
-            val text = getString(R.string.search_preview_rooms, minValue.toString(), maxValue.toString())
-            roomsPreview.text = text
-        }
+        bindViews()
+        manageRangeSeekBar()
 
         search_button.setOnClickListener(this)
 
     }
 
-    private fun getTypesList(): List<String> {
-        val list = ArrayList<String>()
-        for (type in TypeEnum.values()) {
-            val text = getString(type.res)
-            list.add(text)
-        }
-        return list
+    private fun bindViews() {
+        //-- Spinners --//
+        spinnerPrice = findViewById(R.id.search_spinner_price)
+        spinnerPrice.adapter = PriceRangeSpinnerAdapter(this, searchViewModel.getPriceRangeList())
+        spinnerType = findViewById(R.id.search_spinner_type)
+        spinnerType.adapter = TypeEnumSpinnerAdapter(this, searchViewModel.getTypesList())
+        //-- RangeSeekBars --//
+        rangeRooms = findViewById(R.id.search_rooms_seek_bar)
+        roomsPreview = findViewById(R.id.rooms_view)
     }
 
-    private fun getPriceRangeList(): List<String> {
-        val list = ArrayList<String>()
-        for (price in PriceRangeEnum.values()) {
-            val text = price.priceRange
-            list.add(text)
+    private fun manageRangeSeekBar() {
+        rangeRooms.setOnRangeSeekbarChangeListener { minValue, maxValue ->
+            roomsMinValue = minValue.toInt()
+            roomsMaxValue = maxValue.toInt()
+            val text = getString(R.string.search_preview_rooms, minValue.toString(), maxValue.toString())
+            roomsPreview.text = text
         }
-        return list
     }
 
     override fun onClick(item: View?) {
         if (item == search_button) {
-            val priceRange = ArrayList<Int>()
-            val priceEnum: PriceRangeEnum = PriceRangeEnum.getPriceRangeEnumByValue(spinnerPrice.selectedItem.toString())
-            priceRange.add(priceEnum.minValue)
-            priceRange.add(priceEnum.maxValue)
+            searchViewModel.searchDatabase(spinnerPrice.selectedItem.toString(), spinnerType.selectedItem.toString(), roomsMinValue, roomsMaxValue)
 
-            val query = constructQueryResearch(priceRange)
-            Log.d("QUERY", query.toString())
 //            val propertyViewModelFactory = Injection.providePropertyViewModelFactory(this)
 //            val propertyViewModel = ViewModelProviders.of(this, propertyViewModelFactory).get(PropertyViewModel::class.java)
 //            propertyViewModel.searchInDatabase(query).observe(this, Observer {

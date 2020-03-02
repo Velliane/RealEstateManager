@@ -39,21 +39,6 @@ fun compareByDate(property1: Property, property2: Property): Property {
     }
 }
 
-fun constructQueryResearch(priceRange: ArrayList<Int>): SimpleSQLiteQuery {
-
-    var query = String()
-    query += "SELECT * FROM Property"
-
-    if(priceRange.isNotEmpty()){
-        val min = priceRange[0]
-        val max = priceRange[1]
-        query += " WHERE price >= :$min AND price <= :$max"
-        Log.d("QUERY", query)
-    }
-
-    return SimpleSQLiteQuery(query)
-}
-
 
 
 

@@ -12,6 +12,7 @@ import com.openclassrooms.realestatemanager.property.add_edit.EditDataViewModelF
 import com.openclassrooms.realestatemanager.property.show.MainViewModelFactory
 import com.openclassrooms.realestatemanager.data.FirestoreDataRepository
 import com.openclassrooms.realestatemanager.data.database.PropertyDao
+import com.openclassrooms.realestatemanager.search.SearchViewModelFactory
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 
@@ -68,5 +69,8 @@ class Injection {
             return EditDataViewModelFactory(context, propertyDataRepository, addressDataRepository, photoDataRepository, executor)
         }
 
+        fun provideSearchViewModel(context: Context): SearchViewModelFactory {
+            return SearchViewModelFactory(context)
+        }
     }
 }

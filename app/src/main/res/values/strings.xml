@@ -47,5 +47,6 @@
 
     <!-- Search -->
     <string name="search_preview_rooms">between %1$s and %2$s</string>
+    <string name="search_button">Search</string>
 
 </resources>

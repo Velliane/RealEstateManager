@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.search
 
 enum class PriceRangeEnum(val priceRange: String, val minValue: Int, val maxValue: Int) {
 
+    ANY("any", 0, 0),
     LESS_THAN_HUNDRED("< 100k", 0, 100000),
     BETWEEN_HUNDRED_TWOHUNDRED("100k < 200k", 100000, 200000),
     BETWEEN_TWOHUNDER_THREEHUNDRED("200k < 300k", 200000, 300000),

@@ -13,6 +13,7 @@ import com.openclassrooms.realestatemanager.property.Property
 import com.openclassrooms.realestatemanager.property.model.geocode.Geocode
 import com.openclassrooms.realestatemanager.data.FirestoreDataRepository
 import com.openclassrooms.realestatemanager.data.PropertyDataRepository
+import com.openclassrooms.realestatemanager.photos.Photo
 import com.openclassrooms.realestatemanager.utils.compareByDate
 import com.openclassrooms.realestatemanager.utils.setAddressToString
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +24,7 @@ class MainViewModel(private val context: Context, private val propertyDataReposi
 
     val propertiesLiveData = MutableLiveData<List<Property>>()
     val addressLiveData = MutableLiveData<Address>()
+    val listPhotosLiveData = MutableLiveData<List<Photo>>()
 
     //-- PROPERTIES --//
     fun getAllProperty(): LiveData<List<Property>>{
@@ -66,4 +68,7 @@ class MainViewModel(private val context: Context, private val propertyDataReposi
         }
     }
 
+    fun getListOfPhotos(id_property: String){
+        listPhotosLiveData.value = photoDataRepository.getListOfPhotos(id_property)
+    }
 }

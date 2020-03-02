@@ -8,6 +8,7 @@ import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.property.add_edit.EditAddActivity
@@ -34,6 +35,9 @@ class DetailsFragment: BaseFragment() {
     private lateinit var nbrBathrooms: TextView
     private lateinit var addressView: TextView
     private lateinit var map: ImageView
+    /** RecyclerView */
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var photosAdapter: PhotosAdapter
 
     /** Property id */
     private var propertyId: String = ""
@@ -58,8 +62,15 @@ class DetailsFragment: BaseFragment() {
 
         bindViews(view)
         mainViewModel = configurePropertyViewModel()
+        photosAdapter = PhotosAdapter(requireContext())
         getPropertyFromId(propertyId)
         getAddressOfProperty(propertyId)
+        mainViewModel.getListOfPhotos(propertyId)
+        mainViewModel.listPhotosLiveData.observe(this, Observer {
+            recyclerView.adapter = photosAdapter
+            photosAdapter.setData(it)
+            photosAdapter.notifyDataSetChanged()
+        })
 
         return view
     }
@@ -74,6 +85,7 @@ class DetailsFragment: BaseFragment() {
         nbrBathrooms = view.findViewById(R.id.details_bathrooms)
         addressView = view.findViewById(R.id.details_address)
         map = view.findViewById(R.id.details_map)
+        recyclerView = view.findViewById(R.id.detail_photos)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {

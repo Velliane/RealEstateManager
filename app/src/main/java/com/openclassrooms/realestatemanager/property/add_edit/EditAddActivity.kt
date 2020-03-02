@@ -78,8 +78,6 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
     private var typeList: List<String> = ArrayList()
     /** URI of selected image*/
     private lateinit var uriImage: Uri
-    /** Bitmap */
-    private lateinit var bitmap: Bitmap
     /** Image's description*/
     private lateinit var desImage: String
     /** Image List */
@@ -113,6 +111,11 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
             // get address
         }
 
+        if(!checkPermission()){
+            requestPermission()
+        }
+
+
         //-- Set Autocomplete --//
         val adapter = ArrayAdapter<String>(this, android.R.layout.select_dialog_item, typeList)
         autocompleteType.threshold = 1
@@ -138,24 +141,8 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v) {
             saveBtn -> {
-                //bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, image.uri)
                 val property = Property(propertyId, autocompleteType.text.toString(), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), numberBedrooms.text.toString().toInt(), numberBathrooms.text.toString().toInt(), description.text.toString(), true, parseLocalDateTimeToString(LocalDateTime.now()))
                 editDataViewModel.save(propertyId, property,number.text.toString().toInt(), street.text.toString(), zipCode.text.toString(), city.text.toString(), country.text.toString(), imageList)
-//                if (propertyId == "") {
-//                    propertyId = UUID.randomUUID().toString()
-//                    addressId = UUID.randomUUID().toString()
-//                }else{
-//                    editDataViewModel.getAddressOfOneProperty(propertyId).observe(this, Observer {
-//                        addressId = it.id_address
-//                    })
-//                }
-                //-- Save Property and Address in Room --//
-                //savePropertyAndAddressInRoom()
-                //savePropertyAndAddressInFirestore()
-
-                //-- Manage image --//
-                //saveImageInExternalStorageAndFirestore()
-
                 sendNotification()
                 Snackbar.make(layout, "Save complete", Snackbar.LENGTH_SHORT).show()
                 finish()
@@ -172,24 +159,6 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
             addPhotoBtn -> addImageToListAndShowIt()
         }
     }
-
-    //-- MANAGE PROPERTY AND ADDRESS --//
-    private fun savePropertyAndAddressInRoom(){
-        val property = Property(propertyId, autocompleteType.text.toString(), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), numberBedrooms.text.toString().toInt(), numberBathrooms.text.toString().toInt(), description.text.toString(), true, parseLocalDateTimeToString(LocalDateTime.now()))
-        editDataViewModel.addProperty(property)
-        val address = Address(addressId, number.text.toString().toInt(), street.text.toString(), zipCode.text.toString(), city.text.toString(), country.text.toString(), propertyId)
-        editDataViewModel.addAddress(address)
-
-    }
-
-    private fun savePropertyAndAddressInFirestore(){
-        //propertyHelper.createProperty(propertyId, autocompleteType.text.toString(), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), 0, 0, description.text.toString(), true, parseLocalDateTimeToString(LocalDateTime.now()))
-        //addressHelper.createAddress(addressId, number.text.toString().toInt(), street.text.toString(), zipCode.text.toString(), city.text.toString(), country.text.toString(), propertyId)
-        val map = HashMap<String, List<String>>()
-        map["property_id"] = listOf(propertyId)
-        linkHelper.addLink(addressId, map)
-    }
-
 
     //-- NOTIFICATION --//
     private fun sendNotification(){
@@ -234,25 +203,6 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
                 addPhotoBtn.visibility = View.VISIBLE
             } else {
                 //TODO error message
-            }
-        }
-    }
-
-    private fun saveImageInExternalStorageAndFirestore(){
-        if (checkPermission()) {
-            if (imageList.isNotEmpty()) {
-                for (image in imageList) {
-                    bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, image.uri)
-                    editDataViewModel.savePhotos(bitmap, propertyId,  image.description!!, uriImage)
-                }
-            } else {
-                requestPermission()
-                if (imageList.isNotEmpty()) {
-                    for (image in imageList) {
-                        bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, image.uri)
-                        editDataViewModel.savePhotos(bitmap, propertyId,  image.description!!, uriImage)
-                    }
-                }
             }
         }
     }

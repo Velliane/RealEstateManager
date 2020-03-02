@@ -14,7 +14,7 @@ class UserViewModel(private val userDataRepository: UserDataRepository, private 
         executor.execute { userDataRepository.addUser(user) }
     }
 
-    fun udpateUser(user: User){
+    fun updateUser(user: User){
         executor.execute { userDataRepository.updateUser(user) }
     }
 
