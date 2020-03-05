@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.property.show
+package com.openclassrooms.realestatemanager.show.list
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -9,12 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.property.Property
+import com.openclassrooms.realestatemanager.show.BaseFragment
+import com.openclassrooms.realestatemanager.show.detail.DetailsFragment
 import com.openclassrooms.realestatemanager.utils.Constants
+import com.openclassrooms.realestatemanager.utils.Injection
 import com.openclassrooms.realestatemanager.utils.getScreenOrientation
 
 /**
@@ -29,7 +32,7 @@ class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener {
     /** RecyclerView */
     private lateinit var recyclerView: RecyclerView
     /** ViewModel */
-    private lateinit var mainViewModel: MainViewModel
+    private lateinit var mainViewModel: ListViewModel
     /** RecyclerView Adapter */
     private lateinit var adapter: ListPropertyAdapter
     /** No Data TextView */
@@ -49,13 +52,16 @@ class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener {
         recyclerView = view.findViewById(R.id.fragment_list_recycler_view)
         recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.HORIZONTAL))
         recyclerView.layoutManager = LinearLayoutManager(activity!!.applicationContext)
-        adapter = ListPropertyAdapter(this)
+        adapter = ListPropertyAdapter(this, context!!)
         noDataTxt = view.findViewById(R.id.fragment_list_no_data)
 
         sharedPreferences = activity!!.getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE)
 
-        mainViewModel = configurePropertyViewModel()
-        getListOfProperty()
+        val viewModelFactory = Injection.provideViewModelFactory(requireContext())
+        mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(ListViewModel::class.java)
+        if(checkExternalStoragePermissions()) {
+            getListOfProperty()
+        }
 
         return view
     }
@@ -72,7 +78,7 @@ class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener {
      * Observe the LiveData from PropertyViewModel to get the list of all the properties saved in the RoomDatabase
      */
     private fun getListOfProperty() {
-        mainViewModel.getAllProperty().observe(this, Observer<List<Property>> {
+        mainViewModel.propertiesLiveData.observe(this, Observer<List<PropertyModelForList>> {
             updateView(it)
         })
     }
@@ -81,8 +87,8 @@ class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener {
      * Update the data of the RecyclerView with the list of properties
      * List<Property>: the list of Property get from the PropertyDatabase
      */
-    private fun updateView(properties: List<Property>) {
-        if(properties.isEmpty()){
+    private fun updateView(properties: List<PropertyModelForList>?) {
+        if(properties == null || properties.isEmpty()){
             recyclerView.visibility = View.INVISIBLE
             noDataTxt.visibility = View.VISIBLE
 

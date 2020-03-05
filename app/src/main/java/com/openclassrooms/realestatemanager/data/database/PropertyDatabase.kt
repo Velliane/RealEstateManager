@@ -6,8 +6,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.openclassrooms.realestatemanager.login.UserDao
 import com.openclassrooms.realestatemanager.login.User
-import com.openclassrooms.realestatemanager.property.Address
-import com.openclassrooms.realestatemanager.property.Property
+import com.openclassrooms.realestatemanager.add_edit.Address
+import com.openclassrooms.realestatemanager.add_edit.Property
 
 @Database(
         entities = [Property::class, User::class, Address::class],

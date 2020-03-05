@@ -10,7 +10,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.work.*
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.property.add_edit.EditAddActivity
+import com.openclassrooms.realestatemanager.add_edit.EditAddActivity
 
 
 class NotificationWorker(context: Context, workerParameters: WorkerParameters): Worker(context, workerParameters){

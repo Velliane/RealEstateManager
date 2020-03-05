@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.property.show
+package com.openclassrooms.realestatemanager.show.detail
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.photos.Photo
+import com.openclassrooms.realestatemanager.add_edit.Photo
 
 class PhotosAdapter(private val context: Context): RecyclerView.Adapter<PhotosAdapter.PhotosViewHolder>() {
 
@@ -32,7 +32,12 @@ class PhotosAdapter(private val context: Context): RecyclerView.Adapter<PhotosAd
     override fun getItemCount(): Int = data.size
 
     override fun onBindViewHolder(holder: PhotosViewHolder, position: Int) {
-        holder.bind(data[position])
+        if (data.isNotEmpty()){
+            holder.bind(data[position])
+        }else{
+            Glide.with(context).load(R.drawable.no_image_available_64).centerCrop().into(holder.image)
+        }
+
     }
 
     inner class PhotosViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -41,6 +46,7 @@ class PhotosAdapter(private val context: Context): RecyclerView.Adapter<PhotosAd
         val description = itemView.findViewById<TextView>(R.id.item_photo_txt)
 
         fun bind(photo: Photo){
+
             Glide.with(context).load(photo.uri).centerCrop().into(image)
             description.text = photo.description
         }

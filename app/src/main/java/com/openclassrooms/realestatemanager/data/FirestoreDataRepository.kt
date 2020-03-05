@@ -3,8 +3,8 @@ package com.openclassrooms.realestatemanager.data
 import android.util.Log
 import com.openclassrooms.realestatemanager.data.database.AddressDao
 import com.openclassrooms.realestatemanager.data.database.PropertyDao
-import com.openclassrooms.realestatemanager.property.Address
-import com.openclassrooms.realestatemanager.property.Property
+import com.openclassrooms.realestatemanager.add_edit.Address
+import com.openclassrooms.realestatemanager.add_edit.Property
 import com.openclassrooms.realestatemanager.utils.compareByDate
 
 /**

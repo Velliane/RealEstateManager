@@ -5,8 +5,8 @@ import androidx.room.Room
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.runner.AndroidJUnit4
 import com.openclassrooms.realestatemanager.data.database.PropertyDatabase
-import com.openclassrooms.realestatemanager.property.Address
-import com.openclassrooms.realestatemanager.property.Property
+import com.openclassrooms.realestatemanager.add_edit.Address
+import com.openclassrooms.realestatemanager.add_edit.Property
 import junit.framework.Assert.assertTrue
 import org.junit.After
 import org.junit.Before

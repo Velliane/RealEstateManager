@@ -6,7 +6,7 @@ import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.property.show.MainActivity
+import com.openclassrooms.realestatemanager.show.MainActivity
 import com.openclassrooms.realestatemanager.login.LoginActivity
 
 /**

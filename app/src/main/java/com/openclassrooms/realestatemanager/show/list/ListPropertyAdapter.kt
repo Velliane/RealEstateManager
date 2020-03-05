@@ -1,5 +1,6 @@
-package com.openclassrooms.realestatemanager.property.show
+package com.openclassrooms.realestatemanager.show.list
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,13 +10,13 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.property.Property
 
-class ListPropertyAdapter(private val listener: OnItemClickListener) : ListAdapter<Property, ListPropertyAdapter.ListViewHolder>(PropertyAdapterDiffCallback()) {
+class ListPropertyAdapter(private val listener: OnItemClickListener, private val context: Context) : ListAdapter<PropertyModelForList, ListPropertyAdapter.ListViewHolder>(PropertyAdapterDiffCallback()) {
 
 
-    private var data: List<Property> = ArrayList()
+    private var data: List<PropertyModelForList> = ArrayList()
     private lateinit var onItemClickListener: OnItemClickListener
 
 
@@ -23,7 +24,7 @@ class ListPropertyAdapter(private val listener: OnItemClickListener) : ListAdapt
         fun onItemClicked(id: String, position: Int)
     }
 
-    fun setData(newData: List<Property>) {
+    fun setData(newData: List<PropertyModelForList>) {
         data = newData
         notifyDataSetChanged()
     }
@@ -52,24 +53,30 @@ class ListPropertyAdapter(private val listener: OnItemClickListener) : ListAdapt
         var container: ConstraintLayout = itemView.findViewById(R.id.item_list_container)
 
 
-        fun bind(property: Property) {
+        fun bind(property: PropertyModelForList) {
 
             type.text = property.type
-            price.text = property.price.toString()
-            //location.setText("Unknown")
+            price.text = property.price
+            val propertyPhoto = property.photo
+            if(propertyPhoto != null){
+                Glide.with(context).load(propertyPhoto.uri).centerCrop().into(photo)
+            }else{
+                Glide.with(context).load(R.drawable.no_image_available_64).centerCrop().into(photo)
+            }
+            location.text = property.location
             itemView.setOnClickListener {
-                onItemClickListener.onItemClicked(property.id_property, adapterPosition)
+                onItemClickListener.onItemClicked(property.propertyId, adapterPosition)
             }
         }
     }
 
-    private class PropertyAdapterDiffCallback: DiffUtil.ItemCallback<Property>() {
+    private class PropertyAdapterDiffCallback: DiffUtil.ItemCallback<PropertyModelForList>() {
 
-        override fun areItemsTheSame(oldItem: Property, newItem: Property): Boolean {
+        override fun areItemsTheSame(oldItem: PropertyModelForList, newItem: PropertyModelForList): Boolean {
             return false
         }
 
-        override fun areContentsTheSame(oldItem: Property, newItem: Property): Boolean {
+        override fun areContentsTheSame(oldItem: PropertyModelForList, newItem: PropertyModelForList): Boolean {
             return false
         }
     }

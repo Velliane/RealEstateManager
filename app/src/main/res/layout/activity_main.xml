@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        tools:context=".property.show.MainActivity">
+        tools:context=".show.MainActivity">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/activity_main_bottom_navigation"

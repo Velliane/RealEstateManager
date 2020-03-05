@@ -3,15 +3,11 @@ package com.openclassrooms.realestatemanager.utils
 import android.content.Context
 import com.openclassrooms.realestatemanager.data.database.PropertyDatabase
 import com.openclassrooms.realestatemanager.data.AddressDataRepository
-import com.openclassrooms.realestatemanager.property.show.geocode_model.GeocodeRepository
+import com.openclassrooms.realestatemanager.show.geocode_model.GeocodeRepository
 import com.openclassrooms.realestatemanager.data.PropertyDataRepository
 import com.openclassrooms.realestatemanager.login.UserDataRepository
-import com.openclassrooms.realestatemanager.login.UserViewModelFactory
-import com.openclassrooms.realestatemanager.photos.PhotoDataRepository
-import com.openclassrooms.realestatemanager.property.add_edit.EditDataViewModelFactory
-import com.openclassrooms.realestatemanager.property.show.MainViewModelFactory
+import com.openclassrooms.realestatemanager.data.PhotoDataRepository
 import com.openclassrooms.realestatemanager.data.FirestoreDataRepository
-import com.openclassrooms.realestatemanager.data.database.PropertyDao
 import com.openclassrooms.realestatemanager.search.SearchViewModelFactory
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
@@ -45,29 +41,17 @@ class Injection {
             return Executors.newSingleThreadExecutor()
         }
 
-        fun provideMainViewModelFactory(context: Context): MainViewModelFactory {
+        fun provideViewModelFactory(context: Context): ViewModelFactory {
             val propertyDataRepository = providePropertyDataSource(context)
             val addressDataRepository = provideAddressDataSource(context)
+            val userDataRepository = provideUserDataSource(context)
             val executor = provideExecutor()
             val geocodeRepository = GeocodeRepository()
             val firestoreDataRepository = provideFirestoreDataSource(context)
             val photoDataRepository = PhotoDataRepository()
-            return MainViewModelFactory(context, propertyDataRepository, addressDataRepository, geocodeRepository, firestoreDataRepository, photoDataRepository, executor)
+            return ViewModelFactory(context, userDataRepository, propertyDataRepository, addressDataRepository, geocodeRepository, firestoreDataRepository, photoDataRepository, executor)
         }
 
-        fun provideUserViewModelFactory(context: Context): UserViewModelFactory {
-            val userDataRepository = provideUserDataSource(context)
-            val executor = provideExecutor()
-            return UserViewModelFactory(userDataRepository, executor)
-        }
-
-        fun provideEditDataViewModelFactory(context: Context): EditDataViewModelFactory {
-            val propertyDataRepository = providePropertyDataSource(context)
-            val addressDataRepository = provideAddressDataSource(context)
-            val executor = provideExecutor()
-            val photoDataRepository = PhotoDataRepository()
-            return EditDataViewModelFactory(context, propertyDataRepository, addressDataRepository, photoDataRepository, executor)
-        }
 
         fun provideSearchViewModel(context: Context): SearchViewModelFactory {
             return SearchViewModelFactory(context)

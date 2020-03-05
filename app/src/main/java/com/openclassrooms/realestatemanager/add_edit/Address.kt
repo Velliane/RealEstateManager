@@ -1,7 +1,8 @@
-package com.openclassrooms.realestatemanager.property
+package com.openclassrooms.realestatemanager.add_edit
 
 import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
+import com.openclassrooms.realestatemanager.add_edit.Property
 
 @Entity
 (

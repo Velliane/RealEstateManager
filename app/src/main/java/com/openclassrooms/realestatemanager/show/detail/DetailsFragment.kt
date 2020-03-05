@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.property.show
+package com.openclassrooms.realestatemanager.show.detail
 
 import android.content.Context
 import android.content.Intent
@@ -8,14 +8,18 @@ import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.property.add_edit.EditAddActivity
-import com.openclassrooms.realestatemanager.property.Address
-import com.openclassrooms.realestatemanager.property.Property
+import com.openclassrooms.realestatemanager.add_edit.EditAddActivity
+import com.openclassrooms.realestatemanager.add_edit.Address
+import com.openclassrooms.realestatemanager.add_edit.Property
 import com.openclassrooms.realestatemanager.property.model.geocode.Geocode
+import com.openclassrooms.realestatemanager.show.BaseFragment
+import com.openclassrooms.realestatemanager.show.MainViewModel
 import com.openclassrooms.realestatemanager.utils.Constants
+import com.openclassrooms.realestatemanager.utils.Injection
 import com.openclassrooms.realestatemanager.utils.setAddressToString
 
 /**
@@ -23,8 +27,8 @@ import com.openclassrooms.realestatemanager.utils.setAddressToString
  */
 class DetailsFragment: BaseFragment() {
 
-    /** ViewModel */
-    private lateinit var mainViewModel: MainViewModel
+
+
     /** Shared Preferences */
     private lateinit var sharedPreferences: SharedPreferences
     /** View */
@@ -38,18 +42,14 @@ class DetailsFragment: BaseFragment() {
     /** RecyclerView */
     private lateinit var recyclerView: RecyclerView
     private lateinit var photosAdapter: PhotosAdapter
-
+    private lateinit var viewModel: DetailViewModel
     /** Property id */
     private var propertyId: String = ""
 
     companion object{
 
         fun newInstance(): DetailsFragment {
-            val fragment = DetailsFragment()
-//            val args = Bundle()
-//            args.putString(Constants.PROPERTY_ID, id)
-//            fragment.arguments = args
-            return fragment
+            return DetailsFragment()
         }
     }
 
@@ -61,12 +61,14 @@ class DetailsFragment: BaseFragment() {
         propertyId = sharedPreferences.getString(Constants.PREF_ID_PROPERTY, "")!!
 
         bindViews(view)
-        mainViewModel = configurePropertyViewModel()
+        val viewModelFactory = Injection.provideViewModelFactory(requireContext())
+        viewModel =  ViewModelProviders.of(this, viewModelFactory).get(DetailViewModel::class.java)
+
         photosAdapter = PhotosAdapter(requireContext())
         getPropertyFromId(propertyId)
         getAddressOfProperty(propertyId)
-        mainViewModel.getListOfPhotos(propertyId)
-        mainViewModel.listPhotosLiveData.observe(this, Observer {
+        viewModel.getListOfPhotos(propertyId)
+        viewModel.listPhotosLiveData.observe(this, Observer {
             recyclerView.adapter = photosAdapter
             photosAdapter.setData(it)
             photosAdapter.notifyDataSetChanged()
@@ -109,13 +111,15 @@ class DetailsFragment: BaseFragment() {
      * Get the property from the PropertyDatabase
      */
     private fun getPropertyFromId(id: String){
-        mainViewModel.getPropertyFromId(id).observe(this, Observer<Property> {
+        viewModel.getPropertyFromId(id)
+        viewModel.propertyLiveData.observe(this, Observer<Property> {
             updateGeneralInfo(it)
         })
     }
 
     private fun getAddressOfProperty(id: String){
-        mainViewModel.getAddressOfOneProperty(id).observe(this, Observer<Address> {
+        viewModel.getAddressOfOneProperty(id)
+        viewModel.addressLiveData.observe(this, Observer<Address> {
             updateAddress(it)
             setMapsImage(it)
         })
@@ -123,14 +127,13 @@ class DetailsFragment: BaseFragment() {
 
     private fun setMapsImage(address: Address){
         val key = context!!.getString(R.string.api_key_google)
-        mainViewModel.getLatLng(address, "country:FR",key).observe(this, Observer<Geocode> {
+        viewModel.getLatLng(address, "country:FR",key).observe(this, Observer<Geocode> {
             if(it != null) {
                 val lat = it.results!![0].geometry!!.location!!.lat
                 val lng = it.results!![0].geometry!!.location!!.lng
-                val url = "$lat,$lng"
-                val url2 = "https://maps.googleapis.com/maps/api/staticmap?zoom=13&size=300x300&maptype=roadmap\n" +
+                val url = "https://maps.googleapis.com/maps/api/staticmap?zoom=13&size=300x300&maptype=roadmap\n" +
                         "&key=$key&markers=color:blue%7Clabel:S%7C$lat,$lng"
-                Glide.with(this).load(url2).into(map)
+                Glide.with(this).load(url).into(map)
             }else{
                 //TODO default image
             }
@@ -146,6 +149,7 @@ class DetailsFragment: BaseFragment() {
         nbrRooms.text = property.rooms_nbr.toString()
         nrbBedrooms.text = property.bed_nbr.toString()
         nbrBathrooms.text = property.bath_nbr.toString()
+
     }
 
     private fun updateAddress(address: Address) {

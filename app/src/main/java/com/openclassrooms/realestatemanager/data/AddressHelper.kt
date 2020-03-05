@@ -2,7 +2,7 @@ package com.openclassrooms.realestatemanager.data
 
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.*
-import com.openclassrooms.realestatemanager.property.Address
+import com.openclassrooms.realestatemanager.add_edit.Address
 import com.openclassrooms.realestatemanager.utils.Constants
 import kotlinx.coroutines.tasks.await
 

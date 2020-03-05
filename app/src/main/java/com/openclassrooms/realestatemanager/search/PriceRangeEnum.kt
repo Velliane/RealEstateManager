@@ -11,9 +11,5 @@ enum class PriceRangeEnum(val priceRange: String, val minValue: Int, val maxValu
     BETWEEN_FIVEHUNDRED_SIXHUNDRED("500k < 600k", 500000, 600000),
     BETWEEN_SIXHUNDRED_SEVENHUNDRED("600k < 700k", 600000, 700000);
 
-    companion object {
-        fun getPriceRangeEnumByValue(priceRange: String) = valueOf(priceRange)
-    }
-
 }
 

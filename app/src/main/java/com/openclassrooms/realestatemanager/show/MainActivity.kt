@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.property.show
+package com.openclassrooms.realestatemanager.show
 
 import android.content.Context
 import android.content.Intent
@@ -25,9 +25,12 @@ import com.openclassrooms.realestatemanager.login.LoginActivity
 import com.openclassrooms.realestatemanager.login.User
 import com.openclassrooms.realestatemanager.login.UserViewModel
 import com.openclassrooms.realestatemanager.BaseActivity
-import com.openclassrooms.realestatemanager.property.add_edit.EditAddActivity
+import com.openclassrooms.realestatemanager.add_edit.EditAddActivity
 import com.openclassrooms.realestatemanager.search.SearchActivity
 import com.openclassrooms.realestatemanager.settings.SettingsActivity
+import com.openclassrooms.realestatemanager.show.detail.DetailsFragment
+import com.openclassrooms.realestatemanager.show.list.ListFragment
+import com.openclassrooms.realestatemanager.show.list.ListPropertyAdapter
 import com.openclassrooms.realestatemanager.utils.*
 
 /**
@@ -37,19 +40,24 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
 
     /** Toolbar*/
     private lateinit var toolbar: Toolbar
+
     /** Drawer */
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var drawerMenu: NavigationView
+
     /** Boolean isTablet */
     private var isLandscape: Boolean = false
+
     /**Bottom Navigation View */
     private lateinit var bottomNavigationView: BottomNavigationView
+
     /** ViewModel */
-    private lateinit var userViewModel: UserViewModel
     private lateinit var mainViewModel: MainViewModel
+
     /** Header Views */
     private lateinit var photo: ImageView
     private lateinit var name: TextView
+
     /** Shared Preferences */
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -64,15 +72,15 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
         sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE)
 
         //-- Configuration --//
+        configureViewModel()
         bindViews()
         configureDrawerLayout()
-        configureViewModel()
 //        if(savedInstanceState == null){
         mainViewModel.updateDatabase()
-
         configureDrawer()
         showFragments(savedInstanceState)
         bottomNavigationView.selectedItemId = R.id.action_list_view
+
     }
 
 
@@ -177,7 +185,7 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
         } else {
             //-- If not connected, get users' information from Room --//
             val id = sharedPreferences.getString(Constants.PREF_ID_USER, "")
-            userViewModel.getUserById(id!!).observe(this, Observer<User> {
+            mainViewModel.getUserById(id!!).observe(this, Observer<User> {
                 if (it.photo != null) {
                     Glide.with(this).load(it.photo).apply(RequestOptions.circleCropTransform()).centerCrop().into(photo)
                 }
@@ -188,10 +196,8 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
 
 
     private fun configureViewModel() {
-        val viewModelFactory = Injection.provideUserViewModelFactory(this)
-        userViewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel::class.java)
-        val propertyViewModelFactory = Injection.provideMainViewModelFactory(this)
-        mainViewModel = ViewModelProviders.of(this, propertyViewModelFactory).get(MainViewModel::class.java)
+        val viewModelFactory = Injection.provideViewModelFactory(this)
+        mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
     }
 
 
@@ -202,18 +208,18 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
                 .commit()
     }
 
-    private fun showFragments(savedInstanceState: Bundle?){
-        if(savedInstanceState == null) {
+    private fun showFragments(savedInstanceState: Bundle?) {
+        if (savedInstanceState == null) {
             showListFragment()
             if (isLandscape) {
                 val detailsFragment = DetailsFragment.newInstance()
                 supportFragmentManager.beginTransaction().replace(R.id.container_fragment_details, detailsFragment, "DETAILS").commit()
             }
-        }else{
-            if(isLandscape){
+        } else {
+            if (isLandscape) {
                 val detailsFragment = DetailsFragment.newInstance()
                 supportFragmentManager.beginTransaction().replace(R.id.container_fragment_details, detailsFragment, "DETAILS").commit()
-            }else{
+            } else {
                 val fragment = supportFragmentManager.findFragmentByTag("DETAILS")
                 if (fragment != null) {
                     supportFragmentManager.beginTransaction().remove(fragment).commit()

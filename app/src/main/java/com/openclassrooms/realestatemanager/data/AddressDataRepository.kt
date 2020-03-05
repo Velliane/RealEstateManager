@@ -1,7 +1,7 @@
 package com.openclassrooms.realestatemanager.data
 
 import androidx.lifecycle.LiveData
-import com.openclassrooms.realestatemanager.property.Address
+import com.openclassrooms.realestatemanager.add_edit.Address
 import com.openclassrooms.realestatemanager.data.database.AddressDao
 
 class AddressDataRepository(private val addressDao: AddressDao) {
@@ -14,7 +14,7 @@ class AddressDataRepository(private val addressDao: AddressDao) {
         return addressDao.addAddress(address)
     }
 
-    fun getAddressOfOneProperty(idProperty: String): LiveData<Address>{
+    suspend fun getAddressOfOneProperty(idProperty: String): Address {
         return addressDao.getAddressOfOneProperty(idProperty)
     }
 }

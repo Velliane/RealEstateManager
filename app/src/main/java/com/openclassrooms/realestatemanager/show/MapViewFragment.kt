@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.property.show
+package com.openclassrooms.realestatemanager.show
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -14,8 +14,9 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.property.Address
-import com.openclassrooms.realestatemanager.property.Property
+import com.openclassrooms.realestatemanager.add_edit.Address
+import com.openclassrooms.realestatemanager.add_edit.Property
+import com.openclassrooms.realestatemanager.show.detail.DetailsFragment
 import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.getScreenOrientation
 
@@ -62,7 +63,7 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerCl
         googleMap!!.setOnMarkerClickListener(this)
 
         //-- Check if permissions are granted for FINE_LOCATION or request it --//
-        if (checkPermissions()) {
+        if (checkLocationPermissions()) {
             googleMap?.isMyLocationEnabled = true
             getUserLocation()
         }
@@ -92,9 +93,10 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerCl
     }
 
     private fun getListOfProperty() {
-        mainViewModel.getAllProperty().observe(this, Observer<List<Property>> { list ->
+        mainViewModel.propertiesLiveData.observe(this, Observer<List<Property>> { list ->
             for (property in list) {
-                mainViewModel.getAddressOfOneProperty(property.id_property).observe(this, Observer<Address> { address ->
+                mainViewModel.getAddressOfOneProperty(property.id_property)
+                mainViewModel.addressLiveData.observe(this, Observer<Address> { address ->
                     mainViewModel.getLatLng(address, "country:FR", context!!.resources.getString(R.string.api_key_google)).observe(this, Observer {
                         val result = it.results!![0]
                         val location = LatLng(result.geometry!!.location!!.lat!!, result.geometry!!.location!!.lng!!)

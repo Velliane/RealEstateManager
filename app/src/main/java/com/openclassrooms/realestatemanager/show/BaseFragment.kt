@@ -1,5 +1,6 @@
-package com.openclassrooms.realestatemanager.property.show
+package com.openclassrooms.realestatemanager.show
 
+import android.Manifest
 import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
@@ -14,11 +15,20 @@ open class BaseFragment: Fragment() {
     /**
      * Check if permissions are granted. If not, request
      */
-    open fun checkPermissions(): Boolean {
-        return if(ActivityCompat.checkSelfPermission(requireActivity(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+    open fun checkLocationPermissions(): Boolean {
+        return if(ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
             true
         }else{ //-- Request permissions --//
-            ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), Constants.RC_PERMISSION_LOCATION)
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), Constants.RC_PERMISSION_LOCATION)
+            false
+        }
+    }
+
+    open fun checkExternalStoragePermissions(): Boolean {
+        return if(ActivityCompat.checkSelfPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+            true
+        }else{ //-- Request permissions --//
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), Constants.RC_PERMISSION_LOCATION)
             false
         }
     }
@@ -35,7 +45,7 @@ open class BaseFragment: Fragment() {
      * Configure PropertyViewModel
      */
     open fun configurePropertyViewModel(): MainViewModel {
-        val viewModelFactory = context?.let { Injection.provideMainViewModelFactory(it) }
+        val viewModelFactory = context?.let { Injection.provideViewModelFactory(it) }
         return ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
     }
 }

@@ -1,10 +1,7 @@
 package com.openclassrooms.realestatemanager.utils
 
-import android.util.Log
-import androidx.sqlite.db.SimpleSQLiteQuery
-import com.openclassrooms.realestatemanager.property.Address
-import com.openclassrooms.realestatemanager.property.Property
-import kotlin.collections.ArrayList
+import com.openclassrooms.realestatemanager.add_edit.Address
+import com.openclassrooms.realestatemanager.add_edit.Property
 
 
 fun setAddressToString(address: Address): String {

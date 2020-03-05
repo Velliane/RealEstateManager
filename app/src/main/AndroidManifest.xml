@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="com.google.android.apps.photos.permission.GOOGLE_PHOTOS"/>
 
     <application
         android:allowBackup="true"
@@ -30,9 +31,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".login.LoginActivity" />
-        <activity android:name=".property.show.MainActivity" />
+        <activity android:name="com.openclassrooms.realestatemanager.show.MainActivity" />
         <activity
-            android:name=".property.add_edit.EditAddActivity"
+            android:name="com.openclassrooms.realestatemanager.add_edit.EditAddActivity"
             android:theme="@style/DialogTheme" />
         <!-- Provider -->
         <provider

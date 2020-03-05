@@ -1,9 +1,8 @@
-package com.openclassrooms.realestatemanager.property.add_edit
+package com.openclassrooms.realestatemanager.add_edit
 
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -31,17 +30,11 @@ import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.data.AddressHelper
 import com.openclassrooms.realestatemanager.data.LinkHelper
 import com.openclassrooms.realestatemanager.data.PropertyHelper
-import com.openclassrooms.realestatemanager.property.show.MainViewModel
-import com.openclassrooms.realestatemanager.property.Address
-import com.openclassrooms.realestatemanager.photos.Photo
-import com.openclassrooms.realestatemanager.property.Property
-import com.openclassrooms.realestatemanager.property.show.PhotosAdapter
+import com.openclassrooms.realestatemanager.show.detail.PhotosAdapter
 import com.openclassrooms.realestatemanager.utils.*
 import org.threeten.bp.LocalDateTime
 import pub.devrel.easypermissions.EasyPermissions
-import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 /**
  * Add or Edit a Property
@@ -108,7 +101,6 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         propertyId = intent.getStringExtra(Constants.PROPERTY_ID)!!
         if (propertyId != "") {
             getDataFromDatabase(propertyId)
-            // get address
         }
 
         if(!checkPermission()){
@@ -127,10 +119,12 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
      * @param id The id of the property
      */
     private fun getDataFromDatabase(id: String) {
-        editDataViewModel.getPropertyFromId(id).observe(this, Observer<Property> {
+        editDataViewModel.getPropertyFromId(id)
+        editDataViewModel.propertyLiveData.observe(this, Observer<Property> {
             updateViewsWithRoomData(it)
         })
-        editDataViewModel.getAddressOfOneProperty(id).observe(this, Observer<Address> {
+        editDataViewModel.getAddressOfOneProperty(id)
+        editDataViewModel.addressLiveData.observe(this, Observer<Address> {
             updateAddressWithRoomData(it)
         })
     }
@@ -142,7 +136,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         when (v) {
             saveBtn -> {
                 val property = Property(propertyId, autocompleteType.text.toString(), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), numberBedrooms.text.toString().toInt(), numberBathrooms.text.toString().toInt(), description.text.toString(), true, parseLocalDateTimeToString(LocalDateTime.now()))
-                editDataViewModel.save(propertyId, property,number.text.toString().toInt(), street.text.toString(), zipCode.text.toString(), city.text.toString(), country.text.toString(), imageList)
+                editDataViewModel.save(property.id_property, property,number.text.toString().toInt(), street.text.toString(), zipCode.text.toString(), city.text.toString(), country.text.toString(), imageList)
                 sendNotification()
                 Snackbar.make(layout, "Save complete", Snackbar.LENGTH_SHORT).show()
                 finish()
@@ -173,12 +167,9 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
     }
 
     private fun addImageToListAndShowIt(){
-        val photo = Photo()
         desImage = addPhotoTxt.text.toString()
         if (uriImage != null && desImage != "") {
-            photo.uri = uriImage
-            photo.description = desImage
-
+            val photo = Photo(uriImage, desImage)
             imageList.add(photo)
             recyclerView.adapter = photosAdapter
             photosAdapter.setData(imageList)
@@ -209,7 +200,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
 
     //-- CONFIGURATION --//
     private fun configureViewModel() {
-        val editDataViewModelFactory = Injection.provideEditDataViewModelFactory(this)
+        val editDataViewModelFactory = Injection.provideViewModelFactory(this)
         editDataViewModel = ViewModelProviders.of(this, editDataViewModelFactory).get(EditDataViewModel::class.java)
       }
 

@@ -15,7 +15,7 @@ import com.firebase.ui.auth.IdpResponse
 import com.google.android.material.snackbar.Snackbar
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.BaseActivity
-import com.openclassrooms.realestatemanager.property.show.MainActivity
+import com.openclassrooms.realestatemanager.show.MainActivity
 import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.Injection
 
@@ -89,7 +89,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener{
     }
 
     private fun configureUserViewModel(){
-        val viewModelFactory = Injection.provideUserViewModelFactory(this)
+        val viewModelFactory = Injection.provideViewModelFactory(this)
         userViewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel::class.java)
     }
 
