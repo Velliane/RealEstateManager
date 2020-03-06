@@ -6,7 +6,7 @@ import com.openclassrooms.realestatemanager.login.User
 
 
 /**
- * DAO Interface to group all CRUD requests for the table Agent of the PropertyDatabase
+ * DAO Interface to group all CRUD requests for the table User of the PropertyDatabase
  */
 
 @Dao

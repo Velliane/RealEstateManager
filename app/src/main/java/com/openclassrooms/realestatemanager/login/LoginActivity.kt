@@ -21,9 +21,11 @@ import com.openclassrooms.realestatemanager.utils.Injection
 
 /**
  * This Activity allows the user to create an account or log in with his email, using Firebase Authentication
+ * When an account is created, user's info are saved in PropertyDatabase and Firestore
  */
 class LoginActivity : BaseActivity(), View.OnClickListener{
 
+    /** Views */
     private lateinit var connexionBtn: Button
     private lateinit var layout: ConstraintLayout
     /** UserViewModel */
@@ -45,9 +47,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener{
 
     override fun onClick(v: View?) {
         when(v){
-            connexionBtn -> {
-                signIn()
-            }
+            connexionBtn -> { signIn() }
         }
     }
 
@@ -62,19 +62,16 @@ class LoginActivity : BaseActivity(), View.OnClickListener{
                     Constants.RC_SIGN_IN)
         }
 
-    //-- HANDLE RESPONSE --//
+    //-- HANDLE RESPONSE OF SIGN IN--//
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-
         if(requestCode == Constants.RC_SIGN_IN){
             val response = IdpResponse.fromResultIntent(data)
             if(resultCode == Activity.RESULT_OK){
                 Snackbar.make(layout, "Connexion succeed" , Snackbar.LENGTH_SHORT).show()
                 //-- Create User and save it in Room and Firebase --
                 val user = User(getCurrentUser().uid, getCurrentUser().displayName!!, getCurrentUser().email!!, getCurrentUser().photoUrl.toString())
-                addUserInRoom(user)
-                createUser(getCurrentUser().uid, getCurrentUser().displayName!!, getCurrentUser().email!!, getCurrentUser().photoUrl.toString()).addOnFailureListener(onFailureListener())
-                //-- Save userId in SharedPreferences --
-                sharedPreferences.edit().putString(Constants.PREF_ID_USER, getCurrentUser().uid).apply()
+                userViewModel.saveUser(user, this, sharedPreferences)
+                //-- Start MainActivity --//
                 startActivity(Intent(this, MainActivity::class.java))
             }else{
                 when {
@@ -84,16 +81,12 @@ class LoginActivity : BaseActivity(), View.OnClickListener{
                 }
             }
         }
-
         super.onActivityResult(requestCode, resultCode, data)
     }
 
+    //-- CONFIGURATION --//
     private fun configureUserViewModel(){
         val viewModelFactory = Injection.provideViewModelFactory(this)
         userViewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel::class.java)
-    }
-
-    private fun addUserInRoom(user: User){
-        userViewModel.addUser(user)
     }
 }

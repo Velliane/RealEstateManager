@@ -1,6 +1,8 @@
 package com.openclassrooms.realestatemanager.utils
 
+import android.net.Uri
 import com.openclassrooms.realestatemanager.add_edit.Address
+import com.openclassrooms.realestatemanager.add_edit.Photo
 import com.openclassrooms.realestatemanager.add_edit.Property
 
 
@@ -34,6 +36,10 @@ fun compareByDate(property1: Property, property2: Property): Property {
     } else {
         property1
     }
+}
+
+fun getDefaultPhoto(): Photo {
+    return Photo(Uri.parse("android.resource://com.openclassrooms.realestatemanager/drawable/no_image_available_64"), "No image")
 }
 
 

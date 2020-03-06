@@ -1,26 +1,28 @@
 package com.openclassrooms.realestatemanager.show.list
 
-import android.net.Uri
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.realestatemanager.data.AddressDataRepository
-import com.openclassrooms.realestatemanager.data.FirestoreDataRepository
 import com.openclassrooms.realestatemanager.data.PhotoDataRepository
 import com.openclassrooms.realestatemanager.data.PropertyDataRepository
 import com.openclassrooms.realestatemanager.add_edit.Photo
 import com.openclassrooms.realestatemanager.add_edit.Address
 import com.openclassrooms.realestatemanager.add_edit.Property
 import com.openclassrooms.realestatemanager.show.geocode_model.GeocodeRepository
+import com.openclassrooms.realestatemanager.utils.getDefaultPhoto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
  * ViewModel for ListViewFragment
- *
+ * Expose a MediatorLiveDate with two sources:
+ *  - list of all properties get from Firestore
+ *  - list of all Addresses according of properties's id
+ * Merge the two lists
  */
 class ListViewModel(propertyDataRepository: PropertyDataRepository, private val addressDataRepository: AddressDataRepository, private val geocodeRepository: GeocodeRepository, private val photoDataRepository: PhotoDataRepository) : ViewModel() {
 
@@ -60,7 +62,7 @@ class ListViewModel(propertyDataRepository: PropertyDataRepository, private val 
     }
 
     private fun getPhotoForPropertyId(idProperty: String): Photo {
-        var photo = Photo(Uri.parse("android.resource://com.openclassrooms.realestatemanager/drawable/no_image_available_64"), "No image")
+        var photo = getDefaultPhoto()
         val listPhoto = photoDataRepository.getListOfPhotos(idProperty) as ArrayList<Photo>
 
         if(listPhoto.isNotEmpty()){

@@ -1,24 +1,32 @@
 package com.openclassrooms.realestatemanager.login
 
-import androidx.lifecycle.LiveData
+import android.content.Context
+import android.content.SharedPreferences
+import android.util.Log
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModel
-import java.util.concurrent.Executor
+import com.google.android.gms.tasks.OnFailureListener
+import com.openclassrooms.realestatemanager.utils.Constants
 
-class UserViewModel(private val userDataRepository: UserDataRepository, private val executor: Executor): ViewModel() {
+/**
+ * ViewModel for LoginActivity
+ * Save User in PropertyDatabase and Firestore, and save user's id in SharedPreferences
+ */
 
-    fun getAllUsers(): LiveData<List<User>> {
-        return  userDataRepository.getAllUsers()
+class UserViewModel(private val userDataRepository: UserDataRepository): ViewModel() {
+
+    fun saveUser(user: User, context: Context, sharedPreferences: SharedPreferences) {
+        userDataRepository.addUser(user)
+        createUser(user.userId, user.name, user.email, user.photo!!).addOnFailureListener(OnFailureListener { exception ->
+            Log.d("Error", exception.printStackTrace().toString())
+            val builder = AlertDialog.Builder(context)
+            builder.setMessage("Error")
+                    .setNegativeButton("Ok") { dialog, which -> }
+                    .create().show()
+        })
+        //-- Save userId in SharedPreferences --//
+        sharedPreferences.edit().putString(Constants.PREF_ID_USER, user.userId).apply()
+
     }
 
-    fun addUser(user: User){
-        executor.execute { userDataRepository.addUser(user) }
-    }
-
-    fun updateUser(user: User){
-        executor.execute { userDataRepository.updateUser(user) }
-    }
-
-    fun getUserById(userId: String): LiveData<User>{
-        return userDataRepository.getUserById(userId)
-    }
 }

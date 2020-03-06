@@ -18,8 +18,6 @@ class HomeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
-        //update database
-
         Handler().postDelayed({
             kotlin.run {
                     val user = FirebaseAuth.getInstance().currentUser
