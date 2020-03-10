@@ -53,6 +53,7 @@ class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener {
         recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.HORIZONTAL))
         recyclerView.layoutManager = LinearLayoutManager(activity!!.applicationContext)
         adapter = ListPropertyAdapter(this, context!!)
+        recyclerView.adapter = adapter
         noDataTxt = view.findViewById(R.id.fragment_list_no_data)
 
         sharedPreferences = activity!!.getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE)
@@ -93,9 +94,7 @@ class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener {
             noDataTxt.visibility = View.VISIBLE
 
         }else{
-            recyclerView.adapter = adapter
             adapter.setData(properties)
-            adapter.notifyDataSetChanged()
         }
 
     }

@@ -50,7 +50,7 @@ class ListViewModel(propertyDataRepository: PropertyDataRepository, private val 
             }
         }
 
-        val propertyModelsForList = properties.map {
+        val propertyModelsForList = properties.sortedBy { it.date }.map {
             PropertyModelForList(
                     it.id_property,
                     it.type,

@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.realestatemanager.data.*
 import com.openclassrooms.realestatemanager.data.PhotoDataRepository
+import com.openclassrooms.realestatemanager.search.TypeEnum
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -55,6 +56,16 @@ class EditDataViewModel(private val context: Context, private val photoDataRepos
             savePhotos(imageList, property.id_property)
         }
 
+    }
+
+    fun getTypesList(): List<TypeEnum> {
+        val list = ArrayList<TypeEnum>()
+        for (type in TypeEnum.values()) {
+            if(type != TypeEnum.ANY){
+                list.add(type)
+            }
+        }
+        return list
     }
 
     //-- Add Data in Firestore --//

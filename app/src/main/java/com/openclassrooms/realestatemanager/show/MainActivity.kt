@@ -23,7 +23,6 @@ import com.google.android.material.navigation.NavigationView
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.login.LoginActivity
 import com.openclassrooms.realestatemanager.login.User
-import com.openclassrooms.realestatemanager.login.UserViewModel
 import com.openclassrooms.realestatemanager.BaseActivity
 import com.openclassrooms.realestatemanager.add_edit.EditAddActivity
 import com.openclassrooms.realestatemanager.search.SearchActivity
@@ -31,6 +30,7 @@ import com.openclassrooms.realestatemanager.settings.SettingsActivity
 import com.openclassrooms.realestatemanager.show.detail.DetailsFragment
 import com.openclassrooms.realestatemanager.show.list.ListFragment
 import com.openclassrooms.realestatemanager.show.list.ListPropertyAdapter
+import com.openclassrooms.realestatemanager.show.map.MapViewFragment
 import com.openclassrooms.realestatemanager.utils.*
 
 /**

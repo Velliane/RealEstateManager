@@ -1,15 +1,8 @@
 package com.openclassrooms.realestatemanager.add_edit
 
-import android.net.Uri
-import android.os.Parcel
-import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.openclassrooms.realestatemanager.utils.Converters
-import org.threeten.bp.LocalDateTime
-import java.io.Serializable
 
 @Entity
 
@@ -34,10 +27,8 @@ data class Property(
         var bed_nbr: Int? = 0,
         @ColumnInfo (name = "description")
         var description: String? = "",
-
         @ColumnInfo (name = "in_sale")
         var  in_sale: Boolean = true,
-
         @ColumnInfo (name = "date")
         val date: String = ""
 

@@ -41,10 +41,10 @@ class ListPropertyAdapter(private val listener: OnItemClickListener, private val
     override fun getItemCount(): Int = data.size
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        holder.bind(data[position])
+        holder.bind(data[position], onItemClickListener)
     }
 
-    inner class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var photo: ImageView = itemView.findViewById(R.id.item_photo)
         var type: TextView = itemView.findViewById(R.id.item_type)
@@ -53,15 +53,15 @@ class ListPropertyAdapter(private val listener: OnItemClickListener, private val
         var container: ConstraintLayout = itemView.findViewById(R.id.item_list_container)
 
 
-        fun bind(property: PropertyModelForList) {
+        fun bind(property: PropertyModelForList, onItemClickListener: OnItemClickListener) {
 
             type.text = property.type
             price.text = property.price
             val propertyPhoto = property.photo
             if(propertyPhoto != null){
-                Glide.with(context).load(propertyPhoto.uri).centerCrop().into(photo)
+                Glide.with(itemView.context).load(propertyPhoto.uri).centerCrop().into(photo)
             }else{
-                Glide.with(context).load(R.drawable.no_image_available_64).centerCrop().into(photo)
+                Glide.with(itemView.context).load(R.drawable.no_image_available_64).centerCrop().into(photo)
             }
             location.text = property.location
             itemView.setOnClickListener {
@@ -73,11 +73,14 @@ class ListPropertyAdapter(private val listener: OnItemClickListener, private val
     private class PropertyAdapterDiffCallback: DiffUtil.ItemCallback<PropertyModelForList>() {
 
         override fun areItemsTheSame(oldItem: PropertyModelForList, newItem: PropertyModelForList): Boolean {
-            return false
+            return oldItem.propertyId == newItem.propertyId
         }
 
         override fun areContentsTheSame(oldItem: PropertyModelForList, newItem: PropertyModelForList): Boolean {
-            return false
+            return oldItem.type == newItem.type
+                    && oldItem.price == newItem.price
+                    && oldItem.location == newItem.location
+                    && oldItem.photo?.uri == newItem.photo?.uri
         }
     }
 

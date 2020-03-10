@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import com.openclassrooms.realestatemanager.show.map.MapViewModel
 import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.Injection
 import pub.devrel.easypermissions.EasyPermissions
@@ -44,8 +45,8 @@ open class BaseFragment: Fragment() {
     /**
      * Configure PropertyViewModel
      */
-    open fun configurePropertyViewModel(): MainViewModel {
+    open fun configurePropertyViewModel(): MapViewModel {
         val viewModelFactory = context?.let { Injection.provideViewModelFactory(it) }
-        return ViewModelProviders.of(this, viewModelFactory).get(MainViewModel::class.java)
+        return ViewModelProviders.of(this, viewModelFactory).get(MapViewModel::class.java)
     }
 }

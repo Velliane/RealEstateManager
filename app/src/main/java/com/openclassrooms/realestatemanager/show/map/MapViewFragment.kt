@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.show
+package com.openclassrooms.realestatemanager.show.map
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -16,6 +16,8 @@ import com.google.android.libraries.places.api.Places
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.add_edit.Address
 import com.openclassrooms.realestatemanager.add_edit.Property
+import com.openclassrooms.realestatemanager.show.BaseFragment
+import com.openclassrooms.realestatemanager.show.MainViewModel
 import com.openclassrooms.realestatemanager.show.detail.DetailsFragment
 import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.getScreenOrientation
@@ -33,7 +35,7 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerCl
     /** FusedLocation */
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     /** ViewModel */
-    private lateinit var mainViewModel: MainViewModel
+    private lateinit var mapViewModel: MapViewModel
     /** Shared Preferences */
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -44,7 +46,7 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerCl
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         Places.initialize(requireActivity(), context!!.getString(R.string.api_key_google))
         sharedPreferences = activity!!.getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE)
-        mainViewModel = configurePropertyViewModel()
+        mapViewModel = configurePropertyViewModel()
         return view
     }
 
@@ -93,20 +95,28 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerCl
     }
 
     private fun getListOfProperty() {
-        mainViewModel.propertiesLiveData.observe(this, Observer<List<Property>> { list ->
-            for (property in list) {
-                mainViewModel.getAddressOfOneProperty(property.id_property)
-                mainViewModel.addressLiveData.observe(this, Observer<Address> { address ->
-                    mainViewModel.getLatLng(address, "country:FR", context!!.resources.getString(R.string.api_key_google)).observe(this, Observer {
-                        val result = it.results!![0]
-                        val location = LatLng(result.geometry!!.location!!.lat!!, result.geometry!!.location!!.lng!!)
-                        val markerOptions = MarkerOptions().position(location).title(property.price.toString())
-
-                        googleMap!!.addMarker(markerOptions).tag = property.id_property
-
-                    })
-                })
-            }
+//        mapViewModel.propertiesLiveData.observe(this, Observer<List<Property>> { list ->
+//            for (property in list) {
+//                mapViewModel.getAddressOfOneProperty(property.id_property)
+//                mapViewModel.addressLiveData.observe(this, Observer<Address> { address ->
+//                    mapViewModel.getLatLng(address, "country:FR", context!!.resources.getString(R.string.api_key_google)).observe(this, Observer {
+//                        val result = it.results!![0]
+//                        val location = LatLng(result.geometry!!.location!!.lat!!, result.geometry!!.location!!.lng!!)
+//                        val markerOptions = MarkerOptions().position(location).title(property.price.toString())
+//
+//                        googleMap!!.addMarker(markerOptions).tag = property.id_property
+//
+//                    })
+//                })
+//            }
+//        })
+        mapViewModel.propertiesLiveData.observe(this, Observer<List<PropertyModelForMap>> {
+           it?.let {
+               for(property in it) {
+                   val markerOptions = MarkerOptions().position(property.location).title(property.price)
+                   googleMap!!.addMarker(markerOptions).tag = property.propertyId
+               }
+           }
         })
     }
 

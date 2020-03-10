@@ -14,6 +14,7 @@ import com.openclassrooms.realestatemanager.add_edit.EditDataViewModel
 import com.openclassrooms.realestatemanager.show.MainViewModel
 import com.openclassrooms.realestatemanager.show.detail.DetailViewModel
 import com.openclassrooms.realestatemanager.show.list.ListViewModel
+import com.openclassrooms.realestatemanager.show.map.MapViewModel
 import java.lang.IllegalArgumentException
 import java.util.concurrent.Executor
 
@@ -30,10 +31,13 @@ class ViewModelFactory(private val context: Context, private val userDataReposit
                 EditDataViewModel(context, photoDataRepository, propertyDataRepository, addressDataRepository, executor) as T
             }
             modelClass.isAssignableFrom(UserViewModel::class.java) -> {
-                return UserViewModel(userDataRepository, executor) as T
+                return UserViewModel(userDataRepository) as T
             }
             modelClass.isAssignableFrom(DetailViewModel::class.java) -> {
                 return DetailViewModel(propertyDataRepository, geocodeRepository, addressDataRepository, photoDataRepository) as T
+            }
+            modelClass.isAssignableFrom(MapViewModel::class.java) -> {
+                MapViewModel(context, propertyDataRepository, addressDataRepository, geocodeRepository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel")
         }

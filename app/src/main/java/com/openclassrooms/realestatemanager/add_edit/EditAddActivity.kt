@@ -7,11 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.appcompat.widget.AppCompatAutoCompleteTextView
+import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -27,9 +23,8 @@ import com.google.android.material.textfield.TextInputEditText
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.openclassrooms.realestatemanager.BaseActivity
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.data.AddressHelper
-import com.openclassrooms.realestatemanager.data.LinkHelper
-import com.openclassrooms.realestatemanager.data.PropertyHelper
+import com.openclassrooms.realestatemanager.search.TypeEnum
+import com.openclassrooms.realestatemanager.search.TypeEnumSpinnerAdapter
 import com.openclassrooms.realestatemanager.show.detail.PhotosAdapter
 import com.openclassrooms.realestatemanager.utils.*
 import org.threeten.bp.LocalDateTime
@@ -44,7 +39,7 @@ import kotlin.collections.ArrayList
 class EditAddActivity : BaseActivity(), View.OnClickListener {
 
     /** Views */
-    private lateinit var autocompleteType: AppCompatAutoCompleteTextView
+    private lateinit var spinnerType: Spinner
     private lateinit var price: TextInputEditText
     private lateinit var surface: TextInputEditText
     private lateinit var rooms: TextInputEditText
@@ -66,36 +61,31 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
     private lateinit var editDataViewModel: EditDataViewModel
     /** Property Id from DetailsFragment */
     private var propertyId: String = ""
-    private var addressId: String = ""
     /** List of Type for Autocomplete */
-    private var typeList: List<String> = ArrayList()
+    private var typeList: List<TypeEnum> = ArrayList()
     /** URI of selected image*/
     private lateinit var uriImage: Uri
     /** Image's description*/
     private lateinit var desImage: String
     /** Image List */
     private var imageList = ArrayList<Photo>()
-    /** RecyclerView */
+    /** RecyclerView and Adapter */
     private lateinit var recyclerView: RecyclerView
-    private lateinit var photosAdapter: PhotosAdapter
-    private lateinit var propertyHelper: PropertyHelper
-    private lateinit var addressHelper: AddressHelper
-    private lateinit var linkHelper: LinkHelper
+    private var photosAdapter = PhotosAdapter(this)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_add)
         setFinishOnTouchOutside(false)
-
-        typeList = listOf("Apartment", "House", "Loft")
-        propertyHelper = PropertyHelper()
-        addressHelper = AddressHelper()
-        linkHelper = LinkHelper()
         AndroidThreeTen.init(this)
+        configureViewModel()
+
+
+        typeList = editDataViewModel.getTypesList()
         bindViews()
         getSaveInstanceState(savedInstanceState)
-        photosAdapter = PhotosAdapter(this)
-        configureViewModel()
+
 
         //-- Get Property id from intent --//
         propertyId = intent.getStringExtra(Constants.PROPERTY_ID)!!
@@ -103,15 +93,13 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
             getDataFromDatabase(propertyId)
         }
 
-        if(!checkPermission()){
-            requestPermission()
-        }
+        //-- Check permission for Write to External Storage --//
+        if(!checkPermission()){ requestPermission() }
 
 
-        //-- Set Autocomplete --//
-        val adapter = ArrayAdapter<String>(this, android.R.layout.select_dialog_item, typeList)
-        autocompleteType.threshold = 1
-        autocompleteType.setAdapter(adapter)
+        //-- Set TypeEnumSpinner Adapter --//
+        val adapter = TypeEnumSpinnerAdapter(this, typeList)
+        spinnerType.adapter = adapter
     }
 
     /**
@@ -135,7 +123,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v) {
             saveBtn -> {
-                val property = Property(propertyId, autocompleteType.text.toString(), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), numberBedrooms.text.toString().toInt(), numberBathrooms.text.toString().toInt(), description.text.toString(), true, parseLocalDateTimeToString(LocalDateTime.now()))
+                val property = Property(propertyId, spinnerType.selectedItem.toString(), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), numberBedrooms.text.toString().toInt(), numberBathrooms.text.toString().toInt(), description.text.toString(), true, parseLocalDateTimeToString(LocalDateTime.now()))
                 editDataViewModel.save(property.id_property, property,number.text.toString().toInt(), street.text.toString(), zipCode.text.toString(), city.text.toString(), country.text.toString(), imageList)
                 sendNotification()
                 Snackbar.make(layout, "Save complete", Snackbar.LENGTH_SHORT).show()
@@ -205,7 +193,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
       }
 
     private fun bindViews() {
-        autocompleteType = findViewById(R.id.edit_type)
+        spinnerType = findViewById(R.id.add_edit_type_spinner)
         price = findViewById(R.id.edit_price)
         surface = findViewById(R.id.edit_surface)
         rooms = findViewById(R.id.edit_rooms)
@@ -237,6 +225,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         outState.putCharSequence(Constants.KEY_TEXT_DESCRIPTION, description.text)
         outState.putCharSequence(Constants.KEY_TEXT_BEDROOMS, numberBedrooms.text)
         outState.putCharSequence(Constants.KEY_TEXT_BATHROOMS, numberBathrooms.text)
+        outState.putCharSequence(Constants.KEY_TEXT_TYPE, spinnerType.selectedItem.toString())
     }
 
     /**
