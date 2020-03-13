@@ -8,6 +8,7 @@ import com.openclassrooms.realestatemanager.add_edit.Address
 import com.openclassrooms.realestatemanager.add_edit.Property
 import com.openclassrooms.realestatemanager.data.AddressDataRepository
 import com.openclassrooms.realestatemanager.data.PropertyDataRepository
+import com.openclassrooms.realestatemanager.property.model.geocode.Geocode
 import com.openclassrooms.realestatemanager.show.geocode_model.GeocodeRepository
 import com.openclassrooms.realestatemanager.utils.setAddressToString
 import kotlinx.coroutines.Dispatchers
@@ -45,12 +46,16 @@ class MapViewModel(private val context: Context, propertyDataRepository: Propert
         val propertyModelsForList = properties.map {
             PropertyModelForMap(
                     it.id_property,
-                    getLatLngForAddress(addresses.getValue(it.id_property), "country:FR", context.resources.getString(R.string.api_key_google)),
+                    addresses[it.id_property],
                     it.price.toString())
         }
         propertiesLiveData.value = propertyModelsForList
     }
 
+    fun getLatLng(address: Address, countryCode: String, key: String): LiveData<Geocode> {
+        val txt = setAddressToString(address)
+        return geocodeRepository.getLatLng(txt, countryCode, key)
+    }
 
 
     private fun getLatLngForAddress(address: Address, countryCode: String, key: String): LatLng {

@@ -1,6 +1,10 @@
 package com.openclassrooms.realestatemanager.search
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
+import android.os.Parcelable
+import android.util.Log
 import android.view.View
 import android.widget.Spinner
 import android.widget.TextView
@@ -8,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.show.MainActivity
 import com.openclassrooms.realestatemanager.utils.Injection
 import kotlinx.android.synthetic.main.activity_search.*
 
@@ -63,18 +68,20 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(item: View?) {
         if (item == search_button) {
-            searchViewModel.searchDatabase(spinnerPrice.selectedItem.toString(), spinnerType.selectedItem.toString(), roomsMinValue, roomsMaxValue)
+            val query = searchViewModel.searchDatabase(spinnerPrice.selectedItem.toString(), spinnerType.selectedItem.toString(), roomsMinValue, roomsMaxValue)
 
-//            val propertyViewModelFactory = Injection.providePropertyViewModelFactory(this)
-//            val propertyViewModel = ViewModelProviders.of(this, propertyViewModelFactory).get(PropertyViewModel::class.java)
-//            propertyViewModel.searchInDatabase(query).observe(this, Observer {
-//                val intent = Intent(this, MainActivity::class.java)
-//                val bundle = Bundle()
-//                bundle.putParcelableArrayList("List property", it as java.util.ArrayList<out Parcelable>)
-//                startActivityForResult(intent, 2, bundle)
+            val intent = Intent(this, MainActivity::class.java)
+            intent.putExtra("Search query", query)
+            startActivityForResult(intent, 2)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == 2) {
+            if (resultCode == Activity.RESULT_OK && data?.data!= null)  {
+                Log.i("onActivityResult", data.getStringExtra("result")!!)
             }
         }
-
-
-
+    }
 }

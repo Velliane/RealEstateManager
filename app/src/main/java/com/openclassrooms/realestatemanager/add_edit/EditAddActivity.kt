@@ -29,6 +29,7 @@ import com.openclassrooms.realestatemanager.show.detail.PhotosAdapter
 import com.openclassrooms.realestatemanager.utils.*
 import org.threeten.bp.LocalDateTime
 import pub.devrel.easypermissions.EasyPermissions
+import java.util.*
 import kotlin.collections.ArrayList
 
 /**
@@ -123,7 +124,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v) {
             saveBtn -> {
-                val property = Property(propertyId, spinnerType.selectedItem.toString(), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), numberBedrooms.text.toString().toInt(), numberBathrooms.text.toString().toInt(), description.text.toString(), true, parseLocalDateTimeToString(LocalDateTime.now()))
+                val property = Property(propertyId, spinnerType.selectedItem.toString().toUpperCase(Locale.ROOT), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), numberBedrooms.text.toString().toInt(), numberBathrooms.text.toString().toInt(), description.text.toString(), true, parseLocalDateTimeToString(LocalDateTime.now()))
                 editDataViewModel.save(property.id_property, property,number.text.toString().toInt(), street.text.toString(), zipCode.text.toString(), city.text.toString(), country.text.toString(), imageList)
                 sendNotification()
                 Snackbar.make(layout, "Save complete", Snackbar.LENGTH_SHORT).show()

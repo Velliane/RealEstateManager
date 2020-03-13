@@ -14,7 +14,7 @@ class AddressDataRepository(private val addressDao: AddressDao) {
         return addressDao.addAddress(address)
     }
 
-    suspend fun getAddressOfOneProperty(idProperty: String): Address {
+    fun getAddressOfOneProperty(idProperty: String): Address {
         return addressDao.getAddressOfOneProperty(idProperty)
     }
 }

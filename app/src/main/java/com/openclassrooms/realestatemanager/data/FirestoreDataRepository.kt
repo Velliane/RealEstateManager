@@ -1,17 +1,19 @@
 package com.openclassrooms.realestatemanager.data
 
+import android.content.Context
 import android.util.Log
 import com.openclassrooms.realestatemanager.data.database.AddressDao
 import com.openclassrooms.realestatemanager.data.database.PropertyDao
 import com.openclassrooms.realestatemanager.add_edit.Address
 import com.openclassrooms.realestatemanager.add_edit.Property
+import com.openclassrooms.realestatemanager.search.TypeEnum
 import com.openclassrooms.realestatemanager.utils.compareByDate
 
 /**
  * Repository with suspend function to update RoomDatabase with Firestore Data
  */
 
-class FirestoreDataRepository(private val propertyDao: PropertyDao, private val addressDao: AddressDao) {
+class FirestoreDataRepository(private val context: Context, private val propertyDao: PropertyDao, private val addressDao: AddressDao) {
 
     /**
      * Get all properties from Firestore
@@ -56,6 +58,8 @@ class FirestoreDataRepository(private val propertyDao: PropertyDao, private val 
         if(listRoom == null){
             for(property in list){
                 propertyDao.addProperty(property)
+                val type = TypeEnum.valueOf(property.type).res
+                propertyDao.updatePropertyType(context.getString(type), property.id_property)
                 addressDao.addAddress(getAddressFromFirestore(property.id_property))
             }
         }else{
@@ -66,6 +70,7 @@ class FirestoreDataRepository(private val propertyDao: PropertyDao, private val 
                         if (property.date != propertyRoom.date){
                             val updatedProperty = compareByDate(propertyRoom, property)
                             propertyDao.addProperty(updatedProperty)
+                            propertyDao.updatePropertyType(context.getString(TypeEnum.valueOf(updatedProperty.type).res), updatedProperty.id_property)
                             addressDao.addAddress(getAddressFromFirestore(updatedProperty.id_property))
                             foundId = true
                             break
@@ -74,6 +79,7 @@ class FirestoreDataRepository(private val propertyDao: PropertyDao, private val 
                 }
                 if(!foundId){
                     propertyDao.addProperty(property)
+                    propertyDao.updatePropertyType(context.getString(TypeEnum.valueOf(property.type).res), property.id_property)
                     addressDao.addAddress(getAddressFromFirestore(property.id_property))
                 }
             }

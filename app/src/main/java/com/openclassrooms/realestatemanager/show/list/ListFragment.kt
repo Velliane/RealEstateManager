@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.show.list
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
@@ -39,10 +40,16 @@ class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener {
     private lateinit var noDataTxt: TextView
     /** Shared Preferences */
     private lateinit var sharedPreferences: SharedPreferences
+    /** Search query */
+    private var querySearch: String? = ""
 
     companion object {
-        fun newInstance(): ListFragment {
-            return ListFragment()
+        fun newInstance(query: String?): ListFragment {
+            val fragment = ListFragment()
+            val bundle = Bundle()
+            bundle.putString("Search query", query)
+            fragment.arguments = bundle
+            return fragment
         }
     }
 
@@ -56,12 +63,26 @@ class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener {
         recyclerView.adapter = adapter
         noDataTxt = view.findViewById(R.id.fragment_list_no_data)
 
+        querySearch = arguments!!.getString("Search query")
         sharedPreferences = activity!!.getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE)
 
         val viewModelFactory = Injection.provideViewModelFactory(requireContext())
         mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(ListViewModel::class.java)
         if(checkExternalStoragePermissions()) {
-            getListOfProperty()
+            if(querySearch != null){
+                val queryForDatabase = mainViewModel.stringToSimpleSQLiteQuery(querySearch!!)
+                Log.d("query", queryForDatabase.toString())
+                mainViewModel.searchInDatabase(queryForDatabase)
+                mainViewModel.propertiesLiveData.removeSource(mainViewModel.allPropertiesLiveData)
+                mainViewModel.propertiesLiveData.addSource(mainViewModel.propertiesFoundsLiveData, Observer {
+                    mainViewModel.combinePropertiesPhotosAndAddresses(it, mainViewModel.addressesMutableLiveData.value!!)
+                })
+                mainViewModel.propertiesLiveData.observe(this, Observer {
+                    updateView(it)
+                })
+            }else {
+                getListOfProperty()
+            }
         }
 
         return view

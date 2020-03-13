@@ -31,7 +31,7 @@ abstract class PropertyDatabase : RoomDatabase() {
                         INSTANCE = Room.databaseBuilder(
                                 context.applicationContext,
                                 PropertyDatabase::class.java,
-                                "Books.db"
+                                "Property.db"
                         ).setJournalMode(JournalMode.TRUNCATE)
                                 .build()
                     }

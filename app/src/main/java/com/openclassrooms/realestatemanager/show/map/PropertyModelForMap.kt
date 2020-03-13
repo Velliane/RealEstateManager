@@ -1,11 +1,11 @@
 package com.openclassrooms.realestatemanager.show.map
 
-import com.google.android.gms.maps.model.LatLng
+import com.openclassrooms.realestatemanager.add_edit.Address
 
 
 data class PropertyModelForMap (
 
         val propertyId: String,
-        val location: LatLng,
+        val address: Address?,
         val price: String
 )

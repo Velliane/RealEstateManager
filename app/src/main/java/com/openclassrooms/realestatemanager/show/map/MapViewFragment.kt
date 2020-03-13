@@ -21,6 +21,7 @@ import com.openclassrooms.realestatemanager.show.MainViewModel
 import com.openclassrooms.realestatemanager.show.detail.DetailsFragment
 import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.getScreenOrientation
+import com.openclassrooms.realestatemanager.utils.setAddressToString
 
 class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
@@ -113,8 +114,13 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerCl
         mapViewModel.propertiesLiveData.observe(this, Observer<List<PropertyModelForMap>> {
            it?.let {
                for(property in it) {
-                   val markerOptions = MarkerOptions().position(property.location).title(property.price)
-                   googleMap!!.addMarker(markerOptions).tag = property.propertyId
+                   mapViewModel.getLatLng(property.address!!, "country:FR", context!!.resources.getString(R.string.api_key_google)).observe(this, Observer { it ->
+                       val result = it.results!![0]
+                        val location = LatLng(result.geometry!!.location!!.lat!!, result.geometry!!.location!!.lng!!)
+                       val markerOptions = MarkerOptions().position(location).title(property.price)
+                       googleMap!!.addMarker(markerOptions).tag = property.propertyId
+                   })
+
                }
            }
         })

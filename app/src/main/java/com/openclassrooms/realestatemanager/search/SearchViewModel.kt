@@ -7,7 +7,7 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 
 class SearchViewModel(private val context: Context): ViewModel() {
 
-    fun searchDatabase(spinnerPriceSelected: String, spinnerTypeSelected: String, roomsMinValue: Int, roomsMaxValue: Int): SimpleSQLiteQuery{
+    fun searchDatabase(spinnerPriceSelected: String, spinnerTypeSelected: String, roomsMinValue: Int, roomsMaxValue: Int): String{
 
         val priceRange = ArrayList<Int>()
         if(PriceRangeEnum.valueOf(spinnerPriceSelected) != PriceRangeEnum.ANY){
@@ -25,7 +25,7 @@ class SearchViewModel(private val context: Context): ViewModel() {
         return constructQueryResearch(priceRange, type, roomsMinValue, roomsMaxValue)
     }
 
-    private fun constructQueryResearch(priceRange: ArrayList<Int>, type: String, roomsMinValue: Int, roomsMaxValue: Int): SimpleSQLiteQuery {
+    private fun constructQueryResearch(priceRange: ArrayList<Int>, type: String, roomsMinValue: Int, roomsMaxValue: Int): String {
 
         var query = String()
         query += "SELECT * FROM Property"
@@ -34,28 +34,34 @@ class SearchViewModel(private val context: Context): ViewModel() {
         if(priceRange.isNotEmpty()){
             val min = priceRange[0]
             val max = priceRange[1]
-            query += " WHERE price >= :$min AND price <= :$max"
+            query += " WHERE price BETWEEN :$min AND :$max"
             Log.d("QUERY", query)
             contains = true
         }
 
         if(type != ""){
-            if (contains){
-                query += " AND"
+            query += if (contains){
+                " AND"
+            }else{
+                " WHERE"
             }
-            query += " WHERE type == :$type"
+            query += " type = :$type"
             Log.d("QUERY", query)
             contains = true
         }
 
-        if(contains){
-            query += " AND"
-        }
-        query += " WHERE rooms_nbr >= :$roomsMinValue AND rooms_nbr <= :$roomsMaxValue"
-        Log.d("QUERY", query)
+//        query += if(contains){
+//            " AND"
+//        }else{
+//            " WHERE"
+//        }
+//        query += " rooms_nbr >= :$roomsMinValue AND rooms_nbr <= :$roomsMaxValue"
+//        Log.d("QUERY", query)
 
-        return SimpleSQLiteQuery(query)
+        //query += ";"
+        return query
     }
+
 
     fun getPriceRangeList(): List<PriceRangeEnum>{
         val list = ArrayList<PriceRangeEnum>()

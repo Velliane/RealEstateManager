@@ -48,11 +48,6 @@ class MainViewModel(private val context: Context, private val propertyDataReposi
     }
 
 
-    fun searchInDatabase(query: SupportSQLiteQuery): LiveData<List<Property>> {
-        return propertyDataRepository.searchInDatabase(query)
-    }
-
-
     fun getAddressOfOneProperty(id_property: String){
         viewModelScope.launch(Dispatchers.IO) {
             val address = addressDataRepository.getAddressOfOneProperty(id_property)
@@ -75,5 +70,6 @@ class MainViewModel(private val context: Context, private val propertyDataReposi
             firestoreDataRepository.updateDatabase(list)
         }
     }
+
 
 }

@@ -19,10 +19,14 @@ class PropertyDataRepository(private val propertyDao: PropertyDao) {
         return propertyDao.getPropertyFromId(id_property)
     }
 
-    fun searchInDatabase(query: SupportSQLiteQuery): LiveData<List<Property>>{
-        return propertyDao.searchInDatabase(query)
+   suspend fun searchInDatabase(query: SupportSQLiteQuery): List<Property> {
+       val list = propertyDao.searchInDatabase(query)
+        return list
     }
 
+    fun updatePropertyType(type: String, id_property: String): Int {
+        return propertyDao.updatePropertyType(type, id_property)
+    }
 
 
 }

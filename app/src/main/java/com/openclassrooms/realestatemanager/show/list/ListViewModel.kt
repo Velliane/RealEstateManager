@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.sqlite.db.SimpleSQLiteQuery
 import com.openclassrooms.realestatemanager.data.AddressDataRepository
 import com.openclassrooms.realestatemanager.data.PhotoDataRepository
 import com.openclassrooms.realestatemanager.data.PropertyDataRepository
@@ -24,13 +25,15 @@ import kotlinx.coroutines.withContext
  *  - list of all Addresses according of properties's id
  * Merge the two lists
  */
-class ListViewModel(propertyDataRepository: PropertyDataRepository, private val addressDataRepository: AddressDataRepository, private val geocodeRepository: GeocodeRepository, private val photoDataRepository: PhotoDataRepository) : ViewModel() {
+class ListViewModel(private val propertyDataRepository: PropertyDataRepository, private val addressDataRepository: AddressDataRepository, private val geocodeRepository: GeocodeRepository, private val photoDataRepository: PhotoDataRepository) : ViewModel() {
 
     val propertiesLiveData = MediatorLiveData<List<PropertyModelForList>>()
-    private val addressesMutableLiveData = MutableLiveData<MutableMap<String, Address?>>(HashMap<String, Address?>())
+    val addressesMutableLiveData = MutableLiveData<MutableMap<String, Address?>>(HashMap<String, Address?>())
+    val propertiesFromResearchLiveData = MutableLiveData<List<Property>>()
+    val allPropertiesLiveData = propertyDataRepository.getAllProperties()
+    val propertiesFoundsLiveData: MutableLiveData<List<Property>> get() = propertiesFromResearchLiveData
 
     init {
-        val allPropertiesLiveData = propertyDataRepository.getAllProperties()
         propertiesLiveData.addSource(allPropertiesLiveData, Observer {
             combinePropertiesPhotosAndAddresses(it, addressesMutableLiveData.value!!)
         })
@@ -39,7 +42,7 @@ class ListViewModel(propertyDataRepository: PropertyDataRepository, private val 
         })
     }
 
-    private fun combinePropertiesPhotosAndAddresses(properties: List<Property>?, addresses: Map<String, Address?>) {
+    fun combinePropertiesPhotosAndAddresses(properties: List<Property>?, addresses: Map<String, Address?>) {
         if (properties == null) {
             return
         }
@@ -88,5 +91,17 @@ class ListViewModel(propertyDataRepository: PropertyDataRepository, private val 
 
     }
 
+    fun stringToSimpleSQLiteQuery(query: String): SimpleSQLiteQuery {
+        return SimpleSQLiteQuery(query)
+    }
+
+    fun searchInDatabase(query: SimpleSQLiteQuery){
+        viewModelScope.launch(Dispatchers.IO) {
+            val list = propertyDataRepository.searchInDatabase(query)
+            withContext(Dispatchers.Main){
+                propertiesFromResearchLiveData.value = list
+            }
+        }
+    }
 
 }

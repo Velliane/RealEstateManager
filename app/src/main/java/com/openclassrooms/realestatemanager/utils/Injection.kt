@@ -33,7 +33,7 @@ class Injection {
 
         private fun provideFirestoreDataSource(context: Context): FirestoreDataRepository{
             val database = PropertyDatabase.getInstance(context)
-            return FirestoreDataRepository(database.propertyDao(), database.addressDao())
+            return FirestoreDataRepository(context, database.propertyDao(), database.addressDao())
         }
 
 

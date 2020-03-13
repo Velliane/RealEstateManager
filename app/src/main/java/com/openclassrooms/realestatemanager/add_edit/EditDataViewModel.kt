@@ -35,6 +35,7 @@ class EditDataViewModel(private val context: Context, private val photoDataRepos
         var property: Property? = propertyLiveData.value
         if (property == null) {
             addProperty(newProperty)
+            updatePropertyType(context.getString(TypeEnum.valueOf(newProperty.type).res), newProperty.id_property)
             newProperty.id_property = UUID.randomUUID().toString()
             val addressId = UUID.randomUUID().toString()
             val newAddress = Address(addressId, number, street, zip_code, city, country, newProperty.id_property)
@@ -47,6 +48,8 @@ class EditDataViewModel(private val context: Context, private val photoDataRepos
 
         } else {
             property = newProperty
+            addProperty(property)
+            updatePropertyType(context.getString(TypeEnum.valueOf(property.type).res), property.id_property)
             getAddressOfOneProperty(property.id_property)
             val oldAddress = addressLiveData.value!!
             val id = oldAddress.id_address
@@ -77,6 +80,10 @@ class EditDataViewModel(private val context: Context, private val photoDataRepos
     //-- Add Data in Room --//
     private fun addProperty(property: Property) {
         executor.execute { propertyDataRepository.addProperty(property) }
+    }
+
+    private fun updatePropertyType(type: String, id_property: String) {
+        executor.execute{ propertyDataRepository.updatePropertyType(type, id_property)}
     }
 
     private fun addAddress(address: Address) {

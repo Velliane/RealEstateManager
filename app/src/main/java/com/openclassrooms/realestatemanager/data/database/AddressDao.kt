@@ -14,7 +14,7 @@ interface AddressDao {
     fun addAddress(address: Address): Long
 
     @Query("SELECT * FROM Address WHERE idProperty= :idProperty")
-    suspend fun getAddressOfOneProperty(idProperty: String): Address
+    fun getAddressOfOneProperty(idProperty: String): Address
 
 
 }

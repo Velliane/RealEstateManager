@@ -1,5 +1,7 @@
 package com.openclassrooms.realestatemanager.show
 
+import android.app.Activity
+import android.app.Instrumentation
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -61,6 +63,9 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
     /** Shared Preferences */
     private lateinit var sharedPreferences: SharedPreferences
 
+    /** Query for search */
+    private var querySearch:String? = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,6 +75,14 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
         isLandscape = getScreenOrientation(resources.configuration.orientation)
         //-- Get Shared Preferences --//
         sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE)
+
+        //-- get Intent --//
+        querySearch = intent.getStringExtra("Search query")
+        if(querySearch != null) {
+            val intent = Intent()
+            intent.putExtra("result", "Data received successfully")
+            setResult(Activity.RESULT_OK, intent)
+        }
 
         //-- Configuration --//
         configureViewModel()
@@ -231,7 +244,7 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
     private fun showListFragment() {
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment_list)
         if (fragment == null) {
-            val listFragment = ListFragment.newInstance()
+            val listFragment = ListFragment.newInstance(querySearch)
             addFragment(listFragment)
         }
     }
