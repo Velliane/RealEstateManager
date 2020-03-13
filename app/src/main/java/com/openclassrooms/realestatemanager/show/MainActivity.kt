@@ -26,6 +26,7 @@ import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.login.LoginActivity
 import com.openclassrooms.realestatemanager.login.User
 import com.openclassrooms.realestatemanager.BaseActivity
+import com.openclassrooms.realestatemanager.SimulatorActivity
 import com.openclassrooms.realestatemanager.add_edit.EditAddActivity
 import com.openclassrooms.realestatemanager.search.SearchActivity
 import com.openclassrooms.realestatemanager.settings.SettingsActivity
@@ -112,6 +113,9 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
             //-- Drawer --//
             R.id.drawer_menu_settings -> {
                 startActivity(Intent(this, SettingsActivity::class.java))
+            }
+            R.id.drawer_menu_simulator -> {
+                startActivity(Intent(this, SimulatorActivity::class.java))
             }
             R.id.drawer_menu_logout -> {
                 logOut()

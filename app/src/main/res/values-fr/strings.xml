@@ -48,4 +48,11 @@
     <string name="search_preview_rooms">entre %1$s et %2$s</string>
     <string name="search_button">Rechercher</string>
 
+    <!-- Simulator -->
+    <string name="calculer_vos_mensualit_s">Calculer vos mensualités</string>
+    <string name="capital_emprunt">Capital emprunté</string>
+    <string name="duration_in_year">Durée(en année)</string>
+    <string name="rate_in">Taux(en %)</string>
+    <string name="calculate">Calculer</string>
+
 </resources>

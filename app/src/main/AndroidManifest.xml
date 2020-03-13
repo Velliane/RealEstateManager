@@ -8,8 +8,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="com.google.android.apps.photos.permission.GOOGLE_PHOTOS"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.apps.photos.permission.GOOGLE_PHOTOS" />
 
     <application
         android:allowBackup="true"
@@ -19,8 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".SimulatorActivity"></activity>
         <!-- Activities -->
-        <activity android:name=".search.SearchActivity"/>
+        <activity android:name=".search.SearchActivity" />
         <activity android:name=".settings.SettingsActivity" />
         <activity android:name=".BaseActivity" />
         <activity android:name=".dispatcher.HomeActivity">
@@ -31,11 +32,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".login.LoginActivity" />
-        <activity android:name="com.openclassrooms.realestatemanager.show.MainActivity" />
+        <activity android:name=".show.MainActivity" />
         <activity
-            android:name="com.openclassrooms.realestatemanager.add_edit.EditAddActivity"
-            android:theme="@style/DialogTheme" />
-        <!-- Provider -->
+            android:name=".add_edit.EditAddActivity"
+            android:theme="@style/DialogTheme" /> <!-- Provider -->
         <provider
             android:name=".provider.PropertyContentProvider"
             android:authorities="com.openclassrooms.realestatemanager.provider"

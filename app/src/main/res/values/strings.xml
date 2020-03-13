@@ -49,4 +49,11 @@
     <string name="search_preview_rooms">between %1$s and %2$s</string>
     <string name="search_button">Search</string>
 
+    <!-- Simulator -->
+    <string name="calculer_vos_mensualit_s">Calculate your monthly payments</string>
+    <string name="capital_emprunt">Borrowed capital</string>
+    <string name="duration_in_year">Duration(in year)</string>
+    <string name="rate_in">Rate(in %)</string>
+    <string name="calculate">Calculate</string>
+
 </resources>
