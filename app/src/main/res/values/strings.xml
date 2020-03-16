@@ -55,5 +55,6 @@
     <string name="duration_in_year">Duration(in year)</string>
     <string name="rate_in">Rate(in %)</string>
     <string name="calculate">Calculate</string>
+    <string name="result">Your monthly payement is %1$s</string>
 
 </resources>

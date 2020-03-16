@@ -41,6 +41,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
 
     /** Views */
     private lateinit var spinnerType: Spinner
+    private lateinit var spinnerAgent: Spinner
     private lateinit var price: TextInputEditText
     private lateinit var surface: TextInputEditText
     private lateinit var rooms: TextInputEditText
@@ -97,12 +98,15 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         //-- Check permission for Write to External Storage --//
         if(!checkPermission()){ requestPermission() }
 
-
-        //-- Set TypeEnumSpinner Adapter --//
-        val adapter = TypeEnumSpinnerAdapter(this, typeList)
-        spinnerType.adapter = adapter
+        //-- Set Spinner Adapter --//
+        val adapterType = TypeEnumSpinnerAdapter(this, typeList)
+        spinnerType.adapter = adapterType
+        editDataViewModel.getAllUser()
+        editDataViewModel.userListLiveData.observe(this, Observer {
+            val adapterAgent = AgentSpinnerAdapter(this, it)
+            spinnerAgent.adapter = adapterAgent
+        })
     }
-
     /**
      * Get data from the PropertyDatabase if the propertyId is not equals to 0
      * @param id The id of the property
@@ -124,7 +128,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v) {
             saveBtn -> {
-                val property = Property(propertyId, spinnerType.selectedItem.toString().toUpperCase(Locale.ROOT), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), numberBedrooms.text.toString().toInt(), numberBathrooms.text.toString().toInt(), description.text.toString(), true, parseLocalDateTimeToString(LocalDateTime.now()))
+                val property = Property(propertyId, getCurrentUser().uid, spinnerType.selectedItem.toString().toUpperCase(Locale.ROOT), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), numberBedrooms.text.toString().toInt(), numberBathrooms.text.toString().toInt(), description.text.toString(), true, parseLocalDateTimeToString(LocalDateTime.now()))
                 editDataViewModel.save(property.id_property, property,number.text.toString().toInt(), street.text.toString(), zipCode.text.toString(), city.text.toString(), country.text.toString(), imageList)
                 sendNotification()
                 Snackbar.make(layout, "Save complete", Snackbar.LENGTH_SHORT).show()
@@ -195,6 +199,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
 
     private fun bindViews() {
         spinnerType = findViewById(R.id.add_edit_type_spinner)
+        spinnerAgent = findViewById(R.id.agent_spinner)
         price = findViewById(R.id.edit_price)
         surface = findViewById(R.id.edit_surface)
         rooms = findViewById(R.id.edit_rooms)

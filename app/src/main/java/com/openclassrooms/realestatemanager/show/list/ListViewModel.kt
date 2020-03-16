@@ -28,10 +28,9 @@ import kotlinx.coroutines.withContext
 class ListViewModel(private val propertyDataRepository: PropertyDataRepository, private val addressDataRepository: AddressDataRepository, private val geocodeRepository: GeocodeRepository, private val photoDataRepository: PhotoDataRepository) : ViewModel() {
 
     val propertiesLiveData = MediatorLiveData<List<PropertyModelForList>>()
-    val addressesMutableLiveData = MutableLiveData<MutableMap<String, Address?>>(HashMap<String, Address?>())
-    val propertiesFromResearchLiveData = MutableLiveData<List<Property>>()
-    val allPropertiesLiveData = propertyDataRepository.getAllProperties()
-    val propertiesFoundsLiveData: MutableLiveData<List<Property>> get() = propertiesFromResearchLiveData
+    private val addressesMutableLiveData = MutableLiveData<MutableMap<String, Address?>>(HashMap<String, Address?>())
+    private val propertiesFromResearchLiveData = MutableLiveData<List<Property>>()
+    private val allPropertiesLiveData = propertyDataRepository.getAllProperties()
 
     init {
         propertiesLiveData.addSource(allPropertiesLiveData, Observer {
@@ -42,7 +41,7 @@ class ListViewModel(private val propertyDataRepository: PropertyDataRepository, 
         })
     }
 
-    fun combinePropertiesPhotosAndAddresses(properties: List<Property>?, addresses: Map<String, Address?>) {
+    private fun combinePropertiesPhotosAndAddresses(properties: List<Property>?, addresses: Map<String, Address?>) {
         if (properties == null) {
             return
         }
@@ -96,12 +95,18 @@ class ListViewModel(private val propertyDataRepository: PropertyDataRepository, 
     }
 
     fun searchInDatabase(query: SimpleSQLiteQuery){
-        viewModelScope.launch(Dispatchers.IO) {
-            val list = propertyDataRepository.searchInDatabase(query)
-            withContext(Dispatchers.Main){
-                propertiesFromResearchLiveData.value = list
-            }
-        }
+        val propertiesFromResearchLiveData = propertyDataRepository.searchInDatabase(query)
+        propertiesLiveData.removeSource(allPropertiesLiveData)
+        propertiesLiveData.addSource(propertiesFromResearchLiveData, Observer {
+            combinePropertiesPhotosAndAddresses(it, addressesMutableLiveData.value!!)
+        })
+    }
+
+    fun reset(){
+        propertiesLiveData.removeSource(propertiesFromResearchLiveData)
+        propertiesLiveData.addSource(allPropertiesLiveData, Observer {
+            combinePropertiesPhotosAndAddresses(it, addressesMutableLiveData.value!!)
+        })
     }
 
 }

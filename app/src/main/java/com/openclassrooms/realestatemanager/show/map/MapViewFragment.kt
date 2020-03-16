@@ -96,35 +96,23 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerCl
     }
 
     private fun getListOfProperty() {
-//        mapViewModel.propertiesLiveData.observe(this, Observer<List<Property>> { list ->
-//            for (property in list) {
-//                mapViewModel.getAddressOfOneProperty(property.id_property)
-//                mapViewModel.addressLiveData.observe(this, Observer<Address> { address ->
-//                    mapViewModel.getLatLng(address, "country:FR", context!!.resources.getString(R.string.api_key_google)).observe(this, Observer {
-//                        val result = it.results!![0]
-//                        val location = LatLng(result.geometry!!.location!!.lat!!, result.geometry!!.location!!.lng!!)
-//                        val markerOptions = MarkerOptions().position(location).title(property.price.toString())
-//
-//                        googleMap!!.addMarker(markerOptions).tag = property.id_property
-//
-//                    })
-//                })
-//            }
-//        })
-        mapViewModel.propertiesLiveData.observe(this, Observer<List<PropertyModelForMap>> {
-           it?.let {
-               for(property in it) {
-                   mapViewModel.getLatLng(property.address!!, "country:FR", context!!.resources.getString(R.string.api_key_google)).observe(this, Observer { it ->
-                       val result = it.results!![0]
-                        val location = LatLng(result.geometry!!.location!!.lat!!, result.geometry!!.location!!.lng!!)
-                       val markerOptions = MarkerOptions().position(location).title(property.price)
-                       googleMap!!.addMarker(markerOptions).tag = property.propertyId
-                   })
+
+        mapViewModel.propertiesLiveData.observe(this, Observer<List<PropertyModelForMap>> { list ->
+            list?.let {
+               for(property in list) {
+                   property.address?.let { it1 ->
+                       mapViewModel.getLatLng(it1, "country:FR", context!!.resources.getString(R.string.api_key_google)).observe(this, Observer {
+                           val result = it.results!![0]
+                           val location = LatLng(result.geometry!!.location!!.lat!!, result.geometry!!.location!!.lng!!)
+                           val markerOptions = MarkerOptions().position(location).title(property.price)
+                           googleMap!!.addMarker(markerOptions).tag = property.propertyId
+                       })
+                   }
 
                }
            }
         })
-    }
+   }
 
     override fun onMarkerClick(marker: Marker?): Boolean {
         val fragment = DetailsFragment.newInstance()

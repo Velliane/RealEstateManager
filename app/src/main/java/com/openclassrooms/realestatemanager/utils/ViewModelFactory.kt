@@ -15,6 +15,7 @@ import com.openclassrooms.realestatemanager.show.MainViewModel
 import com.openclassrooms.realestatemanager.show.detail.DetailViewModel
 import com.openclassrooms.realestatemanager.show.list.ListViewModel
 import com.openclassrooms.realestatemanager.show.map.MapViewModel
+import com.openclassrooms.realestatemanager.simulator.SimulatorViewModel
 import java.lang.IllegalArgumentException
 import java.util.concurrent.Executor
 
@@ -28,7 +29,7 @@ class ViewModelFactory(private val context: Context, private val userDataReposit
                 ListViewModel(propertyDataRepository, addressDataRepository, geocodeRepository, photoDataRepository) as T
             }
             modelClass.isAssignableFrom(EditDataViewModel::class.java) -> {
-                EditDataViewModel(context, photoDataRepository, propertyDataRepository, addressDataRepository, executor) as T
+                EditDataViewModel(context, photoDataRepository, propertyDataRepository, addressDataRepository, executor, userDataRepository) as T
             }
             modelClass.isAssignableFrom(UserViewModel::class.java) -> {
                 return UserViewModel(userDataRepository) as T
@@ -37,7 +38,10 @@ class ViewModelFactory(private val context: Context, private val userDataReposit
                 return DetailViewModel(propertyDataRepository, geocodeRepository, addressDataRepository, photoDataRepository) as T
             }
             modelClass.isAssignableFrom(MapViewModel::class.java) -> {
-                MapViewModel(context, propertyDataRepository, addressDataRepository, geocodeRepository) as T
+                MapViewModel(propertyDataRepository, addressDataRepository, geocodeRepository) as T
+            }
+            modelClass.isAssignableFrom(SimulatorViewModel::class.java) -> {
+                SimulatorViewModel() as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel")
         }

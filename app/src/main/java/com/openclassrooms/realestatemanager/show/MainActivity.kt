@@ -1,7 +1,6 @@
 package com.openclassrooms.realestatemanager.show
 
 import android.app.Activity
-import android.app.Instrumentation
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -26,7 +25,7 @@ import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.login.LoginActivity
 import com.openclassrooms.realestatemanager.login.User
 import com.openclassrooms.realestatemanager.BaseActivity
-import com.openclassrooms.realestatemanager.SimulatorActivity
+import com.openclassrooms.realestatemanager.simulator.SimulatorActivity
 import com.openclassrooms.realestatemanager.add_edit.EditAddActivity
 import com.openclassrooms.realestatemanager.search.SearchActivity
 import com.openclassrooms.realestatemanager.settings.SettingsActivity

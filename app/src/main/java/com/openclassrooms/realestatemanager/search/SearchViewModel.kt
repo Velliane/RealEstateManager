@@ -34,7 +34,7 @@ class SearchViewModel(private val context: Context): ViewModel() {
         if(priceRange.isNotEmpty()){
             val min = priceRange[0]
             val max = priceRange[1]
-            query += " WHERE price BETWEEN :$min AND :$max"
+            query += " WHERE price BETWEEN '$min' AND '$max'"
             Log.d("QUERY", query)
             contains = true
         }
@@ -45,20 +45,19 @@ class SearchViewModel(private val context: Context): ViewModel() {
             }else{
                 " WHERE"
             }
-            query += " type = :$type"
+            query += " type LIKE '$type'"
             Log.d("QUERY", query)
             contains = true
         }
 
-//        query += if(contains){
-//            " AND"
-//        }else{
-//            " WHERE"
-//        }
-//        query += " rooms_nbr >= :$roomsMinValue AND rooms_nbr <= :$roomsMaxValue"
-//        Log.d("QUERY", query)
+        query += if(contains){
+            " AND"
+        }else{
+            " WHERE"
+        }
+        query += " rooms_nbr >= '$roomsMinValue' AND rooms_nbr <= '$roomsMaxValue'"
+        Log.d("QUERY", query)
 
-        //query += ";"
         return query
     }
 

@@ -97,6 +97,67 @@
         app:max_value="8"
         app:steps="1"/>
 
+
+    <LinearLayout
+        android:id="@+id/location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_rooms_seek_bar">
+
+        <TextView
+            android:id="@+id/search_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textSize="18sp"
+            android:text="Location : "/>
+
+        <EditText
+            android:id="@+id/search_edit_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="City, etc..."
+            android:layout_margin="10dp"
+            android:inputType="text"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/search_bedrooms"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="Bedrooms :"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/location" />
+
+    <TextView
+        android:id="@+id/bedrooms_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:text="@string/search_preview_rooms"
+        app:layout_constraintBottom_toTopOf="@id/search_bedrooms_seek_bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/search_rooms"
+        app:layout_constraintTop_toBottomOf="@id/location" />
+
+
+    <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
+        android:id="@+id/search_bedrooms_seek_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/search_bedrooms"
+        app:layout_constraintTop_toBottomOf="@id/search_bedrooms"
+        app:min_value="1"
+        app:max_value="8"
+        app:steps="1"/>
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/search_button"
         android:layout_width="wrap_content"

@@ -15,9 +15,11 @@ import com.openclassrooms.realestatemanager.utils.Constants
 
 class UserViewModel(private val userDataRepository: UserDataRepository): ViewModel() {
 
+    private val userHelper = UserHelper()
+
     fun saveUser(user: User, context: Context, sharedPreferences: SharedPreferences) {
         userDataRepository.addUser(user)
-        createUser(user.userId, user.name, user.email, user.photo!!).addOnFailureListener(OnFailureListener { exception ->
+        userHelper.createUser(user.userId, user.name, user.email, user.photo!!).addOnFailureListener(OnFailureListener { exception ->
             Log.d("Error", exception.printStackTrace().toString())
             val builder = AlertDialog.Builder(context)
             builder.setMessage("Error")

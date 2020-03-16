@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.openclassrooms.realestatemanager.data.*
 import com.openclassrooms.realestatemanager.data.PhotoDataRepository
+import com.openclassrooms.realestatemanager.login.User
+import com.openclassrooms.realestatemanager.login.UserDataRepository
 import com.openclassrooms.realestatemanager.search.TypeEnum
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,7 +16,7 @@ import kotlinx.coroutines.withContext
 import java.util.*
 import java.util.concurrent.Executor
 
-class EditDataViewModel(private val context: Context, private val photoDataRepository: PhotoDataRepository, private val propertyDataRepository: PropertyDataRepository, private val addressDataRepository: AddressDataRepository, private val executor: Executor) : ViewModel() {
+class EditDataViewModel(private val context: Context, private val photoDataRepository: PhotoDataRepository, private val propertyDataRepository: PropertyDataRepository, private val addressDataRepository: AddressDataRepository, private val executor: Executor, private val userDataRepository: UserDataRepository) : ViewModel() {
 
     /** Helpers for Firestore Data */
     private val propertyHelper = PropertyHelper()
@@ -23,7 +25,7 @@ class EditDataViewModel(private val context: Context, private val photoDataRepos
 
     var propertyLiveData = MutableLiveData<Property>()
     var addressLiveData = MutableLiveData<Address>()
-    var listPhotosLiveData = MutableLiveData<List<String>?>()
+    val userListLiveData = MutableLiveData<List<User>>()
 
     /**
      * Save data in Room and Firestore
@@ -69,6 +71,15 @@ class EditDataViewModel(private val context: Context, private val photoDataRepos
             }
         }
         return list
+    }
+
+    fun getAllUser(){
+        viewModelScope.launch {
+            val list = userDataRepository.getAllUsers()
+            withContext(Dispatchers.Main){
+                userListLiveData.value = list
+            }
+        }
     }
 
     //-- Add Data in Firestore --//

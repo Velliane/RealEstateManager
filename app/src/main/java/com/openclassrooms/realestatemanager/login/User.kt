@@ -9,12 +9,12 @@ data class User (
 
         @PrimaryKey
         @ColumnInfo(name = "userId")
-        var userId: String,
+        var userId: String = "",
 
         @ColumnInfo(name = "name")
-        var name: String,
+        var name: String = "",
         @ColumnInfo(name = "email")
-        var email: String,
+        var email: String = "",
         @ColumnInfo(name = "photo")
-        var photo: String?
+        var photo: String? = ""
 )

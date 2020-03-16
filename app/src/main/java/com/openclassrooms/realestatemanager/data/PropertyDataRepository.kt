@@ -5,26 +5,25 @@ import androidx.sqlite.db.SupportSQLiteQuery
 import com.openclassrooms.realestatemanager.add_edit.Property
 import com.openclassrooms.realestatemanager.data.database.PropertyDao
 
-class PropertyDataRepository(private val propertyDao: PropertyDao) {
+open class PropertyDataRepository(private val propertyDao: PropertyDao) {
 
-    fun getAllProperties(): LiveData<List<Property>>{
+   open fun getAllProperties(): LiveData<List<Property>>{
         return propertyDao.getAllProperties()
     }
 
-    fun addProperty(property: Property): Long{
+    open fun addProperty(property: Property): Long{
         return propertyDao.addProperty(property)
     }
 
-    suspend fun getPropertyFromId(id_property: String): Property {
+    open suspend fun getPropertyFromId(id_property: String): Property {
         return propertyDao.getPropertyFromId(id_property)
     }
 
-   suspend fun searchInDatabase(query: SupportSQLiteQuery): List<Property> {
-       val list = propertyDao.searchInDatabase(query)
-        return list
+   open fun searchInDatabase(query: SupportSQLiteQuery): LiveData<List<Property>> {
+       return propertyDao.searchInDatabase(query)
     }
 
-    fun updatePropertyType(type: String, id_property: String): Int {
+    open fun updatePropertyType(type: String, id_property: String): Int {
         return propertyDao.updatePropertyType(type, id_property)
     }
 

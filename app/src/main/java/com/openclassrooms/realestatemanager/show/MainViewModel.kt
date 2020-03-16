@@ -67,7 +67,7 @@ class MainViewModel(private val context: Context, private val propertyDataReposi
     fun updateDatabase(){
         val list = propertiesLiveData.value
         viewModelScope.launch(Dispatchers.IO) {
-            firestoreDataRepository.updateDatabase(list)
+            firestoreDataRepository.updateDatabase(list, userDataRepository.getAllUsers())
         }
     }
 

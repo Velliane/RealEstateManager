@@ -13,7 +13,7 @@ import com.openclassrooms.realestatemanager.login.User
 interface UserDao {
 
     @Query("SELECT * FROM User")
-    fun getAllUsers(): LiveData<List<User>>
+    suspend fun getAllUsers(): List<User>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun addUser(user: User): Long

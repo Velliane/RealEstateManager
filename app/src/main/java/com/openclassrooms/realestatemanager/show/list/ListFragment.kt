@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.show.BaseFragment
 import com.openclassrooms.realestatemanager.show.detail.DetailsFragment
@@ -28,7 +29,7 @@ import com.openclassrooms.realestatemanager.utils.getScreenOrientation
  * - if orientation is landscape : the fragment DetailsFragment is update with the details of the property clicked
  */
 
-class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener {
+class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener, View.OnClickListener {
 
     /** RecyclerView */
     private lateinit var recyclerView: RecyclerView
@@ -42,6 +43,8 @@ class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener {
     private lateinit var sharedPreferences: SharedPreferences
     /** Search query */
     private var querySearch: String? = ""
+    /** Reset Button */
+    private lateinit var resetBtn: MaterialButton
 
     companion object {
         fun newInstance(query: String?): ListFragment {
@@ -56,6 +59,8 @@ class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_list, container, false)
 
+        resetBtn = view.findViewById(R.id.reset_research)
+        resetBtn.setOnClickListener(this)
         recyclerView = view.findViewById(R.id.fragment_list_recycler_view)
         recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.HORIZONTAL))
         recyclerView.layoutManager = LinearLayoutManager(activity!!.applicationContext)
@@ -70,13 +75,10 @@ class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener {
         mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(ListViewModel::class.java)
         if(checkExternalStoragePermissions()) {
             if(querySearch != null){
+                resetBtn.visibility = View.VISIBLE
                 val queryForDatabase = mainViewModel.stringToSimpleSQLiteQuery(querySearch!!)
                 Log.d("query", queryForDatabase.toString())
                 mainViewModel.searchInDatabase(queryForDatabase)
-                mainViewModel.propertiesLiveData.removeSource(mainViewModel.allPropertiesLiveData)
-                mainViewModel.propertiesLiveData.addSource(mainViewModel.propertiesFoundsLiveData, Observer {
-                    mainViewModel.combinePropertiesPhotosAndAddresses(it, mainViewModel.addressesMutableLiveData.value!!)
-                })
                 mainViewModel.propertiesLiveData.observe(this, Observer {
                     updateView(it)
                 })
@@ -136,6 +138,15 @@ class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener {
             activity!!.supportFragmentManager.beginTransaction().replace(R.id.container_fragment_details, fragment).commit()
         }
 
+    }
+
+    override fun onClick(view: View?) {
+        when(view){
+            resetBtn -> {
+                mainViewModel.reset()
+                resetBtn.visibility = View.GONE
+            }
+        }
     }
 
 }

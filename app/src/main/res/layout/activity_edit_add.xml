@@ -41,6 +41,31 @@
             app:layout_constraintStart_toEndOf="@id/edit_on_sale_btn"
             app:layout_constraintTop_toBottomOf="@id/edit_title" />
 
+        <LinearLayout
+            android:id="@+id/agent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_on_sale_btn"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <TextView
+                android:id="@+id/agent_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="Manage by"
+                android:textSize="18sp"/>
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/agent_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:layout_margin="10dp" />
+
+        </LinearLayout>
 
         <!-- Type of the property -->
 
@@ -57,7 +82,7 @@
             app:layout_constraintBottom_toTopOf="@id/custom_surface_container"
             app:layout_constraintEnd_toStartOf="@id/custom_price_container"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_on_sale_btn">
+            app:layout_constraintTop_toBottomOf="@id/agent">
 
             <Spinner
                 android:id="@+id/add_edit_type_spinner"
@@ -78,7 +103,7 @@
             app:layout_constraintBottom_toTopOf="@id/custom_rooms_container"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/custom_type_container"
-            app:layout_constraintTop_toBottomOf="@id/edit_sold_btn">
+            app:layout_constraintTop_toBottomOf="@id/agent">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_price"

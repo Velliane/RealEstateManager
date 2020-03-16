@@ -1,7 +1,6 @@
 package com.openclassrooms.realestatemanager.data.database
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.openclassrooms.realestatemanager.add_edit.Property
@@ -23,7 +22,7 @@ interface PropertyDao {
     suspend fun getPropertyFromId(id_property: String): Property
 
     @RawQuery(observedEntities = [Property::class])
-    suspend fun searchInDatabase(query: SupportSQLiteQuery): List<Property>
+    fun searchInDatabase(query: SupportSQLiteQuery): LiveData<List<Property>>
 
     @Query("UPDATE Property SET type = :type WHERE id_property = :id_property")
     fun updatePropertyType(type: String, id_property: String): Int

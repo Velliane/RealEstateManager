@@ -1,9 +1,6 @@
 package com.openclassrooms.realestatemanager.show.map
 
-import android.content.Context
 import androidx.lifecycle.*
-import com.google.android.gms.maps.model.LatLng
-import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.add_edit.Address
 import com.openclassrooms.realestatemanager.add_edit.Property
 import com.openclassrooms.realestatemanager.data.AddressDataRepository
@@ -15,7 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MapViewModel(private val context: Context, propertyDataRepository: PropertyDataRepository, private val addressDataRepository: AddressDataRepository, private val geocodeRepository: GeocodeRepository): ViewModel() {
+class MapViewModel(propertyDataRepository: PropertyDataRepository, private val addressDataRepository: AddressDataRepository, private val geocodeRepository: GeocodeRepository): ViewModel() {
 
     val propertiesLiveData = MediatorLiveData<List<PropertyModelForMap>>()
     private val addressesMutableLiveData = MutableLiveData<MutableMap<String, Address?>>(HashMap<String, Address?>())
@@ -52,18 +49,6 @@ class MapViewModel(private val context: Context, propertyDataRepository: Propert
         propertiesLiveData.value = propertyModelsForList
     }
 
-    fun getLatLng(address: Address, countryCode: String, key: String): LiveData<Geocode> {
-        val txt = setAddressToString(address)
-        return geocodeRepository.getLatLng(txt, countryCode, key)
-    }
-
-
-    private fun getLatLngForAddress(address: Address, countryCode: String, key: String): LatLng {
-        val txt = setAddressToString(address)
-        val geocodeMutableLiveData = geocodeRepository.getLatLng(txt, countryCode, key)
-        val geocode = geocodeMutableLiveData.value!!.results!![0]
-        return LatLng(geocode.geometry!!.location!!.lat!!, geocode.geometry!!.location!!.lng!!)
-    }
 
     private fun getAddressForPropertyId(idProperty: String) {
         addressesMutableLiveData.value?.let {
@@ -81,5 +66,24 @@ class MapViewModel(private val context: Context, propertyDataRepository: Propert
         }
 
     }
+
+    fun getLatLng(address: Address, countryCode: String, key: String): LiveData<Geocode> {
+        val txt = setAddressToString(address)
+        return geocodeRepository.getLatLng(txt, countryCode, key)
+    }
+
+
+//    private fun getLatLngForAddress(address: Address, countryCode: String, key: String): LatLng {
+//        val txt = setAddressToString(address)
+//        var latitude = 0.0
+//        var longitude = 0.0
+//        val geocodeMutableLiveData = geocodeRepository.getLatLng(txt, countryCode, key)
+//        val geocode: Geocode = geocodeMutableLiveData.value!!
+//        if(geocode.results != null){
+//            latitude = geocode.results!![0].geometry!!.location!!.lat!!
+//            longitude = geocode.results!![0].geometry!!.location!!.lng!!
+//        }
+//        return LatLng(latitude, longitude)
+//    }
 
 }

@@ -13,6 +13,9 @@ data class Property(
         @ColumnInfo (name = "id_property")
         var id_property: String = "",
 
+        @ColumnInfo (name = "agent")
+        var agent: String = "",
+
         @ColumnInfo (name = "type")
         var type: String = "",
         @ColumnInfo (name = "price")

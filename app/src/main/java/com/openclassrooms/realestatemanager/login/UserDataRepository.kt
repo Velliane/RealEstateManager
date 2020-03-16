@@ -6,7 +6,7 @@ import com.openclassrooms.realestatemanager.login.User
 
 class UserDataRepository(private val userDao: UserDao) {
 
-    fun getAllUsers(): LiveData<List<User>>{
+    suspend fun getAllUsers(): List<User>{
         return userDao.getAllUsers()
     }
 

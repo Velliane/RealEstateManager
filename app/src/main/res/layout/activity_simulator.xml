@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SimulatorActivity">
+    tools:context=".simulator.SimulatorActivity">
 
     <include
         android:id="@+id/toolbar"
@@ -87,7 +87,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.button.MaterialButton
-        android:id="@+id/calculate_button"
+        android:id="@+id/reset_research"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="28dp"
@@ -105,9 +105,11 @@
         android:id="@+id/simulator_result"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_margin="15dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:textSize="25sp"
-        app:layout_constraintTop_toBottomOf="@id/calculate_button"/>
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/reset_research"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
