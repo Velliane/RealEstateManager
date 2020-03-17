@@ -55,5 +55,7 @@
     <string name="rate_in">Taux(en %)</string>
     <string name="calculate">Calculer</string>
     <string name="result">Your monthly payement is %1$s</string>
+    <string name="on_sale">En vente</string>
+    <string name="sold">Vendu</string>
 
 </resources>

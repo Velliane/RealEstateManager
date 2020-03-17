@@ -1,11 +1,9 @@
 package com.openclassrooms.realestatemanager.show.list
 
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.view.View
+import androidx.lifecycle.*
 import androidx.sqlite.db.SimpleSQLiteQuery
+import com.google.android.material.button.MaterialButton
 import com.openclassrooms.realestatemanager.data.AddressDataRepository
 import com.openclassrooms.realestatemanager.data.PhotoDataRepository
 import com.openclassrooms.realestatemanager.data.PropertyDataRepository
@@ -21,15 +19,15 @@ import kotlinx.coroutines.withContext
 /**
  * ViewModel for ListViewFragment
  * Expose a MediatorLiveDate with two sources:
- *  - list of all properties get from Firestore
- *  - list of all Addresses according of properties's id
+ *  - list of properties got from PropertyDatabase
+ *  - list of addresses according of properties's id
  * Merge the two lists
  */
 class ListViewModel(private val propertyDataRepository: PropertyDataRepository, private val addressDataRepository: AddressDataRepository, private val geocodeRepository: GeocodeRepository, private val photoDataRepository: PhotoDataRepository) : ViewModel() {
 
     val propertiesLiveData = MediatorLiveData<List<PropertyModelForList>>()
     private val addressesMutableLiveData = MutableLiveData<MutableMap<String, Address?>>(HashMap<String, Address?>())
-    private val propertiesFromResearchLiveData = MutableLiveData<List<Property>>()
+    private var propertiesFromResearchLiveData: LiveData<List<Property>>? = null
     private val allPropertiesLiveData = propertyDataRepository.getAllProperties()
 
     init {
@@ -41,6 +39,9 @@ class ListViewModel(private val propertyDataRepository: PropertyDataRepository, 
         })
     }
 
+    /**
+     * Merge list of properties with list of addresses
+     */
     private fun combinePropertiesPhotosAndAddresses(properties: List<Property>?, addresses: Map<String, Address?>) {
         if (properties == null) {
             return
@@ -90,23 +91,41 @@ class ListViewModel(private val propertyDataRepository: PropertyDataRepository, 
 
     }
 
-    fun stringToSimpleSQLiteQuery(query: String): SimpleSQLiteQuery {
+    private fun stringToSimpleSQLiteQuery(query: String): SimpleSQLiteQuery {
         return SimpleSQLiteQuery(query)
     }
 
-    fun searchInDatabase(query: SimpleSQLiteQuery){
-        val propertiesFromResearchLiveData = propertyDataRepository.searchInDatabase(query)
-        propertiesLiveData.removeSource(allPropertiesLiveData)
-        propertiesLiveData.addSource(propertiesFromResearchLiveData, Observer {
-            combinePropertiesPhotosAndAddresses(it, addressesMutableLiveData.value!!)
-        })
+    /**
+     * Search list of properties in PropertyDatabase according to query
+     * Change source of MediatorLiveData propertiesLiveData
+     * @param query the search query
+     * @param resetBtn the button for reset the search
+     */
+    fun searchInDatabase(query: String, resetBtn: MaterialButton){
+       propertyDataRepository.searchInDatabase(stringToSimpleSQLiteQuery(query)).let { properties ->
+           propertiesFromResearchLiveData = properties
+           propertiesLiveData.removeSource(allPropertiesLiveData)
+           propertiesLiveData.addSource(properties, Observer {
+               combinePropertiesPhotosAndAddresses(it, addressesMutableLiveData.value!!)
+           })
+       }
+        resetBtn.visibility = View.VISIBLE
+
     }
 
-    fun reset(){
-        propertiesLiveData.removeSource(propertiesFromResearchLiveData)
-        propertiesLiveData.addSource(allPropertiesLiveData, Observer {
-            combinePropertiesPhotosAndAddresses(it, addressesMutableLiveData.value!!)
-        })
+    /**
+     * Reset the research by restore source (allPropertiesLiveData) of MediatorLiveData
+     * @param resetBtn the button for reset the search
+     */
+    fun reset(resetBtn: MaterialButton){
+        propertiesFromResearchLiveData?.let { properties ->
+            propertiesLiveData.removeSource(properties)
+            propertiesLiveData.addSource(allPropertiesLiveData, Observer {
+                combinePropertiesPhotosAndAddresses(it, addressesMutableLiveData.value!!)
+            })
+        }
+        resetBtn.visibility = View.GONE
+
     }
 
 }

@@ -6,12 +6,17 @@ class Constants {
 
         // BUNDLE
         const val PROPERTY_ID = "PROPERTY_ID"
+        const val SEARCH_QUERY = "SEARCH_QUERY"
+
+        // INTENT
+        const val RESULT = "RESULT"
 
         // REQUEST CODE
         const val RC_SIGN_IN = 1
         const val RC_PERMISSION_LOCATION = 2
         const val RC_PERMISSION_FILES_STORAGE = 3
         const val RC_CHOOSE_IMAGE = 4
+        const val RC_SEARCH = 5
 
         // PERMISSIONS
         const val PERMS = android.Manifest.permission.READ_EXTERNAL_STORAGE

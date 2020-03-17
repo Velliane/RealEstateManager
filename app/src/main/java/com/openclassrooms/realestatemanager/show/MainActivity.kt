@@ -1,6 +1,5 @@
 package com.openclassrooms.realestatemanager.show
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -63,8 +62,6 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
     /** Shared Preferences */
     private lateinit var sharedPreferences: SharedPreferences
 
-    /** Query for search */
-    private var querySearch:String? = ""
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,19 +73,13 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
         //-- Get Shared Preferences --//
         sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE)
 
-        //-- get Intent --//
-        querySearch = intent.getStringExtra("Search query")
-        if(querySearch != null) {
-            val intent = Intent()
-            intent.putExtra("result", "Data received successfully")
-            setResult(Activity.RESULT_OK, intent)
-        }
-
         //-- Configuration --//
         configureViewModel()
         bindViews()
         configureDrawerLayout()
-//        if(savedInstanceState == null){
+        if(savedInstanceState == null){
+            sharedPreferences.edit().putString(Constants.PREF_ID_PROPERTY, "").apply()
+        }
         mainViewModel.updateDatabase()
         configureDrawer()
         showFragments(savedInstanceState)
@@ -123,6 +114,13 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
         return false
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        val querySearch = data!!.getStringExtra(Constants.SEARCH_QUERY)
+        val fragment = supportFragmentManager.findFragmentById(R.id.container_fragment_list)
+        (fragment as? ListFragment)?.refreshQuery(querySearch)
+    }
+
     //-- TOOLBAR MENU --//
     /**
      * When click on a Toolbar's item
@@ -137,7 +135,7 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
                 return true
             }
             R.id.toolbar_menu_search -> {
-                startActivity(Intent(this, SearchActivity::class.java))
+                startActivityForResult(Intent(this, SearchActivity::class.java), Constants.RC_SEARCH)
                 return true
             }
         }
@@ -247,7 +245,7 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
     private fun showListFragment() {
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment_list)
         if (fragment == null) {
-            val listFragment = ListFragment.newInstance(querySearch)
+            val listFragment = ListFragment.newInstance()
             addFragment(listFragment)
         }
     }
@@ -274,17 +272,6 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
             showListFragment()
         }
     }
-
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        if(requestCode == 2){
-//            if(resultCode == Activity.RESULT_OK){
-//                val bundle = intent.getBundleExtra("List property")
-//                val list = ArrayList<Property>()
-//                list.addAll(bundle.getParcelableArrayList("List property")!!)
-//            }
-//        }
-//        super.onActivityResult(requestCode, resultCode, data)
-//    }
 
     //-- LOGOUT --//
     private fun logOut() {

@@ -7,5 +7,6 @@ data class PropertyModelForMap (
 
         val propertyId: String,
         val address: Address?,
-        val price: String
+        val price: String,
+        val type: String
 )

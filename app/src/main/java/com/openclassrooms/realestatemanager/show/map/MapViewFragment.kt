@@ -23,7 +23,7 @@ import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.getScreenOrientation
 import com.openclassrooms.realestatemanager.utils.setAddressToString
 
-class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
 
     companion object {
         fun newInstance(): MapViewFragment {
@@ -64,6 +64,7 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerCl
         googleMap = map
         googleMap!!.uiSettings?.isZoomControlsEnabled = true
         googleMap!!.setOnMarkerClickListener(this)
+        googleMap!!.setOnInfoWindowClickListener(this)
 
         //-- Check if permissions are granted for FINE_LOCATION or request it --//
         if (checkLocationPermissions()) {
@@ -104,7 +105,8 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerCl
                        mapViewModel.getLatLng(it1, "country:FR", context!!.resources.getString(R.string.api_key_google)).observe(this, Observer {
                            val result = it.results!![0]
                            val location = LatLng(result.geometry!!.location!!.lat!!, result.geometry!!.location!!.lng!!)
-                           val markerOptions = MarkerOptions().position(location).title(property.price)
+                           val txt = setAddressToString(property.address)
+                           val markerOptions = MarkerOptions().position(location).title(property.type).snippet("${txt}, price:${property.price}")
                            googleMap!!.addMarker(markerOptions).tag = property.propertyId
                        })
                    }
@@ -115,16 +117,17 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerCl
    }
 
     override fun onMarkerClick(marker: Marker?): Boolean {
-        val fragment = DetailsFragment.newInstance()
-        sharedPreferences.edit().putString(Constants.PREF_ID_PROPERTY, marker!!.tag.toString()).apply()
+        return false
+    }
 
+    override fun onInfoWindowClick(p0: Marker?) {
+        val fragment = DetailsFragment.newInstance()
+        sharedPreferences.edit().putString(Constants.PREF_ID_PROPERTY, p0!!.tag.toString()).apply()
         if (!getScreenOrientation(activity!!.resources.configuration.orientation)) {
             activity!!.supportFragmentManager.beginTransaction().replace(R.id.container_fragment_list, fragment).commit()
         } else {
             activity!!.supportFragmentManager.beginTransaction().replace(R.id.container_fragment_details, fragment).commit()
         }
-        return true
     }
-
 
 }

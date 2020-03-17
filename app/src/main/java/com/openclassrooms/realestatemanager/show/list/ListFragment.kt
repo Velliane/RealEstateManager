@@ -3,7 +3,6 @@ package com.openclassrooms.realestatemanager.show.list
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.View
@@ -25,7 +24,7 @@ import com.openclassrooms.realestatemanager.utils.getScreenOrientation
 /**
  * Fragment that show the list of properties saved in the PropertyDatabase
  * When click on an item of the list:
- * - if orientation is portrait : the fragment DetailsFragment replace the LiseFragment with the details of the property clicked
+ * - if orientation is portrait : the fragment DetailsFragment replace the ListFragment with the details of the property clicked
  * - if orientation is landscape : the fragment DetailsFragment is update with the details of the property clicked
  */
 
@@ -34,77 +33,50 @@ class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener, Vie
     /** RecyclerView */
     private lateinit var recyclerView: RecyclerView
     /** ViewModel */
-    private lateinit var mainViewModel: ListViewModel
+    private lateinit var viewModel: ListViewModel
     /** RecyclerView Adapter */
     private lateinit var adapter: ListPropertyAdapter
     /** No Data TextView */
     private lateinit var noDataTxt: TextView
     /** Shared Preferences */
     private lateinit var sharedPreferences: SharedPreferences
-    /** Search query */
-    private var querySearch: String? = ""
     /** Reset Button */
     private lateinit var resetBtn: MaterialButton
 
     companion object {
-        fun newInstance(query: String?): ListFragment {
-            val fragment = ListFragment()
-            val bundle = Bundle()
-            bundle.putString("Search query", query)
-            fragment.arguments = bundle
-            return fragment
+        fun newInstance(): ListFragment {
+            return ListFragment()
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_list, container, false)
-
-        resetBtn = view.findViewById(R.id.reset_research)
-        resetBtn.setOnClickListener(this)
-        recyclerView = view.findViewById(R.id.fragment_list_recycler_view)
-        recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.HORIZONTAL))
-        recyclerView.layoutManager = LinearLayoutManager(activity!!.applicationContext)
-        adapter = ListPropertyAdapter(this, context!!)
-        recyclerView.adapter = adapter
-        noDataTxt = view.findViewById(R.id.fragment_list_no_data)
-
-        querySearch = arguments!!.getString("Search query")
+        bindViews(view)
         sharedPreferences = activity!!.getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE)
-
+        //-- Configure ViewModel --//
         val viewModelFactory = Injection.provideViewModelFactory(requireContext())
-        mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(ListViewModel::class.java)
-        if(checkExternalStoragePermissions()) {
-            if(querySearch != null){
-                resetBtn.visibility = View.VISIBLE
-                val queryForDatabase = mainViewModel.stringToSimpleSQLiteQuery(querySearch!!)
-                Log.d("query", queryForDatabase.toString())
-                mainViewModel.searchInDatabase(queryForDatabase)
-                mainViewModel.propertiesLiveData.observe(this, Observer {
-                    updateView(it)
-                })
-            }else {
-                getListOfProperty()
-            }
-        }
-
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ListViewModel::class.java)
+        showList()
         return view
     }
 
-
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        super.onPrepareOptionsMenu(menu)
-        if(!getScreenOrientation(resources.configuration.orientation)){
-            menu.findItem(R.id.toolbar_menu_modify).isVisible = false
+    /**
+     * Update Recycler View with list of property if permission is granted for ReadExternalStorage
+     * Show all properties from database or result of research is querySearch is not null
+     */
+    private fun showList() {
+        if(checkExternalStoragePermissions()) {
+            viewModel.propertiesLiveData.observe(this, Observer {
+                updateView(it)
+            })
         }
     }
 
     /**
-     * Observe the LiveData from PropertyViewModel to get the list of all the properties saved in the RoomDatabase
+     * Refresh list of properties according to search query
      */
-    private fun getListOfProperty() {
-        mainViewModel.propertiesLiveData.observe(this, Observer<List<PropertyModelForList>> {
-            updateView(it)
-        })
+    fun refreshQuery(querySearch: String) {
+        viewModel.searchInDatabase(querySearch, resetBtn)
     }
 
     /**
@@ -115,13 +87,10 @@ class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener, Vie
         if(properties == null || properties.isEmpty()){
             recyclerView.visibility = View.INVISIBLE
             noDataTxt.visibility = View.VISIBLE
-
         }else{
             adapter.setData(properties)
         }
-
     }
-
 
     /**
      * When click on an item of the RecyclerView
@@ -137,16 +106,32 @@ class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener, Vie
         }else{
             activity!!.supportFragmentManager.beginTransaction().replace(R.id.container_fragment_details, fragment).commit()
         }
-
     }
 
     override fun onClick(view: View?) {
         when(view){
-            resetBtn -> {
-                mainViewModel.reset()
-                resetBtn.visibility = View.GONE
-            }
+            resetBtn -> { viewModel.reset(resetBtn) }
         }
     }
+
+    //-- CONFIGURATION --//
+    private fun bindViews(view: View){
+        resetBtn = view.findViewById(R.id.reset_research)
+        resetBtn.setOnClickListener(this)
+        recyclerView = view.findViewById(R.id.fragment_list_recycler_view)
+        recyclerView.addItemDecoration(DividerItemDecoration(recyclerView.context, DividerItemDecoration.HORIZONTAL))
+        recyclerView.layoutManager = LinearLayoutManager(activity!!.applicationContext)
+        adapter = ListPropertyAdapter(this, context!!)
+        recyclerView.adapter = adapter
+        noDataTxt = view.findViewById(R.id.fragment_list_no_data)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        if(!getScreenOrientation(resources.configuration.orientation)){
+            menu.findItem(R.id.toolbar_menu_modify).isVisible = false
+        }
+    }
+
 
 }

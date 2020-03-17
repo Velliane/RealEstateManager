@@ -76,6 +76,7 @@
         android:id="@+id/address_country_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:errorEnabled="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/address_zip_code_container"
         app:layout_constraintEnd_toEndOf="parent"

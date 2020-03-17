@@ -7,4 +7,6 @@
     <color name="transparentColor">#7A000000</color>
     <color name="drawer_color">#AEB1D1</color>
 
+    <color name="sale_color">#2ABC50</color>
+    <color name="sold_color">#DC0909</color>
 </resources>

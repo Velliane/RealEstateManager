@@ -21,6 +21,7 @@ import com.openclassrooms.realestatemanager.show.MainViewModel
 import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.Injection
 import com.openclassrooms.realestatemanager.utils.setAddressToString
+import kotlinx.android.synthetic.main.fragment_details.*
 
 /**
  * Show the information of the property selected in the ListFragment
@@ -59,6 +60,10 @@ class DetailsFragment: BaseFragment() {
 
         sharedPreferences = activity!!.getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE)
         propertyId = sharedPreferences.getString(Constants.PREF_ID_PROPERTY, "")!!
+        if(propertyId == ""){
+            details_infos_container.visibility = View.GONE
+            details_no_data.visibility = View.VISIBLE
+        }
 
         bindViews(view)
         val viewModelFactory = Injection.provideViewModelFactory(requireContext())

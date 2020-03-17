@@ -27,6 +27,7 @@ import com.openclassrooms.realestatemanager.search.TypeEnum
 import com.openclassrooms.realestatemanager.search.TypeEnumSpinnerAdapter
 import com.openclassrooms.realestatemanager.show.detail.PhotosAdapter
 import com.openclassrooms.realestatemanager.utils.*
+import kotlinx.android.synthetic.main.activity_edit_add.*
 import org.threeten.bp.LocalDateTime
 import pub.devrel.easypermissions.EasyPermissions
 import java.util.*
@@ -83,17 +84,13 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         AndroidThreeTen.init(this)
         configureViewModel()
 
-
         typeList = editDataViewModel.getTypesList()
         bindViews()
         getSaveInstanceState(savedInstanceState)
 
-
         //-- Get Property id from intent --//
         propertyId = intent.getStringExtra(Constants.PROPERTY_ID)!!
-        if (propertyId != "") {
-            getDataFromDatabase(propertyId)
-        }
+        if (propertyId != "") { getDataFromDatabase(propertyId) }
 
         //-- Check permission for Write to External Storage --//
         if(!checkPermission()){ requestPermission() }
@@ -128,11 +125,17 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v) {
             saveBtn -> {
-                val property = Property(propertyId, getCurrentUser().uid, spinnerType.selectedItem.toString().toUpperCase(Locale.ROOT), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), numberBedrooms.text.toString().toInt(), numberBathrooms.text.toString().toInt(), description.text.toString(), true, parseLocalDateTimeToString(LocalDateTime.now()))
-                editDataViewModel.save(property.id_property, property,number.text.toString().toInt(), street.text.toString(), zipCode.text.toString(), city.text.toString(), country.text.toString(), imageList)
-                sendNotification()
-                Snackbar.make(layout, "Save complete", Snackbar.LENGTH_SHORT).show()
-                finish()
+                if(checkRequiredInfo()) {
+                    val property = Property(propertyId, getCurrentUser().uid, spinnerType.selectedItem.toString().toUpperCase(Locale.ROOT), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), numberBedrooms.text.toString().toInt(), numberBathrooms.text.toString().toInt(), description.text.toString(), true, parseLocalDateTimeToString(LocalDateTime.now()))
+                    editDataViewModel.save(property.id_property, property, number.text.toString().toInt(), street.text.toString(), zipCode.text.toString(), city.text.toString(), country.text.toString(), imageList)
+                    sendNotification()
+                    Snackbar.make(layout, "Save complete", Snackbar.LENGTH_SHORT).show()
+                    finish()
+                }else{
+                    if(price.text == null){
+                        custom_price_container.setError("Not empty")
+                    }
+                }
             }
             addPhotoImg -> {
                 //-- Ask permission and let user select an image from his phone --//
@@ -142,9 +145,12 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
                 }
                 selectAnImageFromThePhone()
             }
-
             addPhotoBtn -> addImageToListAndShowIt()
         }
+    }
+
+    private fun checkRequiredInfo(): Boolean {
+        return price.text.toString() != "" && surface.text.toString() != "" && rooms.text.toString() != "" && country.text.toString() != "" && spinnerType.selectedItem != null
     }
 
     //-- NOTIFICATION --//

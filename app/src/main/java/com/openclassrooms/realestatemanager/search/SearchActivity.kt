@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.show.MainActivity
+import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.Injection
 import kotlinx.android.synthetic.main.activity_search.*
 
@@ -69,19 +70,11 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(item: View?) {
         if (item == search_button) {
             val query = searchViewModel.searchDatabase(spinnerPrice.selectedItem.toString(), spinnerType.selectedItem.toString(), roomsMinValue, roomsMaxValue)
-
-            val intent = Intent(this, MainActivity::class.java)
-            intent.putExtra("Search query", query)
-            startActivityForResult(intent, 2)
+            val intent = Intent()
+            intent.putExtra(Constants.SEARCH_QUERY, query)
+            setResult(Constants.RC_SEARCH, intent)
+            finish()
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == 2) {
-            if (resultCode == Activity.RESULT_OK && data?.data!= null)  {
-                Log.i("onActivityResult", data.getStringExtra("result")!!)
-            }
-        }
-    }
 }

@@ -44,7 +44,8 @@ class MapViewModel(propertyDataRepository: PropertyDataRepository, private val a
             PropertyModelForMap(
                     it.id_property,
                     addresses[it.id_property],
-                    it.price.toString())
+                    it.price.toString(),
+                    it.type)
         }
         propertiesLiveData.value = propertyModelsForList
     }
