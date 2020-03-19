@@ -1,7 +1,9 @@
 package com.openclassrooms.realestatemanager.utils
 
-import com.openclassrooms.realestatemanager.property.model.geocode.*
-import com.openclassrooms.realestatemanager.utils.GooglePlacesAPI
+import com.openclassrooms.realestatemanager.property.model.geocode.Geocode
+import com.openclassrooms.realestatemanager.property.model.geocode.Geometry
+import com.openclassrooms.realestatemanager.property.model.geocode.Location
+import com.openclassrooms.realestatemanager.property.model.geocode.Result
 import retrofit2.Call
 import retrofit2.mock.BehaviorDelegate
 

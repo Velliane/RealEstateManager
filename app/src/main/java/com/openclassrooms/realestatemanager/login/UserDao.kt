@@ -2,7 +2,6 @@ package com.openclassrooms.realestatemanager.login
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.openclassrooms.realestatemanager.login.User
 
 
 /**

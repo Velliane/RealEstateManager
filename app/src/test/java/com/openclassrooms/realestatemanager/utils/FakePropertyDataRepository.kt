@@ -13,8 +13,8 @@ class FakePropertyDataRepository(private val propertyDao: PropertyDao): Property
         val listLiveData = MutableLiveData<List<Property>>()
         val list = ArrayList<Property>()
         //-- Create Properties and add them to list --//
-        val property1 = Property("001", "House", 250500, 125, 4, 2, 2, "Big house", true, "2020-03-12T12:20:25")
-        val property2 = Property("002", "House", 185000, 75, 3, 1, 2, "Little house", true, "2020-03-09T12:20:25")
+        val property1 = Property("001", "025","House", 250500, 125, 4, 2, 2, "Big house", true, "2020-03-12T12:20:25")
+        val property2 = Property("002", "025","House", 185000, 75, 3, 1, 2, "Little house", true, "2020-03-09T12:20:25")
         list.add(property1)
         list.add(property2)
         //-- Set value of LiveData --//
@@ -29,14 +29,14 @@ class FakePropertyDataRepository(private val propertyDao: PropertyDao): Property
     override suspend fun getPropertyFromId(id_property: String): Property {
         var property = Property()
         if(id_property == "001"){
-            property = Property("001", "House", 250500, 125, 4, 2, 2, "Big house", true, "2020-03-12T12:20:25")
+            property = Property("001", "025","House", 250500, 125, 4, 2, 2, "Big house", true, "2020-03-12T12:20:25")
         }else if(id_property == "002"){
-            property = Property("002", "House", 185000, 75, 3, 1, 2, "Little house", true, "2020-03-09T12:20:25")
+            property = Property("002", "025","House", 185000, 75, 3, 1, 2, "Little house", true, "2020-03-09T12:20:25")
         }
         return property
     }
 
-    override suspend fun searchInDatabase(query: SupportSQLiteQuery): List<Property> {
+    override fun searchInDatabase(query: SupportSQLiteQuery): LiveData<List<Property>> {
         return super.searchInDatabase(query)
     }
 

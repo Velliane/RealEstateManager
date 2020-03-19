@@ -199,7 +199,7 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
         } else {
             //-- If not connected, get users' information from Room --//
             val id = sharedPreferences.getString(Constants.PREF_ID_USER, "")
-            mainViewModel.getUserById(id!!).observe(this, Observer<User> {
+            mainViewModel.getUserById(id!!).observe(this, Observer {
                 if (it.photo != null) {
                     Glide.with(this).load(it.photo).apply(RequestOptions.circleCropTransform()).centerCrop().into(photo)
                 }

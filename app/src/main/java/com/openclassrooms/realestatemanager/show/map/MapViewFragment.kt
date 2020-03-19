@@ -8,16 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import com.google.android.gms.location.*
-import com.google.android.gms.maps.*
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.add_edit.Address
-import com.openclassrooms.realestatemanager.add_edit.Property
 import com.openclassrooms.realestatemanager.show.BaseFragment
-import com.openclassrooms.realestatemanager.show.MainViewModel
 import com.openclassrooms.realestatemanager.show.detail.DetailsFragment
 import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.getScreenOrientation
@@ -98,7 +98,7 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerCl
 
     private fun getListOfProperty() {
 
-        mapViewModel.propertiesLiveData.observe(this, Observer<List<PropertyModelForMap>> { list ->
+        mapViewModel.propertiesLiveData.observe(this, Observer { list ->
             list?.let {
                for(property in list) {
                    property.address?.let { it1 ->

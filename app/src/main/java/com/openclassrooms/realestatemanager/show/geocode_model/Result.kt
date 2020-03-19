@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.property.model.geocode
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import com.openclassrooms.realestatemanager.show.geocode_model.AddressComponent
 
 class Result {
     @SerializedName("address_components")

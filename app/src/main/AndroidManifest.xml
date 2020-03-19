@@ -19,7 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".simulator.SimulatorActivity"></activity>
+        <activity android:name=".simulator.SimulatorActivity"/>
         <!-- Activities -->
         <activity android:name=".search.SearchActivity" />
         <activity android:name=".settings.SettingsActivity" />

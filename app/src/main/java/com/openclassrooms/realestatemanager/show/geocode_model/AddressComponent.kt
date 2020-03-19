@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.property.model.geocode
+package com.openclassrooms.realestatemanager.show.geocode_model
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName

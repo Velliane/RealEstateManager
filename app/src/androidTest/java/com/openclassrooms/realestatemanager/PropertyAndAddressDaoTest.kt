@@ -8,6 +8,8 @@ import com.openclassrooms.realestatemanager.data.database.PropertyDatabase
 import com.openclassrooms.realestatemanager.add_edit.Address
 import com.openclassrooms.realestatemanager.add_edit.Property
 import junit.framework.Assert.assertTrue
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -17,12 +19,13 @@ import java.lang.Exception
 
 
 @RunWith(AndroidJUnit4::class)
+@ExperimentalCoroutinesApi
 class PropertyAndAddressDaoTest {
 
     private lateinit var propertyDatabase: PropertyDatabase
     private val propertyId: String = "1"
-    private val property1 = Property(propertyId, "House", 256000, 95, 3, 1, 2, "Little house", true, "")
-    private val property2 = Property("2", "House", 350000, 115, 4, 2, 3, "Big house", true, "")
+    private val property1 = Property(propertyId, "025","House", 256000, 95, 3, 1, 2, "Little house", true, "")
+    private val property2 = Property("2", "025","House", 350000, 115, 4, 2, 3, "Big house", true, "")
     private val addressTest = Address("1", 4, "allée des Bleuets", "71500", "Louhans", "France", propertyId)
     private val addresTest2 = Address("2", 22, "rue des Lilas", "01350", "Culoz", "France", "2")
 
@@ -45,10 +48,10 @@ class PropertyAndAddressDaoTest {
 
     @Test
     @Throws(InterruptedException::class)
-    fun insertAndGetOneProperty(){
+    fun insertAndGetOneProperty() = runBlockingTest{
         propertyDatabase.propertyDao().addProperty(property1)
 
-        val property = LiveDataTestUtil.getValue(propertyDatabase.propertyDao().getPropertyFromId(propertyId))
+        val property = propertyDatabase.propertyDao().getPropertyFromId(propertyId)
 
         assertTrue(property.type == property1.type)
         assertTrue(property.price == property1.price)
@@ -93,7 +96,7 @@ class PropertyAndAddressDaoTest {
         propertyDatabase.propertyDao().addProperty(property1)
         propertyDatabase.addressDao().addAddress(addressTest)
 
-        val address = LiveDataTestUtil.getValue(propertyDatabase.addressDao().getAddressOfOneProperty(propertyId))
+        val address = propertyDatabase.addressDao().getAddressOfOneProperty(propertyId)
 
         assertTrue(address.city == addressTest.city)
         assertTrue(address.street == addressTest.street)

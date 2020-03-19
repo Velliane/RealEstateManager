@@ -6,14 +6,15 @@ import com.openclassrooms.realestatemanager.add_edit.Property
 import com.openclassrooms.realestatemanager.data.FirestoreDataRepository
 import com.openclassrooms.realestatemanager.data.database.AddressDao
 import com.openclassrooms.realestatemanager.data.database.PropertyDao
+import com.openclassrooms.realestatemanager.login.UserDao
 
-class FakeFirestoreDataRepository(private val context: Context, private val propertyDao: PropertyDao, private val addressDao: AddressDao): FirestoreDataRepository(context, propertyDao, addressDao) {
+class FakeFirestoreDataRepository(private val context: Context, private val propertyDao: PropertyDao, private val addressDao: AddressDao, private val userDao: UserDao): FirestoreDataRepository(context, propertyDao, addressDao, userDao) {
 
     override suspend fun getAllPropertyFromFirestore(): List<Property> {
         val list = ArrayList<Property>()
         //-- Create Properties and add them to list --//
-        val property1 = Property("001", "House", 250500, 125, 4, 2, 2, "Big house", true, "2020-03-12T12:20:25")
-        val property2 = Property("002", "House", 185000, 75, 3, 1, 2, "Little house", true, "2020-03-09T12:20:25")
+        val property1 = Property("001", "005","House", 250500, 125, 4, 2, 2, "Big house", true, "2020-03-12T12:20:25")
+        val property2 = Property("002", "025","House", 185000, 75, 3, 1, 2, "Little house", true, "2020-03-09T12:20:25")
         list.add(property1)
         list.add(property2)
         return list

@@ -21,7 +21,9 @@
     <string name="add_property_title">Ajouter un bien</string>
     <string name="type_apartment">Appartement</string>
     <string name="type_house">Maison</string>
-    <string name="type_any">Tout</string>
+    <string name="type_duplex">Duplex</string>
+    <string name="type_loft">Loft</string>
+
     <style name="edit_property_title">Editer un bien</style>
     <string name="details_title_media">Media</string>
     <string name="details_title_description">Description</string>
@@ -57,5 +59,15 @@
     <string name="result">Your monthly payement is %1$s</string>
     <string name="on_sale">En vente</string>
     <string name="sold">Vendu</string>
+    <string name="connexion_btn">Connexion</string>
+
+    <!-- Nearby places -->
+    <string name="nearby_bus">Bus</string>
+    <string name="nearby_post">Poste</string>
+    <string name="nearby_shop">Magasin</string>
+    <string name="nearby_school">Ecole</string>
+    <string name="nearby_public_transport">Transport en commun</string>
+    <string name="nearby_restaurant">Restaurant</string>
+    <string name="nearby_university">Université</string>
 
 </resources>

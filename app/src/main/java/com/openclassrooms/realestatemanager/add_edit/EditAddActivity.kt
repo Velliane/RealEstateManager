@@ -20,11 +20,12 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
+import com.hootsuite.nachos.NachoTextView
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.openclassrooms.realestatemanager.BaseActivity
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.search.TypeEnum
-import com.openclassrooms.realestatemanager.search.TypeEnumSpinnerAdapter
+import com.openclassrooms.realestatemanager.search.TypeEnumNachosAdapter
 import com.openclassrooms.realestatemanager.show.detail.PhotosAdapter
 import com.openclassrooms.realestatemanager.utils.*
 import kotlinx.android.synthetic.main.activity_edit_add.*
@@ -43,6 +44,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
     /** Views */
     private lateinit var spinnerType: Spinner
     private lateinit var spinnerAgent: Spinner
+    private lateinit var nearbyNachos: NachoTextView
     private lateinit var price: TextInputEditText
     private lateinit var surface: TextInputEditText
     private lateinit var rooms: TextInputEditText
@@ -59,13 +61,13 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
     private lateinit var addPhotoImg: ImageView
     private lateinit var addPhotoTxt: EditText
     private lateinit var addPhotoBtn: MaterialButton
+    private lateinit var inSaleRadioBtn: RadioButton
+    private lateinit var soldRadioBtn: RadioButton
 
     /** ViewModel */
     private lateinit var editDataViewModel: EditDataViewModel
     /** Property Id from DetailsFragment */
     private var propertyId: String = ""
-    /** List of Type for Autocomplete */
-    private var typeList: List<TypeEnum> = ArrayList()
     /** URI of selected image*/
     private lateinit var uriImage: Uri
     /** Image's description*/
@@ -82,39 +84,30 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         setContentView(R.layout.activity_edit_add)
         setFinishOnTouchOutside(false)
         AndroidThreeTen.init(this)
+        //-- Configuration --//
         configureViewModel()
-
-        typeList = editDataViewModel.getTypesList()
         bindViews()
+        setSpinnerAndNachosAdapters()
         getSaveInstanceState(savedInstanceState)
-
+        //-- Check permission for Write to External Storage --//
+        if(!checkPermission()){ requestPermission() }
         //-- Get Property id from intent --//
         propertyId = intent.getStringExtra(Constants.PROPERTY_ID)!!
         if (propertyId != "") { getDataFromDatabase(propertyId) }
-
-        //-- Check permission for Write to External Storage --//
-        if(!checkPermission()){ requestPermission() }
-
-        //-- Set Spinner Adapter --//
-        val adapterType = TypeEnumSpinnerAdapter(this, typeList)
-        spinnerType.adapter = adapterType
-        editDataViewModel.getAllUser()
-        editDataViewModel.userListLiveData.observe(this, Observer {
-            val adapterAgent = AgentSpinnerAdapter(this, it)
-            spinnerAgent.adapter = adapterAgent
-        })
     }
+
+
     /**
      * Get data from the PropertyDatabase if the propertyId is not equals to 0
      * @param id The id of the property
      */
     private fun getDataFromDatabase(id: String) {
         editDataViewModel.getPropertyFromId(id)
-        editDataViewModel.propertyLiveData.observe(this, Observer<Property> {
+        editDataViewModel.propertyLiveData.observe(this, Observer {
             updateViewsWithRoomData(it)
         })
         editDataViewModel.getAddressOfOneProperty(id)
-        editDataViewModel.addressLiveData.observe(this, Observer<Address> {
+        editDataViewModel.addressLiveData.observe(this, Observer {
             updateAddressWithRoomData(it)
         })
     }
@@ -124,12 +117,18 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
      */
     override fun onClick(v: View?) {
         when (v) {
+
             saveBtn -> {
+                //-- Save property in database and Firestore --//
                 if(checkRequiredInfo()) {
-                    val property = Property(propertyId, getCurrentUser().uid, spinnerType.selectedItem.toString().toUpperCase(Locale.ROOT), price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(), numberBedrooms.text.toString().toInt(), numberBathrooms.text.toString().toInt(), description.text.toString(), true, parseLocalDateTimeToString(LocalDateTime.now()))
-                    editDataViewModel.save(property.id_property, property, number.text.toString().toInt(), street.text.toString(), zipCode.text.toString(), city.text.toString(), country.text.toString(), imageList)
-                    sendNotification()
-                    Snackbar.make(layout, "Save complete", Snackbar.LENGTH_SHORT).show()
+                    val property = Property(propertyId, getCurrentUser().uid, spinnerType.selectedItem.toString().toUpperCase(Locale.ROOT),
+                            price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(),
+                            numberBedrooms.text.toString().toInt(), numberBathrooms.text.toString().toInt(), description.text.toString(),
+                            inSaleRadioBtn.isChecked, null, "18/03/2020", null, parseLocalDateTimeToString(LocalDateTime.now()))
+
+                    editDataViewModel.save(property.id_property, property, number.text.toString().toInt(),
+                            street.text.toString(), zipCode.text.toString(), city.text.toString(),
+                            country.text.toString(), imageList, getCurrentUser().displayName!!, layout)
                     finish()
                 }else{
                     if(price.text == null){
@@ -151,12 +150,6 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
 
     private fun checkRequiredInfo(): Boolean {
         return price.text.toString() != "" && surface.text.toString() != "" && rooms.text.toString() != "" && country.text.toString() != "" && spinnerType.selectedItem != null
-    }
-
-    //-- NOTIFICATION --//
-    private fun sendNotification(){
-        val data = Data.Builder().putString(Constants.DATA_USER_NAME, getCurrentUser().displayName).build()
-        NotificationWorker.configureNotification(data)
     }
 
     //-- MANAGE IMAGE --//
@@ -192,7 +185,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
                 Glide.with(this).load(uriImage).into(addPhotoImg)
                 addPhotoBtn.visibility = View.VISIBLE
             } else {
-                //TODO error message
+                Snackbar.make(layout, "Error with image", Snackbar.LENGTH_SHORT).show()
             }
         }
     }
@@ -203,9 +196,25 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         editDataViewModel = ViewModelProviders.of(this, editDataViewModelFactory).get(EditDataViewModel::class.java)
       }
 
+    /**
+     * Set adapter for TypeSpinner, AgentSpinner and NearbyNachos
+     */
+    private fun setSpinnerAndNachosAdapters() {
+        val adapterType = TypeEnumSpinnerAdapter(this, editDataViewModel.getTypesList())
+        spinnerType.adapter = adapterType
+        val adapter = NearbyAdapter(this, editDataViewModel.getNearbyList())
+        nearbyNachos.setAdapter(adapter)
+        editDataViewModel.getAllUser()
+        editDataViewModel.userListLiveData.observe(this, Observer {
+            val adapterAgent = AgentSpinnerAdapter(this, it)
+            spinnerAgent.adapter = adapterAgent
+        })
+    }
+
     private fun bindViews() {
         spinnerType = findViewById(R.id.add_edit_type_spinner)
         spinnerAgent = findViewById(R.id.agent_spinner)
+        nearbyNachos = findViewById(R.id.edit_nearby)
         price = findViewById(R.id.edit_price)
         surface = findViewById(R.id.edit_surface)
         rooms = findViewById(R.id.edit_rooms)
@@ -226,6 +235,10 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         addPhotoBtn = findViewById(R.id.edit_add_photos_btn)
         addPhotoBtn.setOnClickListener(this)
         recyclerView = findViewById(R.id.edit_list_photos)
+        inSaleRadioBtn = findViewById(R.id.edit_on_sale_btn)
+        inSaleRadioBtn.setOnClickListener(this)
+        soldRadioBtn = findViewById(R.id.edit_sold_btn)
+        soldRadioBtn.setOnClickListener(this)
     }
 
     //-- SAVE INSTANCE --//
@@ -261,7 +274,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
 
     //-- UPDATE VIEWS --//
     /**
-     * Update the views with the data get from PropertyDatabase
+     * Update the views with the data got from PropertyDatabase
      */
     private fun updateViewsWithRoomData(property: Property) {
         price.setText(property.price.toString())
@@ -270,8 +283,16 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         description.setText(property.description)
         numberBedrooms.setText(property.bed_nbr.toString())
         numberBathrooms.setText(property.bath_nbr.toString())
+        if(property.in_sale){
+            inSaleRadioBtn.isChecked = true
+        }else{
+            soldRadioBtn.isChecked = true
+        }
     }
 
+    /**
+     * Update address information with the data got from PropertyDatabase
+     */
     private fun updateAddressWithRoomData(address: Address) {
         number.setText(address.number.toString())
         street.setText(address.street)
@@ -282,12 +303,13 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
 
     //-- Request WRITE_EXTERNAL_STORAGE permission --//
     private fun checkPermission(): Boolean {
-        return ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+        return ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
     }
 
     private fun requestPermission() {
-        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE), Constants.RC_PERMISSION_LOCATION)
-
+        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                android.Manifest.permission.READ_EXTERNAL_STORAGE), Constants.RC_PERMISSION_LOCATION)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

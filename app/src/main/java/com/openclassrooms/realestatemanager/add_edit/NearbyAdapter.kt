@@ -1,4 +1,4 @@
-package com.openclassrooms.realestatemanager.search
+package com.openclassrooms.realestatemanager.add_edit
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.search.NearbyEnum
 
-class TypeEnumSpinnerAdapter(context: Context, list: List<TypeEnum>) : ArrayAdapter<TypeEnum>(context, R.layout.spinner_item, list){
+class NearbyAdapter (context: Context, list: List<NearbyEnum>) : ArrayAdapter<NearbyEnum>(context, R.layout.spinner_item, list){
 
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -23,9 +24,8 @@ class TypeEnumSpinnerAdapter(context: Context, list: List<TypeEnum>) : ArrayAdap
         val view = LayoutInflater.from(parent.context).inflate(R.layout.spinner_item, parent, false)
 
         val text = view.findViewById<TextView>(R.id.spinner_item_name)
-        val type = getItem(position)
-
-        text.text = context.getText(type!!.res)
+        val nearbyEnum = getItem(position)
+        text.text = context.getString(nearbyEnum!!.res)
 
         return view
     }

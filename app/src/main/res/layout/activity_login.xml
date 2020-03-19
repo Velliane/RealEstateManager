@@ -19,12 +19,13 @@
         app:layout_constraintBottom_toTopOf="@id/auth_icon"
         android:textAlignment="center"
         android:textStyle="bold"
-        android:textSize="30dp"/>
+        android:textSize="30sp"/>
 
     <ImageView
         android:id="@+id/auth_icon"
         android:layout_width="@dimen/home_icon_width"
         android:layout_height="@dimen/home_icon_height"
+        android:contentDescription="@string/application_s_logo"
         android:background="@drawable/home_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -39,7 +40,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/auth_icon"
         android:background="@color/colorAccent"
-        android:text="Connexion"
+        android:text="@string/connexion_btn"
         android:textColor="@android:color/white"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

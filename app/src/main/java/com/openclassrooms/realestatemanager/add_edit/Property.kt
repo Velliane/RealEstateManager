@@ -32,6 +32,14 @@ data class Property(
         var description: String? = "",
         @ColumnInfo (name = "in_sale")
         var  in_sale: Boolean = true,
+        @ColumnInfo (name = "nearby")
+        val nearby: String? = "",
+
+        @ColumnInfo (name = "created_date")
+        val created_date: String = "",
+        @ColumnInfo (name = "sold_date")
+        val sold_date: String? = "",
+
         @ColumnInfo (name = "date")
         val date: String = ""
 

@@ -11,7 +11,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
-class PhotoDataRepository {
+open class PhotoDataRepository {
 
     /**
      * Save image selected by user
@@ -20,7 +20,7 @@ class PhotoDataRepository {
      * @param description the description of the image
      * @return the path of the image
      */
-    fun saveImageToExternalStorage(bitmap: Bitmap, id_property: String, description: String){
+    open fun saveImageToExternalStorage(bitmap: Bitmap, id_property: String, description: String){
 
         //val file = File(context.getExternalFilesDir(null), "$id_property$description.jpg")
         val root = Environment.getExternalStorageDirectory().path + "/RealEstateManager/"
@@ -46,14 +46,14 @@ class PhotoDataRepository {
         }
     }
 
-    fun saveImageToFirebase(uri: Uri, id_property: String, description: String){
+    open fun saveImageToFirebase(uri: Uri, id_property: String, description: String){
         val storageReference = FirebaseStorage.getInstance().getReference("/images/$id_property/$description")
         storageReference.putFile(uri).addOnSuccessListener {
             Log.d("PHOTO", "Photo successfully saved in Firebase")
         }
     }
 
-    fun getListOfPhotos(id_property: String): List<Photo>?{
+    open fun getListOfPhotos(id_property: String): List<Photo>?{
         val listPhoto = ArrayList<Photo>()
         val photoPath = File(Environment.getExternalStorageDirectory().path + "/RealEstateManager/$id_property")
         if(photoPath.isDirectory){

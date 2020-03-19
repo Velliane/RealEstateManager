@@ -1,23 +1,19 @@
 package com.openclassrooms.realestatemanager.show
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.*
-import androidx.sqlite.db.SupportSQLiteQuery
-import com.openclassrooms.realestatemanager.data.AddressDataRepository
-import com.openclassrooms.realestatemanager.data.PhotoDataRepository
-import com.openclassrooms.realestatemanager.show.geocode_model.GeocodeRepository
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.openclassrooms.realestatemanager.add_edit.Address
 import com.openclassrooms.realestatemanager.add_edit.Property
-import com.openclassrooms.realestatemanager.property.model.geocode.Geocode
+import com.openclassrooms.realestatemanager.data.AddressDataRepository
 import com.openclassrooms.realestatemanager.data.FirestoreDataRepository
 import com.openclassrooms.realestatemanager.data.PropertyDataRepository
-import com.openclassrooms.realestatemanager.add_edit.Photo
 import com.openclassrooms.realestatemanager.login.User
 import com.openclassrooms.realestatemanager.login.UserDataRepository
+import com.openclassrooms.realestatemanager.property.model.geocode.Geocode
+import com.openclassrooms.realestatemanager.show.geocode_model.GeocodeRepository
 import com.openclassrooms.realestatemanager.utils.setAddressToString
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,8 +21,8 @@ import kotlinx.coroutines.withContext
 
 class MainViewModel(private val context: Context, private val propertyDataRepository: PropertyDataRepository, private val addressDataRepository: AddressDataRepository, private val geocodeRepository: GeocodeRepository, private val firestoreDataRepository: FirestoreDataRepository, private val userDataRepository: UserDataRepository) : ViewModel() {
 
-    val propertiesLiveData = MutableLiveData<List<Property>>()
-    val addressLiveData = MutableLiveData<Address>()
+    private val propertiesLiveData = MutableLiveData<List<Property>>()
+    private val addressLiveData = MutableLiveData<Address>()
 
 
     init {

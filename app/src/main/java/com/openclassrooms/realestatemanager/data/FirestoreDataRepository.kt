@@ -27,7 +27,7 @@ open class FirestoreDataRepository(private val context: Context, private val pro
         val propertyHelper = PropertyHelper()
         val listDocument = propertyHelper.getAllProperties()
         for(document in listDocument){
-            val place = document.toObject<Property>(Property::class.java)
+            val place = document.toObject(Property::class.java)
             Log.d("Place from firebase", document.data.toString())
             list.add(place!!)
         }

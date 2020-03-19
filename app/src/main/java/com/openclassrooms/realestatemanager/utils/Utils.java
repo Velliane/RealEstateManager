@@ -3,11 +3,9 @@ package com.openclassrooms.realestatemanager.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
@@ -53,11 +51,7 @@ public class Utils {
         boolean isConnected;
         ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        if(networkInfo != null && networkInfo.isConnected()){
-            isConnected = true;
-        }else {
-            isConnected = false;
-        }
+        isConnected = networkInfo != null && networkInfo.isConnected();
         return isConnected;
     }
 }

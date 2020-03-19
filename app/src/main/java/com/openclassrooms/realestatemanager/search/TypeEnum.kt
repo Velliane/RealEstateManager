@@ -5,7 +5,8 @@ import com.openclassrooms.realestatemanager.R
 
 enum class TypeEnum(@StringRes val res: Int) {
 
-    ANY(R.string.type_any),
     HOUSE(R.string.type_house),
-    APARTMENT(R.string.type_apartment);
+    APARTMENT(R.string.type_apartment),
+    DUPLEX(R.string.type_duplex),
+    LOFT(R.string.type_loft);
 }

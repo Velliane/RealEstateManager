@@ -3,11 +3,10 @@ package com.openclassrooms.realestatemanager.search
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.sqlite.db.SimpleSQLiteQuery
 
 class SearchViewModel(private val context: Context): ViewModel() {
 
-    fun searchDatabase(spinnerPriceSelected: String, spinnerTypeSelected: String, roomsMinValue: Int, roomsMaxValue: Int): String{
+    fun searchDatabase(spinnerPriceSelected: String, types: List<String>, roomsMinValue: Int, roomsMaxValue: Int): String{
 
         val priceRange = ArrayList<Int>()
         if(PriceRangeEnum.valueOf(spinnerPriceSelected) != PriceRangeEnum.ANY){
@@ -16,16 +15,10 @@ class SearchViewModel(private val context: Context): ViewModel() {
             priceRange.add(priceEnum.maxValue)
         }
 
-        var type = ""
-        if(TypeEnum.valueOf(spinnerTypeSelected) != TypeEnum.ANY){
-            val enum = TypeEnum.valueOf(spinnerTypeSelected)
-            type = context.getString(enum.res)
-        }
-
-        return constructQueryResearch(priceRange, type, roomsMinValue, roomsMaxValue)
+        return constructQueryResearch(priceRange, types, roomsMinValue, roomsMaxValue)
     }
 
-    private fun constructQueryResearch(priceRange: ArrayList<Int>, type: String, roomsMinValue: Int, roomsMaxValue: Int): String {
+    private fun constructQueryResearch(priceRange: ArrayList<Int>, types: List<String>, roomsMinValue: Int, roomsMaxValue: Int): String {
 
         var query = String()
         query += "SELECT * FROM Property"
@@ -39,13 +32,25 @@ class SearchViewModel(private val context: Context): ViewModel() {
             contains = true
         }
 
-        if(type != ""){
+        if(types.isNotEmpty()){
             query += if (contains){
                 " AND"
             }else{
                 " WHERE"
             }
-            query += " type LIKE '$type'"
+            if(types.size == 1) {
+                val type = types[0]
+                query += " type LIKE '$type'"
+            }else{
+                query += " type IN ("
+                types.forEachIndexed{ index, element ->
+                      query += "'$element'"
+                    if (index < types.size-1){
+                        query += ","
+                    }
+                }
+                query += ")"
+            }
             Log.d("QUERY", query)
             contains = true
         }
@@ -70,10 +75,10 @@ class SearchViewModel(private val context: Context): ViewModel() {
         return list
     }
 
-    fun getTypesList(): List<TypeEnum> {
-        val list = ArrayList<TypeEnum>()
+    fun getTypesList(): List<String> {
+        val list = ArrayList<String>()
         for (type in TypeEnum.values()) {
-            list.add(type)
+            list.add(context.getString(type.res))
         }
         return list
     }

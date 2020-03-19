@@ -1,8 +1,6 @@
 package com.openclassrooms.realestatemanager.login
 
 import androidx.lifecycle.LiveData
-import com.openclassrooms.realestatemanager.login.UserDao
-import com.openclassrooms.realestatemanager.login.User
 
 class UserDataRepository(private val userDao: UserDao) {
 

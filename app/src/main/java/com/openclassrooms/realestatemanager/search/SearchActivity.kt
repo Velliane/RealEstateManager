@@ -1,18 +1,15 @@
 package com.openclassrooms.realestatemanager.search
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.os.Parcelable
-import android.util.Log
 import android.view.View
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProviders
 import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
+import com.hootsuite.nachos.NachoTextView
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.show.MainActivity
 import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.Injection
 import kotlinx.android.synthetic.main.activity_search.*
@@ -21,7 +18,7 @@ import kotlinx.android.synthetic.main.activity_search.*
 class SearchActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var spinnerPrice: Spinner
-    private lateinit var spinnerType: Spinner
+    private lateinit var spinnerType: NachoTextView
     private lateinit var rangeRooms: CrystalRangeSeekbar
     private lateinit var roomsPreview: TextView
 
@@ -52,7 +49,7 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
         spinnerPrice = findViewById(R.id.search_spinner_price)
         spinnerPrice.adapter = PriceRangeSpinnerAdapter(this, searchViewModel.getPriceRangeList())
         spinnerType = findViewById(R.id.search_spinner_type)
-        spinnerType.adapter = TypeEnumSpinnerAdapter(this, searchViewModel.getTypesList())
+        spinnerType.setAdapter(TypeEnumNachosAdapter(this, searchViewModel.getTypesList()))
         //-- RangeSeekBars --//
         rangeRooms = findViewById(R.id.search_rooms_seek_bar)
         roomsPreview = findViewById(R.id.rooms_view)
@@ -69,7 +66,7 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(item: View?) {
         if (item == search_button) {
-            val query = searchViewModel.searchDatabase(spinnerPrice.selectedItem.toString(), spinnerType.selectedItem.toString(), roomsMinValue, roomsMaxValue)
+            val query = searchViewModel.searchDatabase(spinnerPrice.selectedItem.toString(), spinnerType.chipValues, roomsMinValue, roomsMaxValue)
             val intent = Intent()
             intent.putExtra(Constants.SEARCH_QUERY, query)
             setResult(Constants.RC_SEARCH, intent)
