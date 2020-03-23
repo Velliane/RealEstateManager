@@ -16,9 +16,6 @@ import com.openclassrooms.realestatemanager.R
 
 class ListPropertyAdapter(private val listener: OnItemClickListener, private val context: Context) : ListAdapter<PropertyModelForList, ListPropertyAdapter.ListViewHolder>(PropertyAdapterDiffCallback()) {
 
-    companion object{
-        var last_position = 0
-    }
 
     private var data: List<PropertyModelForList> = ArrayList()
     private lateinit var onItemClickListener: OnItemClickListener
@@ -46,12 +43,6 @@ class ListPropertyAdapter(private val listener: OnItemClickListener, private val
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
         holder.bind(data[position], onItemClickListener)
-        holder.itemView.setOnClickListener{
-            onItemClickListener.onItemClicked(data[position].propertyId, position)
-            notifyDataSetChanged()
-            holder.container.setBackgroundResource(R.color.sold_color)
-            last_position = position
-        }
     }
 
     class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -74,11 +65,9 @@ class ListPropertyAdapter(private val listener: OnItemClickListener, private val
                 Glide.with(itemView.context).load(R.drawable.no_image_available_64).centerCrop().into(photo)
             }
             location.text = property.location
-//            itemView.setOnClickListener {
-//                onItemClickListener.onItemClicked(property.propertyId, adapterPosition)
-//                container.setBackgroundResource(R.color.sold_color)
-//
-//            }
+            itemView.setOnClickListener {
+                onItemClickListener.onItemClicked(property.propertyId, adapterPosition)
+            }
         }
     }
 

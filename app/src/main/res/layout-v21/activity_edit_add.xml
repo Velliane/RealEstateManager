@@ -32,6 +32,7 @@
             android:textColor="@color/sale_color"
             app:layout_constraintEnd_toStartOf="@id/edit_sold_btn"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/custom_created_date_container"
             app:layout_constraintTop_toBottomOf="@id/edit_title"/>
 
         <RadioButton
@@ -43,7 +44,52 @@
             android:buttonTint="@color/sold_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/edit_on_sale_btn"
-            app:layout_constraintTop_toBottomOf="@id/edit_title" />
+            app:layout_constraintTop_toBottomOf="@id/edit_title"
+            app:layout_constraintBottom_toTopOf="@id/custom_sold_date_container"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/custom_created_date_container"
+            style="@style/TextInputLayoutStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:hint="Date"
+            app:errorEnabled="true"
+            app:layout_constraintBottom_toTopOf="@id/agent"
+            app:layout_constraintEnd_toStartOf="@id/custom_sold_date_container"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/edit_on_sale_btn">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_date_created"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/custom_sold_date_container"
+            style="@style/TextInputLayoutStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            app:errorEnabled="true"
+            android:hint="Sold date"
+            app:layout_constraintBottom_toTopOf="@id/agent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/custom_created_date_container"
+            app:layout_constraintTop_toBottomOf="@id/edit_sold_btn">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_date_sold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <LinearLayout
             android:id="@+id/agent"
@@ -51,7 +97,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_on_sale_btn"
+            app:layout_constraintTop_toBottomOf="@id/custom_created_date_container"
+            app:layout_constraintBottom_toTopOf="@id/custom_type_container"
             app:layout_constraintEnd_toEndOf="parent">
 
             <TextView

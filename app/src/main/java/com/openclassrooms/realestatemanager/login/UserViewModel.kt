@@ -28,7 +28,6 @@ class UserViewModel(private val userDataRepository: UserDataRepository): ViewMod
         })
         //-- Save userId in SharedPreferences --//
         sharedPreferences.edit().putString(Constants.PREF_ID_USER, user.userId).apply()
-
     }
 
 }

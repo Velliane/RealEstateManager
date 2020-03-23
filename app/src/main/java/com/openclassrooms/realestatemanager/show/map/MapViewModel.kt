@@ -1,6 +1,9 @@
 package com.openclassrooms.realestatemanager.show.map
 
+import android.view.View
 import androidx.lifecycle.*
+import androidx.sqlite.db.SimpleSQLiteQuery
+import com.google.android.material.button.MaterialButton
 import com.openclassrooms.realestatemanager.add_edit.Address
 import com.openclassrooms.realestatemanager.add_edit.Property
 import com.openclassrooms.realestatemanager.data.AddressDataRepository
@@ -12,13 +15,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MapViewModel(propertyDataRepository: PropertyDataRepository, private val addressDataRepository: AddressDataRepository, private val geocodeRepository: GeocodeRepository): ViewModel() {
+class MapViewModel(private val propertyDataRepository: PropertyDataRepository, private val addressDataRepository: AddressDataRepository, private val geocodeRepository: GeocodeRepository): ViewModel() {
 
     val propertiesLiveData = MediatorLiveData<List<PropertyModelForMap>>()
     private val addressesMutableLiveData = MutableLiveData<MutableMap<String, Address?>>(HashMap<String, Address?>())
+    private var propertiesFromResearchLiveData: LiveData<List<Property>>? = null
+    private val allPropertiesLiveData = propertyDataRepository.getAllProperties()
 
     init {
-        val allPropertiesLiveData = propertyDataRepository.getAllProperties()
         propertiesLiveData.addSource(allPropertiesLiveData, Observer {
             getPropertiesModelForMap(it, addressesMutableLiveData.value!!)
         })
@@ -65,7 +69,6 @@ class MapViewModel(propertyDataRepository: PropertyDataRepository, private val a
                 }
             }
         }
-
     }
 
     fun getLatLng(address: Address, countryCode: String, key: String): LiveData<Geocode> {
@@ -73,18 +76,40 @@ class MapViewModel(propertyDataRepository: PropertyDataRepository, private val a
         return geocodeRepository.getLatLng(txt, countryCode, key)
     }
 
+    private fun stringToSimpleSQLiteQuery(query: String): SimpleSQLiteQuery {
+        return SimpleSQLiteQuery(query)
+    }
 
-//    private fun getLatLngForAddress(address: Address, countryCode: String, key: String): LatLng {
-//        val txt = setAddressToString(address)
-//        var latitude = 0.0
-//        var longitude = 0.0
-//        val geocodeMutableLiveData = geocodeRepository.getLatLng(txt, countryCode, key)
-//        val geocode: Geocode = geocodeMutableLiveData.value!!
-//        if(geocode.results != null){
-//            latitude = geocode.results!![0].geometry!!.location!!.lat!!
-//            longitude = geocode.results!![0].geometry!!.location!!.lng!!
-//        }
-//        return LatLng(latitude, longitude)
-//    }
+    /**
+     * Search list of properties in PropertyDatabase according to query
+     * Change source of MediatorLiveData propertiesLiveData
+     * @param query the search query
+     * @param resetBtn the button for reset the search
+     */
+    fun searchInDatabase(query: String, resetBtn: MaterialButton){
+        propertyDataRepository.searchInDatabase(stringToSimpleSQLiteQuery(query)).let { properties ->
+            propertiesFromResearchLiveData = properties
+            propertiesLiveData.removeSource(allPropertiesLiveData)
+            propertiesLiveData.addSource(properties, Observer {
+                getPropertiesModelForMap(it, addressesMutableLiveData.value!!)
+            })
+        }
+        resetBtn.visibility = View.VISIBLE
 
+    }
+
+    /**
+     * Reset the research by restore source (allPropertiesLiveData) of MediatorLiveData
+     * @param resetBtn the button for reset the search
+     */
+    fun reset(resetBtn: MaterialButton){
+        propertiesFromResearchLiveData?.let { properties ->
+            propertiesLiveData.removeSource(properties)
+            propertiesLiveData.addSource(allPropertiesLiveData, Observer {
+                getPropertiesModelForMap(it, addressesMutableLiveData.value!!)
+            })
+        }
+        resetBtn.visibility = View.GONE
+
+    }
 }

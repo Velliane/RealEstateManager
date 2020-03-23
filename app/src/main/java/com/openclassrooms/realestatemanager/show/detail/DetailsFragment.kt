@@ -21,7 +21,6 @@ import com.openclassrooms.realestatemanager.show.BaseFragment
 import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.Injection
 import com.openclassrooms.realestatemanager.utils.setAddressToString
-import kotlinx.android.synthetic.main.fragment_details.*
 
 /**
  * Show the information of the property selected in the ListFragment
@@ -41,6 +40,7 @@ class DetailsFragment : BaseFragment() {
     private lateinit var map: ImageView
     private lateinit var container: ConstraintLayout
     private lateinit var noData: TextView
+    private lateinit var agentTxt: TextView
 
     /** RecyclerView */
     private lateinit var recyclerView: RecyclerView
@@ -68,6 +68,10 @@ class DetailsFragment : BaseFragment() {
 
         bindViews(view)
         if (propertyId != "") {
+            if (container != null) {
+                container.visibility = View.VISIBLE
+            }
+            noData.visibility = View.GONE
             photosAdapter = PhotosAdapter(requireContext())
             getPropertyFromId(propertyId)
             getAddressOfProperty(propertyId)
@@ -77,6 +81,11 @@ class DetailsFragment : BaseFragment() {
                 photosAdapter.setData(it)
                 photosAdapter.notifyDataSetChanged()
             })
+        }else{
+            if (container != null) {
+                container.visibility = View.GONE
+            }
+            noData.visibility = View.VISIBLE
         }
         return view
     }
@@ -94,6 +103,7 @@ class DetailsFragment : BaseFragment() {
         recyclerView = view.findViewById(R.id.detail_photos)
         container = view.findViewById(R.id.details_infos_container)
         noData = view.findViewById(R.id.details_no_data)
+        agentTxt = view.findViewById(R.id.details_manager)
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
@@ -118,8 +128,11 @@ class DetailsFragment : BaseFragment() {
      */
     private fun getPropertyFromId(id: String) {
         viewModel.getPropertyFromId(id)
-        viewModel.propertyLiveData.observe(this, Observer<Property> {
-            updateGeneralInfo(it)
+        viewModel.propertyLiveData.observe(this, Observer { property ->
+            updateGeneralInfo(property)
+            viewModel.setAgent(property.agent).observe(this, Observer {
+                agentTxt.text = getString(R.string.manage_by, it.name)
+            })
         })
     }
 

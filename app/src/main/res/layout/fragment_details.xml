@@ -262,10 +262,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_margin="15dp"
             app:layout_constraintTop_toBottomOf="@id/details_bath_container"
-            app:layout_constraintBottom_toTopOf="@id/details_title_address"
+            app:layout_constraintBottom_toTopOf="@id/details_map"
             android:textSize="20sp"
             android:gravity="center"
-            android:text="Manage by ????"/>
+            android:text="@string/manage_by"/>
 
         <!-- Location -->
 
@@ -301,7 +301,7 @@
             android:layout_marginEnd="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/details_title_address" />
+            app:layout_constraintTop_toBottomOf="@id/details_manager" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

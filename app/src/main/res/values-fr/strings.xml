@@ -39,7 +39,7 @@
     <string name="details_number_of_bathrooms">Nombre de salles de bain :</string>
     <string name="details_number_bathrooms">N/C</string>
     <string name="details_address">Adresse</string>
-
+    <string name="details_date">%1$s/%2$s/%3$s</string>
 
     <!-- Home -->
     <string name="looking_for_more_property_in_sale_please_wait">Nous recherchons de nouveau bien mis en vente…veuillez patienter…</string>
@@ -69,5 +69,20 @@
     <string name="nearby_public_transport">Transport en commun</string>
     <string name="nearby_restaurant">Restaurant</string>
     <string name="nearby_university">Université</string>
+
+    <!-- Notification -->
+    <string name="notification_txt">Bonjour %1$s, le bien immobilier a bien été sauvegardé dans la base de données</string>
+    <string name="notification_title">Sauvegarde effectuée avec succès !</string>
+    <string name="notification_channel">Message de RealEstateManage</string>
+    <string name="manage_by">Manage by %1$s</string>
+
+    <!-- Search -->
+    <string name="search_titile_type">Type :</string>
+    <string name="search_title_price">Prix :</string>
+    <string name="search_title_rooms">Pièces :</string>
+    <string name="search_title_location">Localisation :</string>
+    <string name="search_location_hint">Saisir un ou plusieurs mot-clef, séparés par une ,</string>
+    <string name="search_titile_bedrooms">Chambres :</string>
+    <string name="search_title_nearby">A proximité de :</string>
 
 </resources>

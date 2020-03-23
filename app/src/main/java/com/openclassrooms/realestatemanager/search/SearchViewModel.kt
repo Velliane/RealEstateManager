@@ -6,38 +6,15 @@ import androidx.lifecycle.ViewModel
 
 class SearchViewModel(private val context: Context): ViewModel() {
 
-    fun searchDatabase(spinnerPriceSelected: String, types: List<String>, roomsMinValue: Int, roomsMaxValue: Int): String{
-
-        val priceRange = ArrayList<Int>()
-        if(PriceRangeEnum.valueOf(spinnerPriceSelected) != PriceRangeEnum.ANY){
-            val priceEnum: PriceRangeEnum = PriceRangeEnum.valueOf(spinnerPriceSelected)
-            priceRange.add(priceEnum.minValue)
-            priceRange.add(priceEnum.maxValue)
-        }
-
-        return constructQueryResearch(priceRange, types, roomsMinValue, roomsMaxValue)
-    }
-
-    private fun constructQueryResearch(priceRange: ArrayList<Int>, types: List<String>, roomsMinValue: Int, roomsMaxValue: Int): String {
+    fun constructQueryResearch(priceMinValue: Int, priceMaxValue: Int, types: List<String>, roomsMinValue: Int, roomsMaxValue: Int, bedroomsMinValue: Int, bedroomsMaxValue: Int): String {
 
         var query = String()
         query += "SELECT * FROM Property"
         var contains = false
 
-        if(priceRange.isNotEmpty()){
-            val min = priceRange[0]
-            val max = priceRange[1]
-            query += " WHERE price BETWEEN '$min' AND '$max'"
-            Log.d("QUERY", query)
-            contains = true
-        }
-
+        //-- Types --//
         if(types.isNotEmpty()){
-            query += if (contains){
-                " AND"
-            }else{
-                " WHERE"
-            }
+            query += ifContains(contains)
             if(types.size == 1) {
                 val type = types[0]
                 query += " type LIKE '$type'"
@@ -51,28 +28,23 @@ class SearchViewModel(private val context: Context): ViewModel() {
                 }
                 query += ")"
             }
-            Log.d("QUERY", query)
             contains = true
         }
 
-        query += if(contains){
-            " AND"
-        }else{
-            " WHERE"
-        }
-        query += " rooms_nbr >= '$roomsMinValue' AND rooms_nbr <= '$roomsMaxValue'"
-        Log.d("QUERY", query)
+        query += ifContains(contains)
+        query += " price >= '$priceMinValue' AND price <= '$priceMaxValue'"
+        query += " AND rooms_nbr >= '$roomsMinValue' AND rooms_nbr <= '$roomsMaxValue'"
+        query += " AND bed_nbr >= '$bedroomsMinValue' AND bed_nbr <= '$bedroomsMaxValue'"
 
         return query
     }
 
-
-    fun getPriceRangeList(): List<PriceRangeEnum>{
-        val list = ArrayList<PriceRangeEnum>()
-        for (price in PriceRangeEnum.values()) {
-            list.add(price)
+    fun ifContains(contains: Boolean): String {
+        return if(contains) {
+            " AND"
+        }else {
+            " WHERE"
         }
-        return list
     }
 
     fun getTypesList(): List<String> {

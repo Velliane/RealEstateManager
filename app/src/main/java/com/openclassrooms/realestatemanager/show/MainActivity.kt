@@ -119,6 +119,8 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
         val querySearch = data!!.getStringExtra(Constants.SEARCH_QUERY)
         val fragment = supportFragmentManager.findFragmentById(R.id.container_fragment_list)
         (fragment as? ListFragment)?.refreshQuery(querySearch)
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment)
+        (mapFragment as? MapViewFragment)?.refreshQuery(querySearch)
     }
 
     //-- TOOLBAR MENU --//
@@ -281,6 +283,7 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
     }
 
     override fun onItemClicked(id: String, position: Int) {
-        //TODO
+        sharedPreferences.edit().putString(Constants.PREF_ID_PROPERTY, id).apply()
+
     }
 }

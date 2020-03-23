@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#EEABD0</color>
 
+    <color name="thumb_pressed">#E86CB1</color>
     <color name="transparentColor">#7A000000</color>
     <color name="drawer_color">#AEB1D1</color>
 

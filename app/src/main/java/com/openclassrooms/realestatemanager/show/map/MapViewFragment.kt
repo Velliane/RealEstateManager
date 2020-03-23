@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
+import com.google.android.material.button.MaterialButton
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.show.BaseFragment
 import com.openclassrooms.realestatemanager.show.detail.DetailsFragment
@@ -23,7 +24,7 @@ import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.getScreenOrientation
 import com.openclassrooms.realestatemanager.utils.setAddressToString
 
-class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener {
+class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener, View.OnClickListener {
 
     companion object {
         fun newInstance(): MapViewFragment {
@@ -39,11 +40,14 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerCl
     private lateinit var mapViewModel: MapViewModel
     /** Shared Preferences */
     private lateinit var sharedPreferences: SharedPreferences
+    /** Reset Button */
+    private lateinit var resetBtn: MaterialButton
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_map_view, container, false)
 
-
+        resetBtn = view.findViewById(R.id.reset_research)
+        resetBtn.setOnClickListener(this)
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         Places.initialize(requireActivity(), context!!.getString(R.string.api_key_google))
         sharedPreferences = activity!!.getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE)
@@ -96,8 +100,10 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerCl
         }, null)
     }
 
+    /**
+     * Get list of properties and add markers to Map
+     */
     private fun getListOfProperty() {
-
         mapViewModel.propertiesLiveData.observe(this, Observer { list ->
             list?.let {
                for(property in list) {
@@ -116,6 +122,14 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerCl
         })
    }
 
+    /**
+     * Refresh list of properties according to search query
+     */
+    fun refreshQuery(querySearch: String) {
+        mapViewModel.searchInDatabase(querySearch, resetBtn)
+    }
+
+
     override fun onMarkerClick(marker: Marker?): Boolean {
         return false
     }
@@ -127,6 +141,12 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerCl
             activity!!.supportFragmentManager.beginTransaction().replace(R.id.container_fragment_list, fragment).commit()
         } else {
             activity!!.supportFragmentManager.beginTransaction().replace(R.id.container_fragment_details, fragment).commit()
+        }
+    }
+
+    override fun onClick(p0: View?) {
+        when(p0){
+            resetBtn -> mapViewModel.reset(resetBtn)
         }
     }
 

@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.add_edit
 
 import android.content.Context
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.widget.RadioButton
 import androidx.lifecycle.MutableLiveData
@@ -69,6 +70,18 @@ class EditDataViewModel(private val context: Context, private val photoDataRepos
     private fun sendNotification(name: String){
         val data = Data.Builder().putString(Constants.DATA_USER_NAME, name).build()
         NotificationWorker.configureNotification(data)
+    }
+
+    fun getNearby(listNearby: List<String>): String{
+        var nearby = ""
+        listNearby.forEachIndexed{ index, element ->
+            nearby += element.toUpperCase(Locale.ROOT)
+            if (index < listNearby.size-1){
+                nearby += ","
+            }
+        }
+        Log.d("Nearby", nearby)
+        return nearby
     }
 
 

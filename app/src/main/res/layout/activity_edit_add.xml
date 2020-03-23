@@ -21,8 +21,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/edit_on_sale_btn"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <RadioButton
             android:id="@+id/edit_on_sale_btn"
@@ -42,9 +41,10 @@
             android:text="@string/sold"
             android:textColor="@color/sold_color"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/custom_sold_date_container"
             app:layout_constraintStart_toEndOf="@id/edit_on_sale_btn"
-            app:layout_constraintTop_toBottomOf="@id/edit_title" />
+            app:layout_constraintTop_toBottomOf="@id/edit_title"
+            app:layout_constraintBottom_toTopOf="@id/custom_sold_date_container"/>
+
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/custom_created_date_container"

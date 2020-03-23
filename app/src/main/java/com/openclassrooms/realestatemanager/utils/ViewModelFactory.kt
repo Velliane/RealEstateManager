@@ -26,7 +26,7 @@ class ViewModelFactory(private val context: Context, private val userDataReposit
                 MainViewModel(context, propertyDataRepository, addressDataRepository, geocodeRepository, firestoreDataRepository, userDataRepository) as T
             }
             modelClass.isAssignableFrom(ListViewModel::class.java) -> {
-                ListViewModel(propertyDataRepository, addressDataRepository, geocodeRepository, photoDataRepository) as T
+                ListViewModel(context, propertyDataRepository, addressDataRepository, geocodeRepository, photoDataRepository) as T
             }
             modelClass.isAssignableFrom(EditDataViewModel::class.java) -> {
                 EditDataViewModel(context, photoDataRepository, propertyDataRepository, addressDataRepository, executor, userDataRepository) as T
@@ -35,7 +35,7 @@ class ViewModelFactory(private val context: Context, private val userDataReposit
                 return UserViewModel(userDataRepository) as T
             }
             modelClass.isAssignableFrom(DetailViewModel::class.java) -> {
-                return DetailViewModel(propertyDataRepository, geocodeRepository, addressDataRepository, photoDataRepository) as T
+                return DetailViewModel(context, propertyDataRepository, geocodeRepository, addressDataRepository, photoDataRepository, userDataRepository) as T
             }
             modelClass.isAssignableFrom(MapViewModel::class.java) -> {
                 MapViewModel(propertyDataRepository, addressDataRepository, geocodeRepository) as T

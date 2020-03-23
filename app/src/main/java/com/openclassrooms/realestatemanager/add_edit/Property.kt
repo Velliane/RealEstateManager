@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.add_edit
 
+import android.content.ContentValues
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -33,14 +34,33 @@ data class Property(
         @ColumnInfo (name = "in_sale")
         var  in_sale: Boolean = true,
         @ColumnInfo (name = "nearby")
-        val nearby: String? = "",
+        var nearby: String? = "",
 
         @ColumnInfo (name = "created_date")
-        val created_date: String = "",
+        var created_date: String = "",
         @ColumnInfo (name = "sold_date")
-        val sold_date: String? = "",
+        var sold_date: String? = "",
 
         @ColumnInfo (name = "date")
-        val date: String = ""
+        var date: String = ""
 
 )
+
+fun fromContentValues(values: ContentValues?): Property {
+        val property = Property()
+        if(values!!.containsKey("id_property")){ property.id_property = values.getAsString("id_property") }
+        if(values.containsKey("agent")){ property.agent = values.getAsString("agent") }
+        if(values.containsKey("type")) { property.type = values.getAsString("type") }
+        if(values.containsKey("price")) { property.price = values.getAsInteger("price") }
+        if(values.containsKey("surface")) { property.surface = values.getAsInteger("surface") }
+        if(values.containsKey("rooms_nbr")) { property.rooms_nbr = values.getAsInteger("rooms_nbr") }
+        if(values.containsKey("bath_nbr")) { property.bath_nbr = values.getAsInteger("bath_nbr") }
+        if(values.containsKey("bed_nbr")) { property.bed_nbr = values.getAsInteger("bed_nbr") }
+        if(values.containsKey("description")) { property.description = values.getAsString("description") }
+        if(values.containsKey("in_sale")) { property.in_sale = values.getAsBoolean("in_sale") }
+        if(values.containsKey("nearby")) { property.nearby = values.getAsString("nearby") }
+        if(values.containsKey("created_date")) { property.created_date = values.getAsString("created_date") }
+        if(values.containsKey("sold_date")) { property.sold_date = values.getAsString("sold_date") }
+        if(values.containsKey("date")) { property.date = values.getAsString("date") }
+        return property
+}

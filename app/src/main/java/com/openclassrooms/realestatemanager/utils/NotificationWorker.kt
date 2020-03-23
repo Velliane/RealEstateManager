@@ -13,7 +13,7 @@ import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.add_edit.EditAddActivity
 
 
-class NotificationWorker(context: Context, workerParameters: WorkerParameters): Worker(context, workerParameters){
+class NotificationWorker(private val context: Context, workerParameters: WorkerParameters): Worker(context, workerParameters){
 
     companion object {
 
@@ -43,10 +43,10 @@ class NotificationWorker(context: Context, workerParameters: WorkerParameters): 
         val notificationManager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         val channelId = "channelId"
-        val text = "Hello $name, the property has been successfully saved in database"
+        val text = context.getString(R.string.notification_txt, name)
 
         val notificationBuilder = NotificationCompat.Builder(applicationContext, channelId)
-                .setContentTitle("Property save with success !")
+                .setContentTitle(context.getString(R.string.notification_title))
                 .setAutoCancel(true)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setContentIntent(pendingIntent)
@@ -54,7 +54,7 @@ class NotificationWorker(context: Context, workerParameters: WorkerParameters): 
                 .setStyle(NotificationCompat.BigTextStyle().bigText(text))
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channelName = "Message from RealEstateManager"
+            val channelName = context.getString(R.string.notification_channel)
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val channel = NotificationChannel(channelId, channelName, importance)
             notificationManager.createNotificationChannel(channel)

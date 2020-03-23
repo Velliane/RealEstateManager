@@ -18,7 +18,6 @@
     <string name="number_of_rooms">Number of rooms</string>
     <string name="description">Description</string>
     <string name="add_property_title">Add a property</string>
-
     <style name="edit_property_title">Edit a property</style>
 
     <string name="type_apartment">Apartment</string>
@@ -40,6 +39,7 @@
     <string name="details_number_of_bathrooms">Number of bathrooms :</string>
     <string name="details_number_bathrooms">2</string>
     <string name="details_address">Address</string>
+    <string name="details_date">%1$s/%2$s/%3$s</string>
 
     <!-- Home -->
     <string name="title_activity_maps">Map</string>
@@ -69,5 +69,21 @@
     <string name="nearby_public_transport">Public transport</string>
     <string name="nearby_restaurant">Restaurant</string>
     <string name="nearby_university">University</string>
+
+    <!-- Notification -->
+    <string name="notification_txt">Hello %1$s, the property has been successfully saved in database</string>
+    <string name="notification_title">Property save with success !</string>
+    <string name="notification_channel">Message from RealEstateManage</string>
+    <string name="manage_by">Manage by %1$s</string>
+
+    <!-- Search -->
+    <string name="search_titile_type">Type :</string>
+    <string name="search_title_price">Price :</string>
+    <string name="search_title_rooms">Rooms :</string>
+    <string name="search_title_location">Location :</string>
+    <string name="search_location_hint">Enter one or more keyword, separated by ,</string>
+    <string name="search_titile_bedrooms">Bedrooms :</string>
+    <string name="search_title_nearby">Nearby :</string>
+    <string name="default_photo_uri">android.resource://com.openclassrooms.realestatemanager/drawable/no_image_available_64</string>
 
 </resources>

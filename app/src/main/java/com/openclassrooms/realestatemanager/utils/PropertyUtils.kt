@@ -1,6 +1,8 @@
 package com.openclassrooms.realestatemanager.utils
 
+import android.content.Context
 import android.net.Uri
+import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.add_edit.Address
 import com.openclassrooms.realestatemanager.add_edit.Photo
 import com.openclassrooms.realestatemanager.add_edit.Property
@@ -23,10 +25,6 @@ fun setAddressToString(address: Address): String {
     return addressTxt.toString()
 }
 
-fun getLatLngLocation(address: Address): String {
-    return "NC"
-}
-
 fun compareByDate(property1: Property, property2: Property): Property {
     val date1 = parseStringDateToLocalDateTime(property1.date)
     val date2 = parseStringDateToLocalDateTime(property2.date)
@@ -38,8 +36,8 @@ fun compareByDate(property1: Property, property2: Property): Property {
     }
 }
 
-fun getDefaultPhoto(): Photo {
-    return Photo(Uri.parse("android.resource://com.openclassrooms.realestatemanager/drawable/no_image_available_64"), "No image")
+fun getDefaultPhoto(context: Context): Photo {
+    return Photo(Uri.parse(context.getString(R.string.default_photo_uri)), "No image")
 }
 
 

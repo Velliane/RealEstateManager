@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.show.list
 
+import android.content.Context
 import android.view.View
 import androidx.lifecycle.*
 import androidx.sqlite.db.SimpleSQLiteQuery
@@ -23,7 +24,7 @@ import kotlinx.coroutines.withContext
  *  - list of addresses according of properties's id
  * Merge the two lists
  */
-class ListViewModel(private val propertyDataRepository: PropertyDataRepository, private val addressDataRepository: AddressDataRepository, private val geocodeRepository: GeocodeRepository, private val photoDataRepository: PhotoDataRepository) : ViewModel() {
+class ListViewModel(private val context: Context, private val propertyDataRepository: PropertyDataRepository, private val addressDataRepository: AddressDataRepository, private val geocodeRepository: GeocodeRepository, private val photoDataRepository: PhotoDataRepository) : ViewModel() {
 
     val propertiesLiveData = MediatorLiveData<List<PropertyModelForList>>()
     private val addressesMutableLiveData = MutableLiveData<MutableMap<String, Address?>>(HashMap<String, Address?>())
@@ -65,7 +66,7 @@ class ListViewModel(private val propertyDataRepository: PropertyDataRepository, 
     }
 
     private fun getPhotoForPropertyId(idProperty: String): Photo {
-        var photo = getDefaultPhoto()
+        var photo = getDefaultPhoto(context)
         val listPhoto = photoDataRepository.getListOfPhotos(idProperty) as ArrayList<Photo>
 
         if(listPhoto.isNotEmpty()){
@@ -125,7 +126,6 @@ class ListViewModel(private val propertyDataRepository: PropertyDataRepository, 
             })
         }
         resetBtn.visibility = View.GONE
-
     }
 
 }

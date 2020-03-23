@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".search.SearchActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
     <include
         android:id="@+id/toolbar"
@@ -15,6 +19,7 @@
         android:id="@+id/type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintEnd_toEndOf="parent">
@@ -24,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Type :"
+            android:text="@string/search_titile_type"
             android:textSize="18sp"/>
 
         <com.hootsuite.nachos.NachoTextView
@@ -36,63 +41,114 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/price"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/type">
+<!--    <LinearLayout-->
+<!--        android:id="@+id/price"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="5dp"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/type">-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/search_price"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_margin="10dp"-->
+<!--            android:textSize="18sp"-->
+<!--            android:text="@string/search_title_price"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/search_spinner_price"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginEnd="10dp"-->
+<!--            android:text="@string/search_preview_rooms"/>-->
+
+<!--    </LinearLayout>-->
 
         <TextView
             android:id="@+id/search_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="15dp"
+            android:text="@string/search_title_price"
             android:textSize="18sp"
-            android:text="Price : "/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/type" />
 
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/search_spinner_price"
+        <TextView
+            android:id="@+id/price_preview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:text="@string/search_preview_rooms"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/search_rooms"
+            app:layout_constraintTop_toTopOf="@id/search_price"
+            app:layout_constraintBottom_toBottomOf="@id/search_price"/>
+
+
+        <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
+            android:id="@+id/search_price_seek_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"/>
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/search_price"
+            app:layout_constraintTop_toBottomOf="@id/search_price"
+            app:bar_highlight_color="@color/colorPrimary"
+            app:left_thumb_color="@color/colorAccent"
+            app:right_thumb_color="@color/colorAccent"
+            app:left_thumb_color_pressed="@color/thumb_pressed"
+            app:right_thumb_color_pressed="@color/thumb_pressed"
+            app:min_value="0"
+            app:max_value="2000000"
+            app:steps="50000"/>
 
-    </LinearLayout>
 
+        <TextView
+            android:id="@+id/search_rooms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="45dp"
+            android:text="@string/search_title_rooms"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@id/search_rooms_seek_bar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/search_price" />
 
-
-    <TextView
-        android:id="@+id/search_rooms"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="Rooms :"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@id/search_rooms_seek_bar"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/price" />
-
-    <TextView
+        <TextView
         android:id="@+id/rooms_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
         android:text="@string/search_preview_rooms"
-        app:layout_constraintBottom_toTopOf="@id/search_rooms_seek_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/search_rooms"
-        app:layout_constraintTop_toBottomOf="@id/price" />
+        app:layout_constraintTop_toTopOf="@id/search_rooms"
+        app:layout_constraintBottom_toBottomOf="@id/search_rooms"/>
 
 
     <com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
         android:id="@+id/search_rooms_seek_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/search_rooms"
         app:layout_constraintTop_toBottomOf="@id/search_rooms"
+        app:bar_highlight_color="@color/colorPrimary"
+        app:left_thumb_color="@color/colorAccent"
+        app:right_thumb_color="@color/colorAccent"
+        app:left_thumb_color_pressed="@color/thumb_pressed"
+        app:right_thumb_color_pressed="@color/thumb_pressed"
         app:min_value="1"
         app:max_value="8"
         app:steps="1"/>
@@ -102,6 +158,7 @@
         android:id="@+id/location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/search_rooms_seek_bar">
@@ -112,16 +169,15 @@
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:textSize="18sp"
-            android:text="Location : "/>
+            android:text="@string/search_title_location"/>
 
-        <EditText
-            android:id="@+id/search_edit_location"
+        <com.hootsuite.nachos.NachoTextView
+            android:id="@+id/search_nachos_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="City, etc..."
-            android:autofillHints="Location"
             android:layout_margin="10dp"
-            android:inputType="text"/>
+            android:hint="@string/search_location_hint"
+            android:gravity="end" />
 
     </LinearLayout>
 
@@ -129,8 +185,8 @@
         android:id="@+id/search_bedrooms"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="Bedrooms :"
+        android:layout_margin="15dp"
+        android:text="@string/search_titile_bedrooms"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/location" />
@@ -155,14 +211,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/search_bedrooms"
         app:layout_constraintTop_toBottomOf="@id/search_bedrooms"
+        app:bar_highlight_color="@color/colorPrimary"
+        app:left_thumb_color="@color/colorAccent"
+        app:right_thumb_color="@color/colorAccent"
+        app:left_thumb_color_pressed="@color/thumb_pressed"
+        app:right_thumb_color_pressed="@color/thumb_pressed"
         app:min_value="1"
-        app:max_value="8"
+        app:max_value="6"
         app:steps="1"/>
 
     <LinearLayout
         android:id="@+id/nearby"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/search_bedrooms_seek_bar"
         app:layout_constraintEnd_toEndOf="parent">
@@ -172,15 +234,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:text="Nearby :"
+            android:text="@string/search_title_nearby"
             android:textSize="18sp"/>
 
         <com.hootsuite.nachos.NachoTextView
             android:id="@+id/search_nachos_nearby"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="end"
-            android:layout_margin="10dp" />
+            android:layout_margin="10dp"
+            android:gravity="end" />
 
     </LinearLayout>
 
@@ -196,7 +258,9 @@
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nearby"
         app:layout_constraintHorizontal_bias="0.57"
         app:layout_constraintStart_toStartOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

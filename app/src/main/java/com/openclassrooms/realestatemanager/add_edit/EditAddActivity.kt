@@ -1,11 +1,13 @@
 package com.openclassrooms.realestatemanager.add_edit
 
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -20,12 +22,15 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.hootsuite.nachos.NachoTextView
+import com.hootsuite.nachos.terminator.ChipTerminatorHandler
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.openclassrooms.realestatemanager.BaseActivity
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.search.TypeEnum
 import com.openclassrooms.realestatemanager.search.TypeEnumNachosAdapter
+import com.openclassrooms.realestatemanager.show.MainActivity
 import com.openclassrooms.realestatemanager.show.detail.PhotosAdapter
 import com.openclassrooms.realestatemanager.utils.*
 import kotlinx.android.synthetic.main.activity_edit_add.*
@@ -63,6 +68,8 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
     private lateinit var addPhotoBtn: MaterialButton
     private lateinit var inSaleRadioBtn: RadioButton
     private lateinit var soldRadioBtn: RadioButton
+    private lateinit var inSaleDate: TextView
+    private lateinit var soldDate: TextView
 
     /** ViewModel */
     private lateinit var editDataViewModel: EditDataViewModel
@@ -96,7 +103,6 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         if (propertyId != "") { getDataFromDatabase(propertyId) }
     }
 
-
     /**
      * Get data from the PropertyDatabase if the propertyId is not equals to 0
      * @param id The id of the property
@@ -124,12 +130,12 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
                     val property = Property(propertyId, getCurrentUser().uid, spinnerType.selectedItem.toString().toUpperCase(Locale.ROOT),
                             price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(),
                             numberBedrooms.text.toString().toInt(), numberBathrooms.text.toString().toInt(), description.text.toString(),
-                            inSaleRadioBtn.isChecked, null, "18/03/2020", null, parseLocalDateTimeToString(LocalDateTime.now()))
+                            inSaleRadioBtn.isChecked, editDataViewModel.getNearby(nearbyNachos.chipValues), inSaleDate.text.toString(), soldDate.text.toString(), parseLocalDateTimeToString(LocalDateTime.now()))
 
                     editDataViewModel.save(property.id_property, property, number.text.toString().toInt(),
                             street.text.toString(), zipCode.text.toString(), city.text.toString(),
                             country.text.toString(), imageList, getCurrentUser().displayName!!, layout)
-                    finish()
+                    startActivity(Intent(this, MainActivity::class.java))
                 }else{
                     if(price.text == null){
                         custom_price_container.setError("Not empty")
@@ -145,11 +151,27 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
                 selectAnImageFromThePhone()
             }
             addPhotoBtn -> addImageToListAndShowIt()
+            inSaleDate -> getDateFromDatePicker(inSaleDate)
+            soldDate -> getDateFromDatePicker(soldDate)
         }
     }
 
     private fun checkRequiredInfo(): Boolean {
         return price.text.toString() != "" && surface.text.toString() != "" && rooms.text.toString() != "" && country.text.toString() != "" && spinnerType.selectedItem != null
+    }
+
+    private fun getDateFromDatePicker(view: TextView){
+        val calendar = Calendar.getInstance()
+        val actualYear = calendar.get(Calendar.YEAR)
+        val actualMonth = calendar.get(Calendar.MONTH)
+        val actualDay = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val picker = DatePickerDialog(this,
+                DatePickerDialog.OnDateSetListener{ _, year, month, day->
+                    view.text = getString(R.string.details_date, day.toString(), month.toString(), year.toString())
+                },
+                actualYear, actualMonth, actualDay)
+        picker.show()
     }
 
     //-- MANAGE IMAGE --//
@@ -239,6 +261,11 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         inSaleRadioBtn.setOnClickListener(this)
         soldRadioBtn = findViewById(R.id.edit_sold_btn)
         soldRadioBtn.setOnClickListener(this)
+        inSaleDate = findViewById(R.id.edit_date_created)
+        inSaleDate.setOnClickListener(this)
+        soldDate = findViewById(R.id.edit_date_sold)
+        soldDate.setOnClickListener(this)
+
     }
 
     //-- SAVE INSTANCE --//
@@ -283,6 +310,10 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         description.setText(property.description)
         numberBedrooms.setText(property.bed_nbr.toString())
         numberBathrooms.setText(property.bath_nbr.toString())
+        //val nearby = property.nearby!!.split(",").toTypedArray()
+        nearbyNachos.addChipTerminator(',', ChipTerminatorHandler.BEHAVIOR_CHIPIFY_ALL)
+        Log.d("Nearby", property.nearby.toString())
+        nearbyNachos.setText(property.nearby.toString())
         if(property.in_sale){
             inSaleRadioBtn.isChecked = true
         }else{
