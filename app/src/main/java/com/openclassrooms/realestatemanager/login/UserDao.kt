@@ -21,5 +21,5 @@ interface UserDao {
     fun updateUser(user: User): Int
 
     @Query("SELECT * FROM User WHERE userId = :userId")
-    fun getUserById(userId: String): LiveData<User>
+    suspend fun getUserById(userId: String): User
 }

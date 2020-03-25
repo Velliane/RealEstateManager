@@ -37,7 +37,8 @@ fun compareByDate(property1: Property, property2: Property): Property {
 }
 
 fun getDefaultPhoto(context: Context): Photo {
-    return Photo(Uri.parse(context.getString(R.string.default_photo_uri)), "No image")
+    val default = context.getString(R.string.default_photo_uri)
+    return Photo(Uri.parse(default), "No image")
 }
 
 

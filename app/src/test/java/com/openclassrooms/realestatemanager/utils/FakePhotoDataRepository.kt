@@ -16,6 +16,11 @@ class FakePhotoDataRepository(): PhotoDataRepository() {
     }
 
     override fun getListOfPhotos(id_property: String): List<Photo>? {
-        return super.getListOfPhotos(id_property)
+        val listOfPhoto = ArrayList<Photo>()
+        val photo1 = Photo(Uri.parse("025/image.fr"), "Salon séjour avec cheminée")
+        val photo2 = Photo(Uri.parse("054/imagefr"), "Grande chambre")
+        listOfPhoto.add(photo1)
+        listOfPhoto.add(photo2)
+        return listOfPhoto
     }
 }

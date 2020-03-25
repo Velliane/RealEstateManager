@@ -8,5 +8,6 @@ data class PropertyModelForList (
         val type: String,
         val price: String,
         val location: String?,
-        val photo: Photo?
+        val photo: Photo?,
+        val isSelected: Boolean
 )

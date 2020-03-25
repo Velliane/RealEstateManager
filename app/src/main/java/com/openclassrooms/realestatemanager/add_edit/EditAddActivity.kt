@@ -70,6 +70,8 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
     private lateinit var soldRadioBtn: RadioButton
     private lateinit var inSaleDate: TextView
     private lateinit var soldDate: TextView
+    /** TextInputLayout */
+    private lateinit var priceContainer: TextInputLayout
 
     /** ViewModel */
     private lateinit var editDataViewModel: EditDataViewModel
@@ -138,7 +140,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
                     startActivity(Intent(this, MainActivity::class.java))
                 }else{
                     if(price.text == null){
-                        custom_price_container.setError("Not empty")
+                        priceContainer.setError("Not empty")
                     }
                 }
             }
@@ -265,6 +267,8 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         inSaleDate.setOnClickListener(this)
         soldDate = findViewById(R.id.edit_date_sold)
         soldDate.setOnClickListener(this)
+
+        priceContainer = findViewById(R.id.custom_price_container)
 
     }
 

@@ -1,5 +1,8 @@
 package com.openclassrooms.realestatemanager.simulator
 
+import androidx.annotation.VisibleForTesting
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.math.BigDecimal
 import java.math.MathContext
@@ -7,9 +10,12 @@ import java.math.RoundingMode
 
 class SimulatorViewModel: ViewModel() {
 
-    fun calculateMonthlyPayment(capital: Int, duration: Int, rate: Int): BigDecimal {
+    val monthlyLiveData = MutableLiveData<BigDecimal>()
+
+    @VisibleForTesting
+    fun calculateMonthlyPayment(capital: Int, duration: Int, rate: Float): LiveData<BigDecimal> {
         //-- calculate capital*(rate/12) --//
-        val rateInInt = BigDecimal(rate).divide(BigDecimal(100))
+        val rateInInt = BigDecimal(rate.toDouble()).divide(BigDecimal(100))
         val durationInMonth = BigDecimal(duration).multiply(BigDecimal(12)).negate().toInt()
         val first = BigDecimal(capital).multiply(rateInInt).divide(BigDecimal(12), 2, RoundingMode.HALF_UP)
         //-- calculate 1-(1+(rate/12))^durationInMonth --//
@@ -18,6 +24,8 @@ class SimulatorViewModel: ViewModel() {
         val exponent = onePlusRatePermMonth.pow(durationInMonth, MathContext.DECIMAL128)
         val second = BigDecimal(1).subtract(exponent)
         //-- divide the two result --//
-        return first.divide(second, 2 , RoundingMode.HALF_UP)
+        val result = first.divide(second, 2 , RoundingMode.HALF_UP)
+        monthlyLiveData.value = result
+        return monthlyLiveData
     }
 }

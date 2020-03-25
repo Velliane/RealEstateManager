@@ -23,10 +23,10 @@ class ViewModelFactory(private val context: Context, private val userDataReposit
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(MainViewModel::class.java) -> {
-                MainViewModel(context, propertyDataRepository, addressDataRepository, geocodeRepository, firestoreDataRepository, userDataRepository) as T
+                MainViewModel(context, propertyDataRepository, addressDataRepository, firestoreDataRepository, userDataRepository) as T
             }
             modelClass.isAssignableFrom(ListViewModel::class.java) -> {
-                ListViewModel(context, propertyDataRepository, addressDataRepository, geocodeRepository, photoDataRepository) as T
+                ListViewModel(context, propertyDataRepository, addressDataRepository, photoDataRepository) as T
             }
             modelClass.isAssignableFrom(EditDataViewModel::class.java) -> {
                 EditDataViewModel(context, photoDataRepository, propertyDataRepository, addressDataRepository, executor, userDataRepository) as T

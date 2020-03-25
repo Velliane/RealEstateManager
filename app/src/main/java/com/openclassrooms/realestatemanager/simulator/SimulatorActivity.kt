@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
@@ -43,8 +44,11 @@ class SimulatorActivity : AppCompatActivity(), View.OnClickListener {
     override fun onClick(view: View?){
         when(view){
             calculateBtn -> {
-                val monthly = viewModel.calculateMonthlyPayment(capitalTxt.text.toString().toInt(), durationTxt.text.toString().toInt(), rateTxt.text.toString().toInt())
-                result.text = getString(R.string.result, monthly.toString())
+                val rate = rateTxt.text.toString().toFloat()
+                viewModel.calculateMonthlyPayment(capitalTxt.text.toString().toInt(), durationTxt.text.toString().toInt(), rate).observe(this, Observer {
+                    result.text = getString(R.string.result, it.toString())
+                })
+
             }
         }
     }

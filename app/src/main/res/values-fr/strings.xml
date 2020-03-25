@@ -84,5 +84,8 @@
     <string name="search_location_hint">Saisir un ou plusieurs mot-clef, séparés par une ,</string>
     <string name="search_titile_bedrooms">Chambres :</string>
     <string name="search_title_nearby">A proximité de :</string>
+    <string name="choose_your_currency">Choisissez votre devise:</string>
+    <string name="settings_euro">Euros</string>
+    <string name="settings_dollar">Dollar</string>
 
 </resources>

@@ -65,6 +65,11 @@ class ListPropertyAdapter(private val listener: OnItemClickListener, private val
                 Glide.with(itemView.context).load(R.drawable.no_image_available_64).centerCrop().into(photo)
             }
             location.text = property.location
+            if(property.isSelected){
+                container.setBackgroundResource(R.color.drawer_color)
+            }else{
+                container.setBackgroundResource(R.color.quantum_white_100)
+            }
             itemView.setOnClickListener {
                 onItemClickListener.onItemClicked(property.propertyId, adapterPosition)
             }

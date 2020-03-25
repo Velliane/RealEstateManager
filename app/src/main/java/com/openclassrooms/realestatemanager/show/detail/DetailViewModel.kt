@@ -27,6 +27,7 @@ class DetailViewModel(private val context: Context, private val propertyDataRepo
     var propertyLiveData = MutableLiveData<Property>()
     val addressLiveData = MutableLiveData<Address>()
     val listPhotosLiveData = MutableLiveData<List<Photo>>()
+    val agentLiveData = MutableLiveData<User>()
 
     /**
      * Get Property by his id from PropertyDatabase
@@ -61,8 +62,13 @@ class DetailViewModel(private val context: Context, private val propertyDataRepo
         listPhotosLiveData.value = photoDataRepository.getListOfPhotos(id_property)
     }
 
-    fun setAgent(id_agent: String): LiveData<User>{
-        return userDataRepository.getUserById(id_agent)
+    fun setAgent(id_agent: String){
+        viewModelScope.launch(Dispatchers.IO) {
+            val user = userDataRepository.getUserById(id_agent)
+            withContext(Dispatchers.Main){
+                agentLiveData.value = user
+            }
+        }
     }
 
 //    fun setAgent(id_agent: String, txtView: TextView){

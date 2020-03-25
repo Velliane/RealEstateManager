@@ -81,7 +81,7 @@ class DetailsFragment : BaseFragment() {
                 photosAdapter.setData(it)
                 photosAdapter.notifyDataSetChanged()
             })
-        }else{
+        } else {
             if (container != null) {
                 container.visibility = View.GONE
             }
@@ -130,7 +130,8 @@ class DetailsFragment : BaseFragment() {
         viewModel.getPropertyFromId(id)
         viewModel.propertyLiveData.observe(this, Observer { property ->
             updateGeneralInfo(property)
-            viewModel.setAgent(property.agent).observe(this, Observer {
+            viewModel.setAgent(property.agent)
+            viewModel.agentLiveData.observe(this, Observer {
                 agentTxt.text = getString(R.string.manage_by, it.name)
             })
         })

@@ -65,6 +65,18 @@ class SearchViewModelTest {
     }
 
     @Test
+    fun constructQueryResearchTestWithTypeHouseAndLoftSelected(){
+        // search type house and loft, with price between 150 000 and 350 000,
+        // room between 1 and 8
+        // bedrooms between 2 and 3
+        val queryExpected = "SELECT * FROM Property WHERE type IN ('House','Loft') " +
+                "AND price >= '300000' AND price <= '400000' " +
+                "AND rooms_nbr >= '3' AND rooms_nbr <= '4' " +
+                "AND bed_nbr >= '2' AND bed_nbr <= '3'"
+        assertEquals(queryExpected, viewModel.constructQueryResearch(300000, 400000, arrayListOf("House", "Loft"), 3, 4, 2, 3))
+    }
+
+    @Test
     fun getTypesEnumListTest(){
         val list = arrayListOf(context.getString(TypeEnum.HOUSE.res), context.getString(TypeEnum.APARTMENT.res), context.getString(TypeEnum.DUPLEX.res), context.getString(TypeEnum.LOFT.res))
         val listTest = viewModel.getTypesList()

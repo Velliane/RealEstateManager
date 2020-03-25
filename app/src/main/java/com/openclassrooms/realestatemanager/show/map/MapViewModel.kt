@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.show.map
 
 import android.view.View
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.*
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.android.material.button.MaterialButton
@@ -76,7 +77,8 @@ class MapViewModel(private val propertyDataRepository: PropertyDataRepository, p
         return geocodeRepository.getLatLng(txt, countryCode, key)
     }
 
-    private fun stringToSimpleSQLiteQuery(query: String): SimpleSQLiteQuery {
+    @VisibleForTesting
+    fun stringToSimpleSQLiteQuery(query: String): SimpleSQLiteQuery {
         return SimpleSQLiteQuery(query)
     }
 

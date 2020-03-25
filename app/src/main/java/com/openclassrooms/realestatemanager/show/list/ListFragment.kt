@@ -76,7 +76,10 @@ class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener, Vie
      * Refresh list of properties according to search query
      */
     fun refreshQuery(querySearch: String) {
-        viewModel.searchInDatabase(querySearch, resetBtn)
+        viewModel.searchInDatabase(querySearch)
+        viewModel.resetBtnLiveData.observe(this, Observer {
+            resetBtn.visibility = it
+        })
     }
 
     /**
@@ -98,8 +101,7 @@ class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener, Vie
     override fun onItemClicked(id: String, position: Int) {
         val fragment = DetailsFragment.newInstance()
         sharedPreferences.edit().putString(Constants.PREF_ID_PROPERTY, id).apply()
-        adapter.getItemViewType(position)
-        adapter.notifyDataSetChanged()
+        viewModel.propertyClicked(id)
 
         if(!getScreenOrientation(activity!!.resources.configuration.orientation)){
             activity!!.supportFragmentManager.beginTransaction().replace(R.id.container_fragment_list, fragment).commit()
@@ -110,7 +112,12 @@ class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener, Vie
 
     override fun onClick(view: View?) {
         when(view){
-            resetBtn -> { viewModel.reset(resetBtn) }
+            resetBtn -> {
+                viewModel.reset()
+                viewModel.resetBtnLiveData.observe(this, Observer {
+                    resetBtn.visibility = it
+                })
+            }
         }
     }
 

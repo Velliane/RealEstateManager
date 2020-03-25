@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.show.list
 
 import android.content.Context
 import android.view.View
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.*
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.google.android.material.button.MaterialButton
@@ -11,7 +12,6 @@ import com.openclassrooms.realestatemanager.data.PropertyDataRepository
 import com.openclassrooms.realestatemanager.add_edit.Photo
 import com.openclassrooms.realestatemanager.add_edit.Address
 import com.openclassrooms.realestatemanager.add_edit.Property
-import com.openclassrooms.realestatemanager.show.geocode_model.GeocodeRepository
 import com.openclassrooms.realestatemanager.utils.getDefaultPhoto
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,26 +24,35 @@ import kotlinx.coroutines.withContext
  *  - list of addresses according of properties's id
  * Merge the two lists
  */
-class ListViewModel(private val context: Context, private val propertyDataRepository: PropertyDataRepository, private val addressDataRepository: AddressDataRepository, private val geocodeRepository: GeocodeRepository, private val photoDataRepository: PhotoDataRepository) : ViewModel() {
+class ListViewModel(private val context: Context, private val propertyDataRepository: PropertyDataRepository, private val addressDataRepository: AddressDataRepository, private val photoDataRepository: PhotoDataRepository) : ViewModel() {
 
     val propertiesLiveData = MediatorLiveData<List<PropertyModelForList>>()
-    private val addressesMutableLiveData = MutableLiveData<MutableMap<String, Address?>>(HashMap<String, Address?>())
+    val addressesMutableLiveData = MutableLiveData<MutableMap<String, Address?>>(HashMap<String, Address?>())
     private var propertiesFromResearchLiveData: LiveData<List<Property>>? = null
-    private val allPropertiesLiveData = propertyDataRepository.getAllProperties()
+    private val allPropertiesLiveData = getAllProperties()
+    val currentIdPropertySelectedLiveData = MutableLiveData<String>()
+    val resetBtnLiveData = MutableLiveData<Int>()
 
     init {
         propertiesLiveData.addSource(allPropertiesLiveData, Observer {
-            combinePropertiesPhotosAndAddresses(it, addressesMutableLiveData.value!!)
+            combinePropertiesPhotosAndAddresses(it, addressesMutableLiveData.value!!, currentIdPropertySelectedLiveData.value)
         })
         propertiesLiveData.addSource(addressesMutableLiveData, Observer {
-            combinePropertiesPhotosAndAddresses(allPropertiesLiveData.value, it)
+            combinePropertiesPhotosAndAddresses(allPropertiesLiveData.value, it, currentIdPropertySelectedLiveData.value)
         })
+        propertiesLiveData.addSource(currentIdPropertySelectedLiveData, Observer {
+            combinePropertiesPhotosAndAddresses(allPropertiesLiveData.value, addressesMutableLiveData.value!!, it)
+        })
+    }
+
+    fun getAllProperties(): LiveData<List<Property>> {
+        return propertyDataRepository.getAllProperties()
     }
 
     /**
      * Merge list of properties with list of addresses
      */
-    private fun combinePropertiesPhotosAndAddresses(properties: List<Property>?, addresses: Map<String, Address?>) {
+    private fun combinePropertiesPhotosAndAddresses(properties: List<Property>?, addresses: Map<String, Address?>, idProperty: String?) {
         if (properties == null) {
             return
         }
@@ -60,16 +69,17 @@ class ListViewModel(private val context: Context, private val propertyDataReposi
                     it.type,
                     it.price.toString(),
                     addresses[it.id_property]?.city,
-                    getPhotoForPropertyId(it.id_property))
+                    getPhotoForPropertyId(it.id_property),
+                    it.id_property==idProperty)
         }
         propertiesLiveData.value = propertyModelsForList
     }
 
-    private fun getPhotoForPropertyId(idProperty: String): Photo {
+    fun getPhotoForPropertyId(idProperty: String): Photo {
         var photo = getDefaultPhoto(context)
-        val listPhoto = photoDataRepository.getListOfPhotos(idProperty) as ArrayList<Photo>
+        val listPhoto = photoDataRepository.getListOfPhotos(idProperty)
 
-        if(listPhoto.isNotEmpty()){
+        if(listPhoto!!.isNotEmpty()){
             photo = listPhoto[0]
         }
         return photo
@@ -100,32 +110,42 @@ class ListViewModel(private val context: Context, private val propertyDataReposi
      * Search list of properties in PropertyDatabase according to query
      * Change source of MediatorLiveData propertiesLiveData
      * @param query the search query
-     * @param resetBtn the button for reset the search
      */
-    fun searchInDatabase(query: String, resetBtn: MaterialButton){
+    fun searchInDatabase(query: String){
        propertyDataRepository.searchInDatabase(stringToSimpleSQLiteQuery(query)).let { properties ->
            propertiesFromResearchLiveData = properties
            propertiesLiveData.removeSource(allPropertiesLiveData)
            propertiesLiveData.addSource(properties, Observer {
-               combinePropertiesPhotosAndAddresses(it, addressesMutableLiveData.value!!)
+               combinePropertiesPhotosAndAddresses(it, addressesMutableLiveData.value!!, currentIdPropertySelectedLiveData.value)
            })
        }
-        resetBtn.visibility = View.VISIBLE
+        setButtonVisibility(true)
 
     }
 
     /**
      * Reset the research by restore source (allPropertiesLiveData) of MediatorLiveData
-     * @param resetBtn the button for reset the search
      */
-    fun reset(resetBtn: MaterialButton){
+    fun reset(){
         propertiesFromResearchLiveData?.let { properties ->
             propertiesLiveData.removeSource(properties)
             propertiesLiveData.addSource(allPropertiesLiveData, Observer {
-                combinePropertiesPhotosAndAddresses(it, addressesMutableLiveData.value!!)
+                combinePropertiesPhotosAndAddresses(it, addressesMutableLiveData.value!!, currentIdPropertySelectedLiveData.value)
             })
         }
-        resetBtn.visibility = View.GONE
+        setButtonVisibility(false)
+    }
+
+    fun propertyClicked(id: String) {
+        currentIdPropertySelectedLiveData.value = id
+    }
+
+    fun setButtonVisibility(visibility: Boolean){
+        if(visibility){
+            resetBtnLiveData.value = View.VISIBLE
+        }else{
+            resetBtnLiveData.value = View.GONE
+        }
     }
 
 }

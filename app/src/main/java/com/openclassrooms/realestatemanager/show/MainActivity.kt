@@ -17,12 +17,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.firebase.ui.auth.AuthUI
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.login.LoginActivity
-import com.openclassrooms.realestatemanager.login.User
 import com.openclassrooms.realestatemanager.BaseActivity
 import com.openclassrooms.realestatemanager.simulator.SimulatorActivity
 import com.openclassrooms.realestatemanager.add_edit.EditAddActivity
@@ -48,6 +45,8 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
 
     /** Boolean isTablet */
     private var isLandscape: Boolean = false
+    private var searchActivated: Boolean = false
+    private var querySearch: String? = ""
 
     /**Bottom Navigation View */
     private lateinit var bottomNavigationView: BottomNavigationView
@@ -63,7 +62,6 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
     private lateinit var sharedPreferences: SharedPreferences
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -72,19 +70,19 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
         isLandscape = getScreenOrientation(resources.configuration.orientation)
         //-- Get Shared Preferences --//
         sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE)
-
         //-- Configuration --//
         configureViewModel()
         bindViews()
         configureDrawerLayout()
-        if(savedInstanceState == null){
+        if (savedInstanceState == null) {
             sharedPreferences.edit().putString(Constants.PREF_ID_PROPERTY, "").apply()
+            bottomNavigationView.selectedItemId = R.id.action_list_view
+            sharedPreferences.edit().putBoolean("Search activated", false).apply()
         }
         mainViewModel.updateDatabase()
         configureDrawer()
         showFragments(savedInstanceState)
-        bottomNavigationView.selectedItemId = R.id.action_list_view
-
+        searchActivated = sharedPreferences.getBoolean("Search activated", false)
     }
 
 
@@ -93,11 +91,21 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
         when (item.itemId) {
             //-- Bottom navigation --//
             R.id.action_list_view -> {
-                showListFragment()
+                if(searchActivated){
+                    val fragment = supportFragmentManager.findFragmentById(R.id.container_fragment_list)
+                    (fragment as? ListFragment)?.refreshQuery(querySearch!!)
+                }else{
+                    showListFragment()
+                }
                 return true
             }
             R.id.action_map_view -> {
-                showMapFragment()
+                if(searchActivated){
+                    val mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment)
+                    (mapFragment as? MapViewFragment)?.refreshQuery(querySearch!!)
+                }else {
+                    showMapFragment()
+                }
                 return true
             }
             //-- Drawer --//
@@ -108,7 +116,7 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
                 startActivity(Intent(this, SimulatorActivity::class.java))
             }
             R.id.drawer_menu_logout -> {
-                logOut()
+                mainViewModel.logOut()
             }
         }
         return false
@@ -116,11 +124,10 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        val querySearch = data!!.getStringExtra(Constants.SEARCH_QUERY)
+        querySearch = data!!.getStringExtra(Constants.SEARCH_QUERY)
+        sharedPreferences.edit().putBoolean("Search activated", true).apply()
         val fragment = supportFragmentManager.findFragmentById(R.id.container_fragment_list)
-        (fragment as? ListFragment)?.refreshQuery(querySearch)
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment)
-        (mapFragment as? MapViewFragment)?.refreshQuery(querySearch)
+        (fragment as? ListFragment)?.refreshQuery(querySearch!!)
     }
 
     //-- TOOLBAR MENU --//
@@ -185,29 +192,14 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
      */
     private fun configureDrawer() {
         drawerMenu.setNavigationItemSelectedListener(this)
-
         val view = drawerMenu.getHeaderView(0)
         photo = view.findViewById(R.id.header_photo)
         name = view.findViewById(R.id.header_name)
-
         //-- Update Views with user's info --//
-        if (Utils.isInternetAvailable(this)) {
-            //-- If connected to internet, get user's information from Firebase --//
-            if (getCurrentUser().photoUrl != null) {
-                Glide.with(this).load(getCurrentUser().photoUrl).apply(RequestOptions.circleCropTransform()).centerCrop().into(photo)
-            }
-            name.text = getCurrentUser().displayName
-
-        } else {
-            //-- If not connected, get users' information from Room --//
-            val id = sharedPreferences.getString(Constants.PREF_ID_USER, "")
-            mainViewModel.getUserById(id!!).observe(this, Observer {
-                if (it.photo != null) {
-                    Glide.with(this).load(it.photo).apply(RequestOptions.circleCropTransform()).centerCrop().into(photo)
-                }
-                name.text = it.name
-            })
-        }
+        mainViewModel.updateHeader(getCurrentUser(), sharedPreferences).observe(this, Observer {
+            name.text = it.name
+            Glide.with(applicationContext).load(it.photo).apply(RequestOptions.circleCropTransform()).centerCrop().into(photo)
+        })
     }
 
 
@@ -230,16 +222,6 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
             if (isLandscape) {
                 val detailsFragment = DetailsFragment.newInstance()
                 supportFragmentManager.beginTransaction().replace(R.id.container_fragment_details, detailsFragment, "DETAILS").commit()
-            }
-        } else {
-            if (isLandscape) {
-                val detailsFragment = DetailsFragment.newInstance()
-                supportFragmentManager.beginTransaction().replace(R.id.container_fragment_details, detailsFragment, "DETAILS").commit()
-            } else {
-                val fragment = supportFragmentManager.findFragmentByTag("DETAILS")
-                if (fragment != null) {
-                    supportFragmentManager.beginTransaction().remove(fragment).commit()
-                }
             }
         }
     }
@@ -272,13 +254,6 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
     override fun onBackPressed() {
         if (!isLandscape) {
             showListFragment()
-        }
-    }
-
-    //-- LOGOUT --//
-    private fun logOut() {
-        AuthUI.getInstance().signOut(this).addOnCompleteListener {
-            startActivity(Intent(this, LoginActivity::class.java))
         }
     }
 

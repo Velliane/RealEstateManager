@@ -85,5 +85,8 @@
     <string name="search_titile_bedrooms">Bedrooms :</string>
     <string name="search_title_nearby">Nearby :</string>
     <string name="default_photo_uri">android.resource://com.openclassrooms.realestatemanager/drawable/no_image_available_64</string>
+    <string name="choose_your_currency">Choose your currency:</string>
+    <string name="settings_euro">Euros</string>
+    <string name="settings_dollar">Dollar</string>
 
 </resources>
