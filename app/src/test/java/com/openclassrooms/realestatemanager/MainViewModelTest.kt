@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager
 
 import android.content.Context
+import android.os.Looper
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.doReturn
@@ -28,18 +29,19 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoRule
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.Shadows.shadowOf
+import org.robolectric.annotation.LooperMode
 
 
 @ExperimentalCoroutinesApi
-@RunWith(JUnit4::class)
+@RunWith(RobolectricTestRunner::class)
+@LooperMode(LooperMode.Mode.PAUSED)
 class MainViewModelTest {
-
-    private lateinit var viewModel: MainViewModel
 
     @Mock
     private lateinit var context: Context
@@ -59,7 +61,6 @@ class MainViewModelTest {
     @Rule
     @JvmField
     val mockitoRule: MockitoRule = MockitoJUnit.rule()
-
     private val testCoroutineDispatcher = TestCoroutineDispatcher()
 
     @Rule
@@ -81,7 +82,6 @@ class MainViewModelTest {
 
     @Test
     fun getUserInformation() = runBlockingTest {
-
         val user = User("566413", "Martin", "martin@orange.fr", "profile.martin/image.fr")
         val mockUserDataRepository = mock<UserDataRepository> {
             onBlocking { getUserById("566413") } doReturn user
@@ -93,31 +93,27 @@ class MainViewModelTest {
         val viewModel = MainViewModel(context, mockPropertyDataRepository, fakeAddressDataRepository, fakeFirestoreDataRepository, mockUserDataRepository)
         viewModel.getUserById("566413")
 
-        val result = viewModel.userLiveData.value
-        assertEquals("martin@orange.fr", result?.email)
-        assertEquals("profile.martin/image.fr", result?.photo)
+        shadowOf(Looper.getMainLooper()).idle()
+        assertEquals("martin@orange.fr", viewModel.userLiveData.value?.email)
+        assertEquals("profile.martin/image.fr", viewModel.userLiveData.value?.photo)
     }
 
     @Test
     fun getAddressOfPropertyWithIdEqual001() {
-        val address = Address("1", 4, "allée des Bleuets", "71500", "Louhans", "France", "001")
-
         val mockPropertyDataRepository = mock<PropertyDataRepository> {
             onBlocking { getAllProperties() } doReturn liveData
         }
+        val address = Address("1", 4, "allée des Bleuets", "71500", "Louhans", "France", "001")
         val mockAddressDataRepository = mock<AddressDataRepository> {
             onGeneric { getAddressOfOneProperty("001")} doReturn address
         }
+
+
         val viewModel = MainViewModel(context, mockPropertyDataRepository, mockAddressDataRepository, fakeFirestoreDataRepository, fakeUserDataRepository)
         viewModel.getAddressOfOneProperty("001")
 
+        shadowOf(Looper.getMainLooper()).idle()
         assertEquals(4, viewModel.addressLiveData.value?.number)
     }
 
-    @Test
-    fun getUser() = runBlockingTest {
-        viewModel.getUserById("566413")
-        val user = viewModel._userLiveData.value
-        assertEquals("Martin", user?.name)
-    }
 }
