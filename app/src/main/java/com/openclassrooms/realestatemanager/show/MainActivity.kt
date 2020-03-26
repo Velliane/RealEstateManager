@@ -196,7 +196,8 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
         photo = view.findViewById(R.id.header_photo)
         name = view.findViewById(R.id.header_name)
         //-- Update Views with user's info --//
-        mainViewModel.updateHeader(getCurrentUser(), sharedPreferences).observe(this, Observer {
+        val id = sharedPreferences.getString(Constants.PREF_ID_USER, "")
+        mainViewModel.updateHeader(getCurrentUser().displayName.toString(), getCurrentUser().photoUrl.toString(), getCurrentUser().email.toString(), id).observe(this, Observer {
             name.text = it.name
             Glide.with(applicationContext).load(it.photo).apply(RequestOptions.circleCropTransform()).centerCrop().into(photo)
         })

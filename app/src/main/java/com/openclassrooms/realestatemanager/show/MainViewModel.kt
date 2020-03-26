@@ -30,13 +30,12 @@ import kotlinx.coroutines.withContext
 
 class MainViewModel(private val context: Context, private val propertyDataRepository: PropertyDataRepository, private val addressDataRepository: AddressDataRepository, private val firestoreDataRepository: FirestoreDataRepository, private val userDataRepository: UserDataRepository) : ViewModel() {
 
-    private val propertiesLiveData = MutableLiveData<List<Property>>()
+    val propertiesLiveData = MutableLiveData<List<Property>>()
     val addressLiveData = MutableLiveData<Address>()
     val userLiveData = MutableLiveData<User>()
-    val _userLiveData: LiveData<User> = userLiveData
 
     init {
-        getAllProperty()
+       getAllProperty()
     }
 
     suspend fun getUserById(userId: String){
@@ -49,7 +48,7 @@ class MainViewModel(private val context: Context, private val propertyDataReposi
     }
 
     //-- PROPERTIES --//
-    private fun getAllProperty(): LiveData<List<Property>>{
+    fun getAllProperty(): LiveData<List<Property>>{
         return propertyDataRepository.getAllProperties()
     }
 
@@ -79,22 +78,24 @@ class MainViewModel(private val context: Context, private val propertyDataReposi
 
     /**
      * Return LiveData<User> get from Firebase or Room according of Internet's connexion
-     * @param currentUser FirebaseUser
-     * @param sharedPreferences SharedPreferences
+     * @param displayName The name got from Firebase
+     * @param photoUrl the url of the photo got from Firebase
+     * @param email the email got from Firebase
+     * @param id the user's id
      * @return LiveData<User>
      */
-    fun updateHeader(currentUser: FirebaseUser, sharedPreferences: SharedPreferences): LiveData<User> {
+    fun updateHeader(displayName: String, photoUrl: String, email: String, id: String?): LiveData<User> {
         val user = User()
         if (Utils.isInternetAvailable(context)) {
             //-- If connected to internet, get user's information from Firebase --//
-            if (currentUser.photoUrl != null) {
-                user.photo = currentUser.photoUrl.toString()
+            if (photoUrl != "") {
+                user.photo = photoUrl
             }
-            user.name = currentUser.displayName.toString()
+            user.name = displayName
+            user.email = email
             userLiveData.value = user
         } else {
             //-- If not connected, get users' information from Room --//
-            val id = sharedPreferences.getString(Constants.PREF_ID_USER, "")
             viewModelScope.launch(Dispatchers.IO) {
                 getUserById(id!!)
             }
