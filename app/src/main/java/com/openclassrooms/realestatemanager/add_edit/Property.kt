@@ -7,7 +7,6 @@ import androidx.room.PrimaryKey
 
 @Entity
 
-
 data class Property(
 
         @PrimaryKey

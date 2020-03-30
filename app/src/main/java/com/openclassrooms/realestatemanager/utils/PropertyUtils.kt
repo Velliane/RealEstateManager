@@ -15,11 +15,24 @@ fun setAddressToString(address: Address): String {
     val city = address.city
     val country = address.country
     val addressTxt = StringBuilder("")
-    addressTxt.append(number)
-    addressTxt.append(" $street")
-    addressTxt.append("\n")
-    addressTxt.append(zipCode)
-    addressTxt.append(" $city")
+
+    if(number != null) {
+        addressTxt.append("$number ")
+        if(street != null){
+            addressTxt.append("$street")
+        }
+    }
+    if(number == null && street != null){
+        addressTxt.append("$street")
+    }
+    if(number != null || street != null){
+        addressTxt.append("\n")
+    }
+    if(zipCode != null) {
+        addressTxt.append("$zipCode ")
+    }
+
+    addressTxt.append(city)
     addressTxt.append("\n")
     addressTxt.append(country)
     return addressTxt.toString()

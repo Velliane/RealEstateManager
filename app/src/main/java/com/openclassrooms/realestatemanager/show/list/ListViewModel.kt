@@ -28,7 +28,7 @@ class ListViewModel(private val context: Context, private val propertyDataReposi
 
     val propertiesLiveData = MediatorLiveData<List<PropertyModelForList>>()
     val addressesMutableLiveData = MutableLiveData<MutableMap<String, Address?>>(HashMap<String, Address?>())
-    private var propertiesFromResearchLiveData: LiveData<List<Property>>? = null
+    private var propertiesFromResearchLiveData: LiveData<List<Property>?>? = null
     private val allPropertiesLiveData = getAllProperties()
     val currentIdPropertySelectedLiveData = MutableLiveData<String>()
     val resetBtnLiveData = MutableLiveData<Int>()

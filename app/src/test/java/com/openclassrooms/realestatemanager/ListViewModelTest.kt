@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager
 
 import android.content.Context
+import android.net.Uri
 import android.view.View
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
@@ -12,21 +13,28 @@ import com.openclassrooms.realestatemanager.data.PropertyDataRepository
 import com.openclassrooms.realestatemanager.show.list.ListViewModel
 import com.openclassrooms.realestatemanager.utils.FakeAddressDataRepository
 import com.openclassrooms.realestatemanager.utils.FakePhotoDataRepository
+import com.openclassrooms.realestatemanager.utils.getOrAwaitValue
 import junit.framework.Assert.assertEquals
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.junit.runners.JUnit4
 import org.mockito.Matchers.any
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoRule
+import org.powermock.core.classloader.annotations.PrepareForTest
 import org.robolectric.RobolectricTestRunner
 
 
-@RunWith(RobolectricTestRunner::class)
+@ExperimentalCoroutinesApi
+@RunWith(JUnit4::class)
+@PrepareForTest(Uri::class)
 class ListViewModelTest{
 
     private lateinit var viewModel: ListViewModel
@@ -47,7 +55,7 @@ class ListViewModelTest{
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Before
-    fun setUp() = runBlocking {
+    fun setUp() = runBlockingTest {
         MockitoAnnotations.initMocks(this)
         doReturn("android.resource://com.openclassrooms.realestatemanager/drawable/no_image_available_64").`when`(context).getString(any(Int::class.javaObjectType))
         val liveData = MutableLiveData<List<Property>>()
@@ -68,19 +76,22 @@ class ListViewModelTest{
     @Test
     fun setResetButtonToVisibilityVisible() {
         viewModel.setButtonVisibility(true)
-        assertEquals(View.VISIBLE, viewModel.resetBtnLiveData.value)
+        val result = viewModel.resetBtnLiveData.getOrAwaitValue()
+        assertEquals(View.VISIBLE, result)
     }
 
     @Test
     fun setResetButtonToVisibilityGone() {
         viewModel.setButtonVisibility(false)
-        assertEquals(View.GONE, viewModel.resetBtnLiveData.value)
+        val result = viewModel.resetBtnLiveData.getOrAwaitValue()
+        assertEquals(View.GONE, result)
     }
 
     @Test
     fun getIdOfPorpertySelected() {
         viewModel.propertyClicked("001")
-        assertEquals("001", viewModel.currentIdPropertySelectedLiveData.value)
+        val result = viewModel.currentIdPropertySelectedLiveData.getOrAwaitValue()
+        assertEquals("001", result)
     }
 
     @Test

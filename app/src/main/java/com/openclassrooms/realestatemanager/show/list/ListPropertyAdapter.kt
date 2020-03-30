@@ -13,20 +13,23 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.utils.Utils
 
 class ListPropertyAdapter(private val listener: OnItemClickListener, private val context: Context) : ListAdapter<PropertyModelForList, ListPropertyAdapter.ListViewHolder>(PropertyAdapterDiffCallback()) {
 
 
     private var data: List<PropertyModelForList> = ArrayList()
     private lateinit var onItemClickListener: OnItemClickListener
+    private var currencySelected = 0
 
 
     interface OnItemClickListener {
         fun onItemClicked(id: String, position: Int)
     }
 
-    fun setData(newData: List<PropertyModelForList>) {
+    fun setData(newData: List<PropertyModelForList>, currency: Int) {
         data = newData
+        currencySelected = currency
         notifyDataSetChanged()
     }
 
@@ -42,7 +45,7 @@ class ListPropertyAdapter(private val listener: OnItemClickListener, private val
     override fun getItemCount(): Int = data.size
 
     override fun onBindViewHolder(holder: ListViewHolder, position: Int) {
-        holder.bind(data[position], onItemClickListener)
+        holder.bind(data[position], onItemClickListener, currencySelected)
     }
 
     class ListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -51,13 +54,18 @@ class ListPropertyAdapter(private val listener: OnItemClickListener, private val
         var type: TextView = itemView.findViewById(R.id.item_type)
         var location: TextView = itemView.findViewById(R.id.item_location)
         var price: TextView = itemView.findViewById(R.id.item_price)
-        var container: ConstraintLayout = itemView.findViewById(R.id.item_list_container)
+        private var container: ConstraintLayout = itemView.findViewById(R.id.item_list_container)
 
 
-        fun bind(property: PropertyModelForList, onItemClickListener: OnItemClickListener) {
+        fun bind(property: PropertyModelForList, onItemClickListener: OnItemClickListener, currency: Int) {
 
             type.text = property.type
-            price.text = property.price
+            if(currency == 0){
+                price.text = itemView.context.getString(R.string.details_price_euro, property.price)
+            }else{
+                price.text = itemView.context.getString(R.string.details_price_dollar, Utils.convertEuroToDollar(property.price.toInt()).toString())
+            }
+
             val propertyPhoto = property.photo
             if(propertyPhoto != null){
                 Glide.with(itemView.context).load(propertyPhoto.uri).centerCrop().into(photo)

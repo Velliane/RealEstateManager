@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.openclassrooms.realestatemanager.R
 
-class TypeEnumNachosAdapter(context: Context, list: List<String>) : ArrayAdapter<String>(context, R.layout.spinner_item, list){
+class ArrayListStringAdapter(context: Context, list: List<String>) : ArrayAdapter<String>(context, R.layout.spinner_item, list){
 
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -23,9 +23,9 @@ class TypeEnumNachosAdapter(context: Context, list: List<String>) : ArrayAdapter
         val view = LayoutInflater.from(parent.context).inflate(R.layout.spinner_item, parent, false)
 
         val text = view.findViewById<TextView>(R.id.spinner_item_name)
-        val type = getItem(position)
+        val item = getItem(position)
 
-        text.text = type
+        text.text = item
 
         return view
     }

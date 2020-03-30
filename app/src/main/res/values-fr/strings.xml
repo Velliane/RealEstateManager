@@ -46,10 +46,6 @@
     <string name="application_s_logo">Logo de l\'application</string>
     <string name="title_activity_maps">Carte</string>
 
-    <!-- Search -->
-    <string name="search_preview_rooms">entre %1$s et %2$s</string>
-    <string name="search_button">Rechercher</string>
-
     <!-- Simulator -->
     <string name="calculer_vos_mensualit_s">Calculer vos mensualités</string>
     <string name="capital_emprunt">Capital emprunté</string>
@@ -77,6 +73,8 @@
     <string name="manage_by">Manage by %1$s</string>
 
     <!-- Search -->
+    <string name="search_preview_rooms">entre %1$s et %2$s</string>
+    <string name="search_button">Rechercher</string>
     <string name="search_titile_type">Type :</string>
     <string name="search_title_price">Prix :</string>
     <string name="search_title_rooms">Pièces :</string>
@@ -84,8 +82,8 @@
     <string name="search_location_hint">Saisir un ou plusieurs mot-clef, séparés par une ,</string>
     <string name="search_titile_bedrooms">Chambres :</string>
     <string name="search_title_nearby">A proximité de :</string>
+
+    <!--Settings -->
     <string name="choose_your_currency">Choisissez votre devise:</string>
-    <string name="settings_euro">Euros</string>
-    <string name="settings_dollar">Dollar</string>
 
 </resources>

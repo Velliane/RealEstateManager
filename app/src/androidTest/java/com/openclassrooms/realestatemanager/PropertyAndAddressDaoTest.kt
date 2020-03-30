@@ -7,6 +7,7 @@ import androidx.test.runner.AndroidJUnit4
 import com.openclassrooms.realestatemanager.data.database.PropertyDatabase
 import com.openclassrooms.realestatemanager.add_edit.Address
 import com.openclassrooms.realestatemanager.add_edit.Property
+import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertTrue
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
@@ -66,6 +67,8 @@ class PropertyAndAddressDaoTest {
         val properties = LiveDataTestUtil.getValue(propertyDatabase.propertyDao().getAllProperties())
 
         assertTrue(properties.size == 2)
+        assertEquals(2, properties[0].bed_nbr)
+        assertEquals(2, properties[1].bath_nbr)
     }
 
     @Test

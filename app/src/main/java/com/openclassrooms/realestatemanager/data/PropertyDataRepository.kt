@@ -19,7 +19,7 @@ open class PropertyDataRepository(private val propertyDao: PropertyDao) {
         return propertyDao.getPropertyFromId(id_property)
     }
 
-   open fun searchInDatabase(query: SupportSQLiteQuery): LiveData<List<Property>> {
+   open fun searchInDatabase(query: SupportSQLiteQuery): LiveData<List<Property>?> {
        return propertyDao.searchInDatabase(query)
     }
 

@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/settings_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".settings.SettingsActivity">
@@ -11,12 +12,26 @@
         layout="@layout/toolbar"/>
 
     <TextView
+        android:id="@+id/settings_money"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Affichage des prix en Euro ou en Dollar"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/settings_toolbar"
+        app:layout_constraintBottom_toTopOf="@id/settings_money_title"/>
+
+    <TextView
         android:id="@+id/settings_money_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="15dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/settings_toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/settings_money"
         app:layout_constraintEnd_toStartOf="@id/settings_spinner_money"
         android:text="@string/choose_your_currency"/>
 
@@ -24,10 +39,25 @@
         android:id="@+id/settings_spinner_money"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="15dp"
         app:layout_constraintStart_toEndOf="@id/settings_money_title"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/settings_toolbar"/>
+        app:layout_constraintTop_toBottomOf="@id/settings_money"/>
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/settings_save_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="28dp"
+        android:padding="15dp"
+        android:text="Sauvegarder"
+        android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.57"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

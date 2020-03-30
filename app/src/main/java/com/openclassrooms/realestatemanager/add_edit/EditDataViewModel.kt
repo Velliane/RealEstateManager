@@ -80,7 +80,6 @@ class EditDataViewModel(private val context: Context, private val photoDataRepos
                 nearby += ","
             }
         }
-        Log.d("Nearby", nearby)
         return nearby
     }
 
@@ -120,7 +119,7 @@ class EditDataViewModel(private val context: Context, private val photoDataRepos
 
 
     //-- ADD DATA IN ROOM --//
-    private fun addProperty(property: Property) {
+    fun addProperty(property: Property) {
         executor.execute { propertyDataRepository.addProperty(property) }
     }
 

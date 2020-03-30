@@ -14,6 +14,8 @@ import com.openclassrooms.realestatemanager.utils.FakeFirestoreDataRepository
 import com.openclassrooms.realestatemanager.utils.FakePropertyDataRepository
 import com.openclassrooms.realestatemanager.utils.FakeUserDataRepository
 import junit.framework.Assert.assertEquals
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -25,6 +27,7 @@ import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoRule
 
 
+@ExperimentalCoroutinesApi
 @RunWith(JUnit4::class)
 class MapViewModelTest {
 
@@ -47,7 +50,7 @@ class MapViewModelTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Before
-    fun setUp() {
+    fun setUp() = runBlockingTest {
         MockitoAnnotations.initMocks(this)
         val liveData = MutableLiveData<List<Property>>()
         val list = ArrayList<Property>()

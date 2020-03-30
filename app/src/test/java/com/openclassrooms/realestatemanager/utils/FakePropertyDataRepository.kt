@@ -36,7 +36,7 @@ class FakePropertyDataRepository(private val propertyDao: PropertyDao): Property
         return property
     }
 
-    override fun searchInDatabase(query: SupportSQLiteQuery): LiveData<List<Property>> {
+    override fun searchInDatabase(query: SupportSQLiteQuery): LiveData<List<Property>?> {
         return super.searchInDatabase(query)
     }
 

@@ -11,6 +11,8 @@ import com.openclassrooms.realestatemanager.data.PropertyDataRepository
 import com.openclassrooms.realestatemanager.login.UserDataRepository
 import com.openclassrooms.realestatemanager.login.UserViewModel
 import com.openclassrooms.realestatemanager.add_edit.EditDataViewModel
+import com.openclassrooms.realestatemanager.search.SearchViewModel
+import com.openclassrooms.realestatemanager.settings.SettingsViewModel
 import com.openclassrooms.realestatemanager.show.MainViewModel
 import com.openclassrooms.realestatemanager.show.detail.DetailViewModel
 import com.openclassrooms.realestatemanager.show.list.ListViewModel
@@ -42,6 +44,12 @@ class ViewModelFactory(private val context: Context, private val userDataReposit
             }
             modelClass.isAssignableFrom(SimulatorViewModel::class.java) -> {
                 SimulatorViewModel() as T
+            }
+            modelClass.isAssignableFrom(SettingsViewModel::class.java) -> {
+                SettingsViewModel(context) as T
+            }
+            modelClass.isAssignableFrom(SearchViewModel::class.java) -> {
+                SearchViewModel(context) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel")
         }

@@ -16,7 +16,6 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
-import androidx.work.Data
 import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -28,12 +27,9 @@ import com.hootsuite.nachos.terminator.ChipTerminatorHandler
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.openclassrooms.realestatemanager.BaseActivity
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.search.TypeEnum
-import com.openclassrooms.realestatemanager.search.TypeEnumNachosAdapter
 import com.openclassrooms.realestatemanager.show.MainActivity
 import com.openclassrooms.realestatemanager.show.detail.PhotosAdapter
 import com.openclassrooms.realestatemanager.utils.*
-import kotlinx.android.synthetic.main.activity_edit_add.*
 import org.threeten.bp.LocalDateTime
 import pub.devrel.easypermissions.EasyPermissions
 import java.util.*

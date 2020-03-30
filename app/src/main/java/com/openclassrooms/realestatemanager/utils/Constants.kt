@@ -39,6 +39,7 @@ class Constants {
         const val SHARED_PREFERENCES = "SHARED_PREFERENCES"
         const val PREF_ID_USER = "PREF_ID_USER"
         const val PREF_ID_PROPERTY = "PREF_ID_PROPERTY"
+        const val PREF_CURRENCY = "PREF_CURRENCY"
 
         // NOTIFICATION DATA
         const val DATA_USER_NAME = "DATA_USER_NAME"

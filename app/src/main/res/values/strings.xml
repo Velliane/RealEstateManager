@@ -24,7 +24,8 @@
     <string name="type_house">House</string>
     <string name="type_duplex">Duplex</string>
     <string name="type_loft">Loft</string>
-
+    <string name="details_price_euro" translatable="false">€ %1$s</string>
+    <string name="details_price_dollar" translatable="false">$ %1$s</string>
     <string name="details_title_media">Media</string>
     <string name="details_title_description">Description</string>
     <string name="details_surface_icon_description">Surface\'s icon</string>
@@ -84,9 +85,11 @@
     <string name="search_location_hint">Enter one or more keyword, separated by ,</string>
     <string name="search_titile_bedrooms">Bedrooms :</string>
     <string name="search_title_nearby">Nearby :</string>
-    <string name="default_photo_uri">android.resource://com.openclassrooms.realestatemanager/drawable/no_image_available_64</string>
+    <string name="default_photo_uri" translatable="false">android.resource://com.openclassrooms.realestatemanager/drawable/no_image_available_64</string>
+
+    <!--Settings -->
     <string name="choose_your_currency">Choose your currency:</string>
-    <string name="settings_euro">Euros</string>
-    <string name="settings_dollar">Dollar</string>
+    <string name="settings_euro" translatable="false">Euro</string>
+    <string name="settings_dollar" translatable="false">Dollar</string>
 
 </resources>

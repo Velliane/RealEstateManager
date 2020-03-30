@@ -42,6 +42,8 @@ class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener, Vie
     private lateinit var sharedPreferences: SharedPreferences
     /** Reset Button */
     private lateinit var resetBtn: MaterialButton
+    /** Currency */
+    private var currencySelected: Int = 0
 
     companion object {
         fun newInstance(): ListFragment {
@@ -53,6 +55,7 @@ class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener, Vie
         val view = inflater.inflate(R.layout.fragment_list, container, false)
         bindViews(view)
         sharedPreferences = activity!!.getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE)
+        currencySelected = sharedPreferences.getInt(Constants.PREF_CURRENCY, 0)
         //-- Configure ViewModel --//
         val viewModelFactory = Injection.provideViewModelFactory(requireContext())
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ListViewModel::class.java)
@@ -91,7 +94,7 @@ class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener, Vie
             recyclerView.visibility = View.INVISIBLE
             noDataTxt.visibility = View.VISIBLE
         }else{
-            adapter.setData(properties)
+            adapter.setData(properties, currencySelected)
         }
     }
 

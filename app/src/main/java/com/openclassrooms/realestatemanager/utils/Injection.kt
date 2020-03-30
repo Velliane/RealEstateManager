@@ -52,10 +52,5 @@ class Injection {
             return ViewModelFactory(context, userDataRepository, propertyDataRepository, addressDataRepository, geocodeRepository, firestoreDataRepository, photoDataRepository, executor)
         }
 
-
-        fun provideSearchViewModel(context: Context): SearchViewModelFactory {
-            return SearchViewModelFactory(context)
-        }
-
     }
 }

@@ -20,7 +20,7 @@ class MapViewModel(private val propertyDataRepository: PropertyDataRepository, p
 
     val propertiesLiveData = MediatorLiveData<List<PropertyModelForMap>>()
     private val addressesMutableLiveData = MutableLiveData<MutableMap<String, Address?>>(HashMap<String, Address?>())
-    private var propertiesFromResearchLiveData: LiveData<List<Property>>? = null
+    private var propertiesFromResearchLiveData: LiveData<List<Property>?>? = null
     private val allPropertiesLiveData = propertyDataRepository.getAllProperties()
 
     init {
