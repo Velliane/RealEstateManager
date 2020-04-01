@@ -126,7 +126,10 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerCl
      * Refresh list of properties according to search query
      */
     fun refreshQuery(querySearch: String) {
-        mapViewModel.searchInDatabase(querySearch, resetBtn)
+        mapViewModel.searchInDatabase(querySearch)
+        mapViewModel.resetBtnLiveData.observe(this, Observer {
+            resetBtn.visibility = it
+        })
     }
 
 
@@ -146,7 +149,12 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerCl
 
     override fun onClick(p0: View?) {
         when(p0){
-            resetBtn -> mapViewModel.reset(resetBtn)
+            resetBtn -> {
+                mapViewModel.reset()
+                mapViewModel.resetBtnLiveData.observe(this, Observer {
+                    resetBtn.visibility = it
+                })
+            }
         }
     }
 

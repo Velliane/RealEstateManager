@@ -1,9 +1,8 @@
 package com.openclassrooms.realestatemanager.add_edit
 
-import android.net.Uri
-
 data class Photo(
 
-        val uri: Uri,
-        val description: String
+        val uri: String?,
+        val description: String,
+        val isSelected: Boolean
 )

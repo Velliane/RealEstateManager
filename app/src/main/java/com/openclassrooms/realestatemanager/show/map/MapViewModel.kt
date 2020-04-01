@@ -20,8 +20,9 @@ class MapViewModel(private val propertyDataRepository: PropertyDataRepository, p
 
     val propertiesLiveData = MediatorLiveData<List<PropertyModelForMap>>()
     private val addressesMutableLiveData = MutableLiveData<MutableMap<String, Address?>>(HashMap<String, Address?>())
-    private var propertiesFromResearchLiveData: LiveData<List<Property>?>? = null
+    var propertiesFromResearchLiveData: LiveData<List<Property>?>? = null
     private val allPropertiesLiveData = propertyDataRepository.getAllProperties()
+    val resetBtnLiveData = MutableLiveData<Int>()
 
     init {
         propertiesLiveData.addSource(allPropertiesLiveData, Observer {
@@ -77,7 +78,6 @@ class MapViewModel(private val propertyDataRepository: PropertyDataRepository, p
         return geocodeRepository.getLatLng(txt, countryCode, key)
     }
 
-    @VisibleForTesting
     fun stringToSimpleSQLiteQuery(query: String): SimpleSQLiteQuery {
         return SimpleSQLiteQuery(query)
     }
@@ -86,9 +86,8 @@ class MapViewModel(private val propertyDataRepository: PropertyDataRepository, p
      * Search list of properties in PropertyDatabase according to query
      * Change source of MediatorLiveData propertiesLiveData
      * @param query the search query
-     * @param resetBtn the button for reset the search
      */
-    fun searchInDatabase(query: String, resetBtn: MaterialButton){
+    fun searchInDatabase(query: String){
         propertyDataRepository.searchInDatabase(stringToSimpleSQLiteQuery(query)).let { properties ->
             propertiesFromResearchLiveData = properties
             propertiesLiveData.removeSource(allPropertiesLiveData)
@@ -96,22 +95,28 @@ class MapViewModel(private val propertyDataRepository: PropertyDataRepository, p
                 getPropertiesModelForMap(it, addressesMutableLiveData.value!!)
             })
         }
-        resetBtn.visibility = View.VISIBLE
+        setButtonVisibility(true)
 
     }
 
     /**
      * Reset the research by restore source (allPropertiesLiveData) of MediatorLiveData
-     * @param resetBtn the button for reset the search
      */
-    fun reset(resetBtn: MaterialButton){
+    fun reset(){
         propertiesFromResearchLiveData?.let { properties ->
             propertiesLiveData.removeSource(properties)
             propertiesLiveData.addSource(allPropertiesLiveData, Observer {
                 getPropertiesModelForMap(it, addressesMutableLiveData.value!!)
             })
         }
-        resetBtn.visibility = View.GONE
+        setButtonVisibility(false)
+    }
 
+    fun setButtonVisibility(visibility: Boolean){
+        if(visibility){
+            resetBtnLiveData.value = View.VISIBLE
+        }else{
+            resetBtnLiveData.value = View.GONE
+        }
     }
 }

@@ -28,7 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MainViewModel(private val context: Context, private val propertyDataRepository: PropertyDataRepository, private val addressDataRepository: AddressDataRepository, private val firestoreDataRepository: FirestoreDataRepository, private val userDataRepository: UserDataRepository) : ViewModel() {
+class MainViewModel(private val authUI: AuthUI, private val context: Context, private val propertyDataRepository: PropertyDataRepository, private val addressDataRepository: AddressDataRepository, private val firestoreDataRepository: FirestoreDataRepository, private val userDataRepository: UserDataRepository) : ViewModel() {
 
     val propertiesLiveData = MutableLiveData<List<Property>>()
     val addressLiveData = MutableLiveData<Address>()
@@ -71,7 +71,7 @@ class MainViewModel(private val context: Context, private val propertyDataReposi
 
     //-- LOG OUT --//
     fun logOut(){
-        AuthUI.getInstance().signOut(context).addOnCompleteListener {
+        authUI.signOut(context).addOnCompleteListener {
             context.startActivity(Intent(context, LoginActivity::class.java))
         }
     }

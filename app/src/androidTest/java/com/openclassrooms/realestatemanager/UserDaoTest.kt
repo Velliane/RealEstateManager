@@ -8,8 +8,12 @@ import com.openclassrooms.realestatemanager.data.database.PropertyDatabase
 import com.openclassrooms.realestatemanager.login.User
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertTrue
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -29,12 +33,20 @@ class UserDaoTest {
     @Rule
     @JvmField
     val instantTaskExecutorRule = InstantTaskExecutorRule()
+    private val testCoroutineDispatcher = TestCoroutineDispatcher()
 
     @Before
     @Throws(Exception::class)
     fun initDb(){
         propertyDatabase = Room.inMemoryDatabaseBuilder(InstrumentationRegistry.getInstrumentation().context, PropertyDatabase::class.java)
                 .allowMainThreadQueries().build()
+        Dispatchers.setMain(testCoroutineDispatcher)
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+        testCoroutineDispatcher.cleanupTestCoroutines()
     }
 
     @After
@@ -45,10 +57,10 @@ class UserDaoTest {
 
     @Test
     @Throws(InterruptedException::class)
-    fun insertUser(){
+    fun insertUser() = runBlockingTest{
         propertyDatabase.userDao().addUser(userTest)
 
-        val user = LiveDataTestUtil.getValue(propertyDatabase.userDao().getUserById(USER_ID))
+        val user = propertyDatabase.userDao().getUserById(USER_ID)
 
         assertTrue(user.name == userTest.name)
     }

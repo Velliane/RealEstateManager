@@ -6,6 +6,7 @@ import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.add_edit.Address
 import com.openclassrooms.realestatemanager.add_edit.Photo
 import com.openclassrooms.realestatemanager.add_edit.Property
+import com.openclassrooms.realestatemanager.search.NearbyEnum
 
 
 fun setAddressToString(address: Address): String {
@@ -51,7 +52,15 @@ fun compareByDate(property1: Property, property2: Property): Property {
 
 fun getDefaultPhoto(context: Context): Photo {
     val default = context.getString(R.string.default_photo_uri)
-    return Photo(Uri.parse(default), "No image")
+    return Photo(default, "No image", false)
+}
+
+fun getNearbyList(): List<NearbyEnum> {
+    val list = ArrayList<NearbyEnum>()
+    for(item in NearbyEnum.values()){
+        list.add(item)
+    }
+    return list
 }
 
 

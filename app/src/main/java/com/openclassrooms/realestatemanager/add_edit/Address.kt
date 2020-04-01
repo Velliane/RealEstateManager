@@ -1,5 +1,6 @@
 package com.openclassrooms.realestatemanager.add_edit
 
+import android.content.ContentValues
 import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
 
@@ -33,3 +34,15 @@ data class Address (
         var idProperty: String = ""
 
 )
+
+fun addressFromContentValues(values: ContentValues?): Address {
+        val address = Address()
+        if(values!!.containsKey("id_address")){ address.id_address = values.getAsString("id_address") }
+        if(values.containsKey("number")){ address.number = values.getAsInteger("number") }
+        if(values.containsKey("street")) { address.street = values.getAsString("street") }
+        if(values.containsKey("zip_code")) { address.zip_code = values.getAsString("zip_code") }
+        if(values.containsKey("city")) { address.city = values.getAsString("city") }
+        if(values.containsKey("country")) { address.country = values.getAsString("country") }
+        if(values.containsKey("idProperty")) { address.idProperty = values.getAsString("idProperty") }
+        return address
+}

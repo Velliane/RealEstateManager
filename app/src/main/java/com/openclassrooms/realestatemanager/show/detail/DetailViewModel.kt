@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.show.detail
 
 import android.content.Context
+import android.net.Uri
 import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -22,7 +23,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class DetailViewModel(private val context: Context, private val propertyDataRepository: PropertyDataRepository, private val geocodeRepository: GeocodeRepository, private val addressDataRepository: AddressDataRepository, private val photoDataRepository: PhotoDataRepository, private val userDataRepository: UserDataRepository): ViewModel() {
+class DetailViewModel(private val propertyDataRepository: PropertyDataRepository, private val geocodeRepository: GeocodeRepository, private val addressDataRepository: AddressDataRepository, private val photoDataRepository: PhotoDataRepository, private val userDataRepository: UserDataRepository): ViewModel() {
 
     var propertyLiveData = MutableLiveData<Property>()
     val addressLiveData = MutableLiveData<Address>()
@@ -71,10 +72,5 @@ class DetailViewModel(private val context: Context, private val propertyDataRepo
         }
     }
 
-//    fun setAgent(id_agent: String, txtView: TextView){
-//        val userLiveData = getAgentById(id_agent)
-//        if(userLiveData.value != null){
-//            txtView.text = context.getString(R.string.manage_by, userLiveData.value!!.name)
-//        }
-//    }
+
 }

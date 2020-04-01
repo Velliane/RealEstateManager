@@ -30,6 +30,8 @@ import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.show.MainActivity
 import com.openclassrooms.realestatemanager.show.detail.PhotosAdapter
 import com.openclassrooms.realestatemanager.utils.*
+import kotlinx.android.synthetic.main.activity_edit_add.*
+import kotlinx.android.synthetic.main.custom_address.*
 import org.threeten.bp.LocalDateTime
 import pub.devrel.easypermissions.EasyPermissions
 import java.util.*
@@ -40,7 +42,7 @@ import kotlin.collections.ArrayList
  * If adding, create an Id with LocalDate.now() and save it in PropertyDatabase and Firestore
  * If editing, get the data from the Database with the Id get from the intent, and update it in PropertyDatabase and Firestore
  */
-class EditAddActivity : BaseActivity(), View.OnClickListener {
+class EditAddActivity : BaseActivity(), View.OnClickListener, PhotosAdapter.OnItemClickListener {
 
     /** Views */
     private lateinit var spinnerType: Spinner
@@ -62,27 +64,27 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
     private lateinit var addPhotoImg: ImageView
     private lateinit var addPhotoTxt: EditText
     private lateinit var addPhotoBtn: MaterialButton
+    private lateinit var deletePhotoBtn: FloatingActionButton
     private lateinit var inSaleRadioBtn: RadioButton
     private lateinit var soldRadioBtn: RadioButton
     private lateinit var inSaleDate: TextView
     private lateinit var soldDate: TextView
+
     /** TextInputLayout */
     private lateinit var priceContainer: TextInputLayout
-
     /** ViewModel */
     private lateinit var editDataViewModel: EditDataViewModel
     /** Property Id from DetailsFragment */
     private var propertyId: String = ""
     /** URI of selected image*/
-    private lateinit var uriImage: Uri
+    private var uriImage: Uri? = null
     /** Image's description*/
     private lateinit var desImage: String
     /** Image List */
     private var imageList = ArrayList<Photo>()
     /** RecyclerView and Adapter */
     private lateinit var recyclerView: RecyclerView
-    private var photosAdapter = PhotosAdapter(this)
-
+    private var photosAdapter = PhotosAdapter(this, this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,13 +94,22 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         //-- Configuration --//
         configureViewModel()
         bindViews()
+        recyclerView.adapter = photosAdapter
         setSpinnerAndNachosAdapters()
         getSaveInstanceState(savedInstanceState)
         //-- Check permission for Write to External Storage --//
-        if(!checkPermission()){ requestPermission() }
+        if (!checkPermission()) {
+            requestPermission()
+        }
         //-- Get Property id from intent --//
         propertyId = intent.getStringExtra(Constants.PROPERTY_ID)!!
-        if (propertyId != "") { getDataFromDatabase(propertyId) }
+        if (propertyId != "") {
+            editDataViewModel.getListOfPhotos(propertyId)
+            editDataViewModel.listPhotosLiveData.observe(this, Observer {
+                it.forEach { photo -> imageList.add(photo) }
+            })
+            getDataFromDatabase(propertyId)
+        }
     }
 
     /**
@@ -114,6 +125,11 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         editDataViewModel.addressLiveData.observe(this, Observer {
             updateAddressWithRoomData(it)
         })
+        editDataViewModel.getAllPhotos(id)
+        editDataViewModel.photosLiveData.observe(this, Observer {
+            photosAdapter.setData(it)
+            photosAdapter.notifyDataSetChanged()
+        })
     }
 
     /**
@@ -121,10 +137,9 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
      */
     override fun onClick(v: View?) {
         when (v) {
-
             saveBtn -> {
                 //-- Save property in database and Firestore --//
-                if(checkRequiredInfo()) {
+                if (checkRequiredInfo()) {
                     val property = Property(propertyId, getCurrentUser().uid, spinnerType.selectedItem.toString().toUpperCase(Locale.ROOT),
                             price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(),
                             numberBedrooms.text.toString().toInt(), numberBathrooms.text.toString().toInt(), description.text.toString(),
@@ -132,12 +147,14 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
 
                     editDataViewModel.save(property.id_property, property, number.text.toString().toInt(),
                             street.text.toString(), zipCode.text.toString(), city.text.toString(),
-                            country.text.toString(), imageList, getCurrentUser().displayName!!, layout)
+                            country.text.toString())
                     startActivity(Intent(this, MainActivity::class.java))
-                }else{
-                    if(price.text == null){
-                        priceContainer.setError("Not empty")
-                    }
+                } else {
+                    priceContainer.error = getString(R.string.cant_be_empty)
+                    custom_surface_container.error = getString(R.string.cant_be_empty)
+                    custom_rooms_container.error = getString(R.string.cant_be_empty)
+                    address_country_container.error = getString(R.string.cant_be_empty)
+                    custom_type_container.error = getString(R.string.cant_be_empty)
                 }
             }
             addPhotoImg -> {
@@ -147,6 +164,14 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
                     return
                 }
                 selectAnImageFromThePhone()
+            }
+            soldRadioBtn -> {
+                soldRadioBtn.isChecked = true
+                inSaleRadioBtn.isChecked = false
+            }
+            inSaleRadioBtn -> {
+                inSaleRadioBtn.isChecked = true
+                soldRadioBtn.isChecked = false
             }
             addPhotoBtn -> addImageToListAndShowIt()
             inSaleDate -> getDateFromDatePicker(inSaleDate)
@@ -158,14 +183,14 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         return price.text.toString() != "" && surface.text.toString() != "" && rooms.text.toString() != "" && country.text.toString() != "" && spinnerType.selectedItem != null
     }
 
-    private fun getDateFromDatePicker(view: TextView){
+    private fun getDateFromDatePicker(view: TextView) {
         val calendar = Calendar.getInstance()
         val actualYear = calendar.get(Calendar.YEAR)
         val actualMonth = calendar.get(Calendar.MONTH)
         val actualDay = calendar.get(Calendar.DAY_OF_MONTH)
 
         val picker = DatePickerDialog(this,
-                DatePickerDialog.OnDateSetListener{ _, year, month, day->
+                DatePickerDialog.OnDateSetListener { _, year, month, day ->
                     view.text = getString(R.string.details_date, day.toString(), month.toString(), year.toString())
                 },
                 actualYear, actualMonth, actualDay)
@@ -178,18 +203,17 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         startActivityForResult(intent, Constants.RC_CHOOSE_IMAGE)
     }
 
-    private fun addImageToListAndShowIt(){
+    private fun addImageToListAndShowIt() {
         desImage = addPhotoTxt.text.toString()
         if (uriImage != null && desImage != "") {
-            val photo = Photo(uriImage, desImage)
+            val photo = Photo(uriImage.toString(), desImage, false)
             imageList.add(photo)
-            recyclerView.adapter = photosAdapter
             photosAdapter.setData(imageList)
             photosAdapter.notifyDataSetChanged()
         } else if (desImage == "") {
-            Snackbar.make(layout, "Please write a description", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(layout, getString(R.string.description_required), Snackbar.LENGTH_SHORT).show()
         } else {
-            Snackbar.make(layout, "Please select an image and write a description", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(layout, getString(R.string.image_and_description_required), Snackbar.LENGTH_SHORT).show()
         }
     }
 
@@ -214,15 +238,15 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
     private fun configureViewModel() {
         val editDataViewModelFactory = Injection.provideViewModelFactory(this)
         editDataViewModel = ViewModelProviders.of(this, editDataViewModelFactory).get(EditDataViewModel::class.java)
-      }
+    }
 
     /**
      * Set adapter for TypeSpinner, AgentSpinner and NearbyNachos
      */
     private fun setSpinnerAndNachosAdapters() {
-        val adapterType = TypeEnumSpinnerAdapter(this, editDataViewModel.getTypesList())
+        val adapterType = TypeEnumSpinnerAdapter(this, editDataViewModel.getTypesEnumList())
         spinnerType.adapter = adapterType
-        val adapter = NearbyAdapter(this, editDataViewModel.getNearbyList())
+        val adapter = NearbyAdapter(this, getNearbyList())
         nearbyNachos.setAdapter(adapter)
         editDataViewModel.getAllUser()
         editDataViewModel.userListLiveData.observe(this, Observer {
@@ -231,6 +255,9 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         })
     }
 
+    /**
+     * Bind all views
+     */
     private fun bindViews() {
         spinnerType = findViewById(R.id.add_edit_type_spinner)
         spinnerAgent = findViewById(R.id.agent_spinner)
@@ -255,6 +282,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         addPhotoBtn = findViewById(R.id.edit_add_photos_btn)
         addPhotoBtn.setOnClickListener(this)
         recyclerView = findViewById(R.id.edit_list_photos)
+        deletePhotoBtn = findViewById(R.id.edit_delete_btn)
         inSaleRadioBtn = findViewById(R.id.edit_on_sale_btn)
         inSaleRadioBtn.setOnClickListener(this)
         soldRadioBtn = findViewById(R.id.edit_sold_btn)
@@ -263,7 +291,6 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         inSaleDate.setOnClickListener(this)
         soldDate = findViewById(R.id.edit_date_sold)
         soldDate.setOnClickListener(this)
-
         priceContainer = findViewById(R.id.custom_price_container)
 
     }
@@ -310,15 +337,19 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
         description.setText(property.description)
         numberBedrooms.setText(property.bed_nbr.toString())
         numberBathrooms.setText(property.bath_nbr.toString())
-        //val nearby = property.nearby!!.split(",").toTypedArray()
+
+        val nearby = property.nearby!!.split(",").toString()
         nearbyNachos.addChipTerminator(',', ChipTerminatorHandler.BEHAVIOR_CHIPIFY_ALL)
         Log.d("Nearby", property.nearby.toString())
-        nearbyNachos.setText(property.nearby.toString())
-        if(property.in_sale){
+        nearbyNachos.setText(nearby)
+
+        if (property.in_sale) {
             inSaleRadioBtn.isChecked = true
-        }else{
+        } else {
             soldRadioBtn.isChecked = true
         }
+        inSaleDate.text = property.created_date
+        soldDate.text = property.sold_date
     }
 
     /**
@@ -346,5 +377,14 @@ class EditAddActivity : BaseActivity(), View.OnClickListener {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    override fun onItemClicked(photo: Photo, position: Int) {
+        editDataViewModel.photoClicked(photo.uri!!)
+        deletePhotoBtn.show()
+        deletePhotoBtn.setOnClickListener {
+            editDataViewModel.deletePhotos(propertyId, photo)
+            deletePhotoBtn.hide()
+        }
     }
 }

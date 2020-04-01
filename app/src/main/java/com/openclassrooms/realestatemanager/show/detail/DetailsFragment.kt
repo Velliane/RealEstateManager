@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.show.detail
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
@@ -15,17 +16,19 @@ import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.add_edit.EditAddActivity
 import com.openclassrooms.realestatemanager.add_edit.Address
+import com.openclassrooms.realestatemanager.add_edit.Photo
 import com.openclassrooms.realestatemanager.add_edit.Property
 import com.openclassrooms.realestatemanager.property.model.geocode.Geocode
 import com.openclassrooms.realestatemanager.show.BaseFragment
 import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.Injection
 import com.openclassrooms.realestatemanager.utils.setAddressToString
+import kotlinx.android.synthetic.main.activity_edit_add.*
 
 /**
  * Show the information of the property selected in the ListFragment
  */
-class DetailsFragment : BaseFragment() {
+class DetailsFragment : BaseFragment(), PhotosAdapter.OnItemClickListener {
 
     /** Shared Preferences */
     private lateinit var sharedPreferences: SharedPreferences
@@ -72,7 +75,7 @@ class DetailsFragment : BaseFragment() {
                 container.visibility = View.VISIBLE
             }
             noData.visibility = View.GONE
-            photosAdapter = PhotosAdapter(requireContext())
+            photosAdapter = PhotosAdapter(requireContext(), this)
             getPropertyFromId(propertyId)
             getAddressOfProperty(propertyId)
             viewModel.getListOfPhotos(propertyId)
@@ -173,5 +176,9 @@ class DetailsFragment : BaseFragment() {
 
     private fun updateAddress(address: Address) {
         addressView.text = setAddressToString(address)
+    }
+
+    override fun onItemClicked(photo: Photo, position: Int) {
+        //
     }
 }

@@ -2,6 +2,7 @@ package com.openclassrooms.realestatemanager.show.list
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
@@ -13,6 +14,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.button.MaterialButton
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.show.BaseFragment
@@ -20,6 +22,7 @@ import com.openclassrooms.realestatemanager.show.detail.DetailsFragment
 import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.Injection
 import com.openclassrooms.realestatemanager.utils.getScreenOrientation
+import kotlinx.android.synthetic.main.activity_main.*
 
 /**
  * Fragment that show the list of properties saved in the PropertyDatabase
@@ -108,6 +111,8 @@ class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener, Vie
 
         if(!getScreenOrientation(activity!!.resources.configuration.orientation)){
             activity!!.supportFragmentManager.beginTransaction().replace(R.id.container_fragment_list, fragment).commit()
+            val bottomNav = (activity?.parent as? ViewGroup)?.findViewById(R.id.activity_main_bottom_navigation) as? BottomNavigationView
+            bottomNav?.visibility = View.GONE
         }else{
             activity!!.supportFragmentManager.beginTransaction().replace(R.id.container_fragment_details, fragment).commit()
         }

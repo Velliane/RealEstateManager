@@ -1,20 +1,18 @@
 package com.openclassrooms.realestatemanager.add_edit
 
 import android.content.Context
+import android.net.Uri
 import android.provider.MediaStore
-import android.util.Log
-import android.view.View
-import android.widget.RadioButton
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.Data
-import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.data.*
 import com.openclassrooms.realestatemanager.data.PhotoDataRepository
 import com.openclassrooms.realestatemanager.login.User
 import com.openclassrooms.realestatemanager.login.UserDataRepository
-import com.openclassrooms.realestatemanager.search.NearbyEnum
 import com.openclassrooms.realestatemanager.search.TypeEnum
 import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.NotificationWorker
@@ -25,7 +23,7 @@ import java.util.*
 import java.util.concurrent.Executor
 import kotlin.collections.ArrayList
 
-class EditDataViewModel(private val context: Context, private val photoDataRepository: PhotoDataRepository, private val propertyDataRepository: PropertyDataRepository, private val addressDataRepository: AddressDataRepository, private val executor: Executor, private val userDataRepository: UserDataRepository) : ViewModel() {
+class EditDataViewModel(private val firabaseAuth: FirebaseAuth, private val context: Context, private val photoDataRepository: PhotoDataRepository, private val propertyDataRepository: PropertyDataRepository, private val addressDataRepository: AddressDataRepository, private val executor: Executor, private val userDataRepository: UserDataRepository) : ViewModel() {
 
     /** Helpers for Firestore Data */
     private val propertyHelper = PropertyHelper()
@@ -35,13 +33,15 @@ class EditDataViewModel(private val context: Context, private val photoDataRepos
     var propertyLiveData = MutableLiveData<Property>()
     var addressLiveData = MutableLiveData<Address>()
     val userListLiveData = MutableLiveData<List<User>>()
+    val listPhotosLiveData = MutableLiveData<List<Photo>>()
+    val currentIdPropertySelectedLiveData = MutableLiveData<String>()
+    val photosLiveData = MediatorLiveData<List<Photo>>()
 
     /**
      * Save data in Room and Firestore
      */
     fun save(propertyId: String, newProperty: Property, number: Int, street: String,
-             zip_code: String, city: String, country: String, imageList: List<Photo>?,
-             name: String, container: View) {
+             zip_code: String, city: String, country: String) {
 
         getPropertyFromId(propertyId)
         var property: Property? = propertyLiveData.value
@@ -51,7 +51,7 @@ class EditDataViewModel(private val context: Context, private val photoDataRepos
             addProperty(newProperty)
             updatePropertyType(context.getString(TypeEnum.valueOf(newProperty.type).res), newProperty.id_property)
             saveAddress(UUID.randomUUID().toString(), number, street, zip_code, city, country, newProperty.id_property, newProperty)
-            savePhotos(imageList, newProperty.id_property)
+            savePhotos(newProperty.id_property)
         } else {
             //-- If property already exist, update it --//
             property = newProperty
@@ -61,22 +61,21 @@ class EditDataViewModel(private val context: Context, private val photoDataRepos
             val oldAddress = addressLiveData.value!!
             val id = oldAddress.id_address
             saveAddress(id, number, street, zip_code, city, country, propertyId, property)
-            savePhotos(imageList, property.id_property)
+            savePhotos(property.id_property)
         }
-        sendNotification(name)
-        Snackbar.make(container, "Save complete", Snackbar.LENGTH_SHORT).show()
+        sendNotification()
     }
 
-    private fun sendNotification(name: String){
-        val data = Data.Builder().putString(Constants.DATA_USER_NAME, name).build()
+    private fun sendNotification() {
+        val data = Data.Builder().putString(Constants.DATA_USER_NAME, firabaseAuth.currentUser?.displayName).build()
         NotificationWorker.configureNotification(data)
     }
 
-    fun getNearby(listNearby: List<String>): String{
+    fun getNearby(listNearby: List<String>): String {
         var nearby = ""
-        listNearby.forEachIndexed{ index, element ->
+        listNearby.forEachIndexed { index, element ->
             nearby += element.toUpperCase(Locale.ROOT)
-            if (index < listNearby.size-1){
+            if (index < listNearby.size - 1) {
                 nearby += ","
             }
         }
@@ -85,18 +84,10 @@ class EditDataViewModel(private val context: Context, private val photoDataRepos
 
 
     //-- GET LIST FOR ADAPTERS --//
-    fun getTypesList(): List<TypeEnum> {
+    fun getTypesEnumList(): List<TypeEnum> {
         val list = ArrayList<TypeEnum>()
         for (type in TypeEnum.values()) {
             list.add(type)
-        }
-        return list
-    }
-
-    fun getNearbyList(): List<NearbyEnum> {
-        val list = ArrayList<NearbyEnum>()
-        for(item in NearbyEnum.values()){
-            list.add(item)
         }
         return list
     }
@@ -108,7 +99,7 @@ class EditDataViewModel(private val context: Context, private val photoDataRepos
         addressHelper.createAddress(addressId, address)
     }
 
-    private fun saveAddress(id_address: String, number: Int, street: String, zip_code: String, city: String, country: String, id_property: String, property: Property){
+    private fun saveAddress(id_address: String, number: Int, street: String, zip_code: String, city: String, country: String, id_property: String, property: Property) {
         val address = Address(id_address, number, street, zip_code, city, country, id_property)
         addAddress(address)
         saveInFirestore(id_property, property, id_address, address)
@@ -124,7 +115,7 @@ class EditDataViewModel(private val context: Context, private val photoDataRepos
     }
 
     private fun updatePropertyType(type: String, id_property: String) {
-        executor.execute{ propertyDataRepository.updatePropertyType(type, id_property)}
+        executor.execute { propertyDataRepository.updatePropertyType(type, id_property) }
     }
 
     private fun addAddress(address: Address) {
@@ -151,10 +142,10 @@ class EditDataViewModel(private val context: Context, private val photoDataRepos
         }
     }
 
-    fun getAllUser(){
+    fun getAllUser() {
         viewModelScope.launch {
             val list = userDataRepository.getAllUsers()
-            withContext(Dispatchers.Main){
+            withContext(Dispatchers.Main) {
                 userListLiveData.value = list
             }
         }
@@ -162,14 +153,47 @@ class EditDataViewModel(private val context: Context, private val photoDataRepos
 
 
     //-- PHOTOS --//
-    private fun savePhotos(imageList: List<Photo>?, id_property: String) {
-        if (imageList != null) {
-            for (image in imageList) {
-                val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, image.uri)
+    private fun savePhotos(id_property: String) {
+        listPhotosLiveData.value?.let {
+            for (image in it) {
+                val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, Uri.parse(image.uri))
                 photoDataRepository.saveImageToExternalStorage(bitmap, id_property, image.description)
-                photoDataRepository.saveImageToFirebase(image.uri, id_property, image.description)
+                photoDataRepository.saveImageToFirebase(image.uri!!, id_property, image.description)
             }
+
         }
+
     }
 
+    fun photoClicked(stringUri: String) {
+        currentIdPropertySelectedLiveData.value = stringUri
+    }
+
+    fun getAllPhotos(id: String) {
+        getListOfPhotos(id)
+        photosLiveData.addSource(listPhotosLiveData, androidx.lifecycle.Observer {
+            combinePropertiesPhotosAndAddresses(it, currentIdPropertySelectedLiveData.value)
+        })
+        photosLiveData.addSource(currentIdPropertySelectedLiveData, androidx.lifecycle.Observer {
+            combinePropertiesPhotosAndAddresses(listPhotosLiveData.value!!, it)
+        })
+    }
+
+    private fun combinePropertiesPhotosAndAddresses(listPhotos: List<Photo>, selectedPhoto: String?) {
+        val listOfPhotosForRecyclerView = listPhotos.map {
+            Photo(it.uri,
+                    it.description,
+                    it.uri == selectedPhoto)
+        }
+        photosLiveData.value = listOfPhotosForRecyclerView
+    }
+
+    fun getListOfPhotos(id_property: String) {
+        listPhotosLiveData.value = photoDataRepository.getListOfPhotos(id_property)
+    }
+
+    fun deletePhotos(id_property: String, photo: Photo) {
+        photoDataRepository.deletePhotos(id_property, photo)
+        getListOfPhotos(id_property)
+    }
 }

@@ -2,8 +2,11 @@ package com.openclassrooms.realestatemanager
 
 import com.openclassrooms.realestatemanager.add_edit.Address
 import com.openclassrooms.realestatemanager.add_edit.Property
+import com.openclassrooms.realestatemanager.search.NearbyEnum
 import com.openclassrooms.realestatemanager.utils.compareByDate
+import com.openclassrooms.realestatemanager.utils.getNearbyList
 import com.openclassrooms.realestatemanager.utils.setAddressToString
+import junit.framework.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -36,5 +39,11 @@ class PropertyUtilsTest {
 
         val address4 = Address("3", null, "rue des Eglantines", "01350", "Culoz", "France", "003")
         assertEquals("rue des Eglantines\n01350 Culoz\nFrance", setAddressToString(address4))
+    }
+
+    @Test
+    fun getAllNearbyPlacesFromEnumConstant() {
+        val list = listOf(NearbyEnum.BUS, NearbyEnum.SHOP, NearbyEnum.SCHOOL, NearbyEnum.POST, NearbyEnum.PUBLIC_TRANSPORT, NearbyEnum.RESTAURANT, NearbyEnum.UNIVERSITY)
+        Assert.assertEquals(list, getNearbyList())
     }
 }

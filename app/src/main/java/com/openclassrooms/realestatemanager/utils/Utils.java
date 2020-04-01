@@ -18,13 +18,18 @@ public class Utils {
     /**
      * Conversion d'un prix d'un bien immobilier (Dollars vers Euros)
      * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
-     * @param dollars
-     * @return
+     * @param dollars prix en dollars
+     * @return prix en euro
      */
     public static int convertDollarToEuro(int dollars){
         return (int) Math.round(dollars * 0.90);
     }
 
+    /**
+     * Conversion d'un prix d'un bien immobilier (Euros vers Dollars)
+     * @param euros prix en euros
+     * @return prix en dollar
+     */
     public static int convertEuroToDollar(int euros) {
         return (int) Math.round(euros * 1.12);
     }
@@ -46,10 +51,9 @@ public class Utils {
      * @return true if Connected, false if not connected
      */
     public static Boolean isInternetAvailable(Context context){
-//        WifiManager wifi = (WifiManager)context.getSystemService(Context.WIFI_SERVICE);
-//        return wifi.isWifiEnabled();
         boolean isConnected;
         ConnectivityManager connectivityManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert connectivityManager != null;
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         isConnected = networkInfo != null && networkInfo.isConnected();
         return isConnected;

@@ -8,7 +8,11 @@ import kotlin.collections.ArrayList
 
 class SearchViewModel(private val context: Context): ViewModel() {
 
-    fun constructQueryResearch(priceMinValue: Int, priceMaxValue: Int, types: List<String>, locations: List<String>, roomsMinValue: Int, roomsMaxValue: Int, bedroomsMinValue: Int, bedroomsMaxValue: Int): String {
+    /**
+     * Construct query with all filters for research
+     * @return a string query
+     */
+    fun constructQueryResearch(priceMinValue: Int, priceMaxValue: Int, types: List<String>, locations: List<String>, nearbies: List<String>, roomsMinValue: Int, roomsMaxValue: Int, bedroomsMinValue: Int, bedroomsMaxValue: Int): String {
 
         var query = String()
         query += "SELECT * FROM Property"
@@ -45,10 +49,24 @@ class SearchViewModel(private val context: Context): ViewModel() {
             query += "OR"
             query += constructLocationQuery(locations, "country")
         }
-        Log.d("QUERY", query)
+
+        if(nearbies.isNotEmpty()){
+            query += ifContains(contains)
+            if(nearbies.size == 1) {
+                val type = nearbies[0]
+                query += " nearby LIKE '$type'"
+            }else{
+                query += " nearby IN ("
+                query += constructQueryFromList(nearbies)
+            }
+        }
+
         return query
     }
 
+    /**
+     * Return 'AND' or 'WHERE' for query according of boolean contains
+     */
     fun ifContains(contains: Boolean): String {
         return if(contains) {
             " AND"
@@ -57,6 +75,9 @@ class SearchViewModel(private val context: Context): ViewModel() {
         }
     }
 
+    /**
+     * Construct a query from list, for nearbies and types list
+     */
     private fun constructQueryFromList(list: List<String>): String{
         var query = String()
         list.forEachIndexed{ index, element ->
@@ -69,11 +90,14 @@ class SearchViewModel(private val context: Context): ViewModel() {
         return query
     }
 
+    /**
+     * Construct a query from list of locations
+     */
     private fun constructLocationQuery(list: List<String>, field: String): String {
         var query = String()
         list.forEachIndexed{ index, element ->
             val location = element.toUpperCase(Locale.ROOT)
-            query += " UPPER(Address.$field) LIKE ('%$location%') "
+            query += " UPPER(Address.$field) LIKE '%$location%' "
             if(index < list.size-1){
                 query += "OR"
             }
@@ -82,18 +106,10 @@ class SearchViewModel(private val context: Context): ViewModel() {
     }
 
 
-    fun getTypesList(): List<String> {
+    fun getTypesResList(): List<String> {
         val list = ArrayList<String>()
         for (type in TypeEnum.values()) {
             list.add(context.getString(type.res))
-        }
-        return list
-    }
-
-    fun getNearbyList(): List<NearbyEnum> {
-        val list = ArrayList<NearbyEnum>()
-        for(item in NearbyEnum.values()){
-            list.add(item)
         }
         return list
     }

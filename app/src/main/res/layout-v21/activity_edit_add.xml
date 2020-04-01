@@ -334,7 +334,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/edit_container_photo"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
             android:padding="5dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -347,8 +347,9 @@
                 android:src="@drawable/action_add"
                 android:layout_gravity="center_vertical"
                 android:background="@color/drawer_color"
+                android:contentDescription="Photo's property"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/edit_list_photos"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/edit_add_photos_txt"
                 app:layout_constraintStart_toStartOf="parent"/>
 
@@ -361,29 +362,33 @@
                 android:textAlignment="center"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/edit_add_photos"
-                app:layout_constraintEnd_toStartOf="@id/edit_list_photos"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="@id/edit_add_photos_btn"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/edit_add_photos_btn"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:text="Add"
-                android:visibility="gone"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:padding="3dp"
+                android:text="@string/add_photo_btn"
                 android:textAppearance="@style/Widget.MaterialComponents.Button.TextButton"
+                android:textColor="@color/colorPrimary"
+                android:textSize="20sp"
+                android:textAlignment="center"
+                app:layout_constraintBottom_toTopOf="@id/edit_list_photos"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/edit_add_photos_txt"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/edit_list_photos"/>
+                app:layout_constraintTop_toBottomOf="@id/edit_add_photos_txt" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/edit_list_photos"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 tools:listitem="@layout/item_photos"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@id/edit_add_photos"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/edit_add_photos_btn"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 

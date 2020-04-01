@@ -14,6 +14,7 @@ import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.add_edit.NearbyAdapter
 import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.Injection
+import com.openclassrooms.realestatemanager.utils.getNearbyList
 import kotlinx.android.synthetic.main.activity_search.*
 
 
@@ -56,11 +57,11 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
     private fun bindViews() {
         //-- Nachos --//
         nachoType = findViewById(R.id.search_spinner_type)
-        nachoType.setAdapter(ArrayListStringAdapter(this, searchViewModel.getTypesList()))
+        nachoType.setAdapter(ArrayListStringAdapter(this, searchViewModel.getTypesResList()))
         nachoLocation = findViewById(R.id.search_nachos_location)
         nachoLocation.addChipTerminator(',', ChipTerminatorHandler.BEHAVIOR_CHIPIFY_ALL)
         nachoNearby = findViewById(R.id.search_nachos_nearby)
-        nachoNearby.setAdapter(NearbyAdapter(this, searchViewModel.getNearbyList()))
+        nachoNearby.setAdapter(NearbyAdapter(this, getNearbyList()))
         //-- RangeSeekBars --//
         rangeRooms = findViewById(R.id.search_rooms_seek_bar)
         roomsPreview = findViewById(R.id.rooms_view)
@@ -93,7 +94,7 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(item: View?) {
         if (item == search_button) {
-            val query = searchViewModel.constructQueryResearch(priceMinValue, priceMaxValue, nachoType.chipValues, nachoLocation.chipValues, roomsMinValue, roomsMaxValue, bedroomsMinValue, bedroomsMaxValue)
+            val query = searchViewModel.constructQueryResearch(priceMinValue, priceMaxValue, nachoType.chipValues, nachoLocation.chipValues, nachoNearby.chipValues, roomsMinValue, roomsMaxValue, bedroomsMinValue, bedroomsMaxValue)
             val intent = Intent()
             intent.putExtra(Constants.SEARCH_QUERY, query)
             setResult(Constants.RC_SEARCH, intent)

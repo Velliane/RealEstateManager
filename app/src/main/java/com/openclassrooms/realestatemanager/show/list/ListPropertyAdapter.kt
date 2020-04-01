@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.os.persistableBundleOf
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.utils.Utils
+import com.openclassrooms.realestatemanager.utils.getScreenOrientation
 
 class ListPropertyAdapter(private val listener: OnItemClickListener, private val context: Context) : ListAdapter<PropertyModelForList, ListPropertyAdapter.ListViewHolder>(PropertyAdapterDiffCallback()) {
 
@@ -54,11 +56,14 @@ class ListPropertyAdapter(private val listener: OnItemClickListener, private val
         var type: TextView = itemView.findViewById(R.id.item_type)
         var location: TextView = itemView.findViewById(R.id.item_location)
         var price: TextView = itemView.findViewById(R.id.item_price)
+        val soldIcon: ImageView = itemView.findViewById(R.id.drawable_sold_icon)
         private var container: ConstraintLayout = itemView.findViewById(R.id.item_list_container)
+        private var progressBar: ProgressBar = itemView.findViewById(R.id.item_list_progress)
 
 
         fun bind(property: PropertyModelForList, onItemClickListener: OnItemClickListener, currency: Int) {
 
+            itemView.isClickable = false
             type.text = property.type
             if(currency == 0){
                 price.text = itemView.context.getString(R.string.details_price_euro, property.price)
@@ -73,11 +78,25 @@ class ListPropertyAdapter(private val listener: OnItemClickListener, private val
                 Glide.with(itemView.context).load(R.drawable.no_image_available_64).centerCrop().into(photo)
             }
             location.text = property.location
-            if(property.isSelected){
-                container.setBackgroundResource(R.color.drawer_color)
+            //-- Set background of property selected if orientation is landscape --//
+            if(getScreenOrientation(itemView.context.resources.configuration.orientation)) {
+                if (property.isSelected) {
+                    container.setBackgroundResource(R.color.drawer_color)
+                } else {
+                    container.setBackgroundResource(R.color.quantum_white_100)
+                }
             }else{
                 container.setBackgroundResource(R.color.quantum_white_100)
             }
+
+            if(!property.inSale){
+                soldIcon.visibility = View.VISIBLE
+            }else{
+                soldIcon.visibility = View.GONE
+            }
+
+            progressBar.visibility = View.GONE
+            itemView.isClickable = true
             itemView.setOnClickListener {
                 onItemClickListener.onItemClicked(property.propertyId, adapterPosition)
             }

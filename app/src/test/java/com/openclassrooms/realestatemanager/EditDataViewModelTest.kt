@@ -1,24 +1,19 @@
 package com.openclassrooms.realestatemanager
 
 import android.content.Context
-import android.database.CursorJoiner
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.room.Room
-import androidx.test.platform.app.InstrumentationRegistry
-import androidx.work.Operation
+import com.google.firebase.auth.FirebaseAuth
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.openclassrooms.realestatemanager.add_edit.Address
 import com.openclassrooms.realestatemanager.add_edit.EditDataViewModel
 import com.openclassrooms.realestatemanager.add_edit.Property
 import com.openclassrooms.realestatemanager.data.AddressDataRepository
+import com.openclassrooms.realestatemanager.data.PhotoDataRepository
 import com.openclassrooms.realestatemanager.data.PropertyDataRepository
-import com.openclassrooms.realestatemanager.data.database.PropertyDatabase
 import com.openclassrooms.realestatemanager.login.User
 import com.openclassrooms.realestatemanager.login.UserDataRepository
-import com.openclassrooms.realestatemanager.search.NearbyEnum
 import com.openclassrooms.realestatemanager.search.TypeEnum
-import com.openclassrooms.realestatemanager.utils.FakePhotoDataRepository
 import com.openclassrooms.realestatemanager.utils.FakePropertyDataRepository
 import com.openclassrooms.realestatemanager.utils.getOrAwaitValue
 import junit.framework.Assert.*
@@ -50,13 +45,16 @@ class EditDataViewModelTest {
     private lateinit var context: Context
 
     @Mock
-    private lateinit var fakePhotoDataRepository: FakePhotoDataRepository
+    private lateinit var photoDataRepository: PhotoDataRepository
 
     @Mock
     private lateinit var fakePropertyDataRepository: FakePropertyDataRepository
 
     @Mock
     private lateinit var addressDataRepository: AddressDataRepository
+
+    @Mock
+    private lateinit var firebaseAuth: FirebaseAuth
 
     @Mock
     private lateinit var executor: Executor
@@ -75,7 +73,7 @@ class EditDataViewModelTest {
     fun setUp() {
         MockitoAnnotations.initMocks(this)
         Dispatchers.setMain(testCoroutineDispatcher)
-        viewModel = EditDataViewModel(context, fakePhotoDataRepository, fakePropertyDataRepository, addressDataRepository, executor, userDataRepository)
+        viewModel = EditDataViewModel(firebaseAuth, context, photoDataRepository, fakePropertyDataRepository, addressDataRepository, executor, userDataRepository)
     }
 
     @After
@@ -90,7 +88,7 @@ class EditDataViewModelTest {
         val mockUserDataRepository = mock<UserDataRepository>{
             onBlocking { getAllUsers() } doReturn list
         }
-        viewModel = EditDataViewModel(context, fakePhotoDataRepository, fakePropertyDataRepository, addressDataRepository, executor, mockUserDataRepository)
+        viewModel = EditDataViewModel(firebaseAuth, context, photoDataRepository, fakePropertyDataRepository, addressDataRepository, executor, mockUserDataRepository)
 
         viewModel.getAllUser()
         val listResult = viewModel.userListLiveData.getOrAwaitValue()
@@ -110,7 +108,7 @@ class EditDataViewModelTest {
         val mockUserDataRepository = mock<UserDataRepository>{
             onBlocking { getAllUsers() } doReturn list
         }
-        viewModel = EditDataViewModel(context, fakePhotoDataRepository, fakePropertyDataRepository, addressDataRepository, executor, mockUserDataRepository)
+        viewModel = EditDataViewModel(firebaseAuth, context, photoDataRepository, fakePropertyDataRepository, addressDataRepository, executor, mockUserDataRepository)
 
         viewModel.getAllUser()
         val listResult = viewModel.userListLiveData.getOrAwaitValue()
@@ -124,7 +122,7 @@ class EditDataViewModelTest {
     @Test
     fun getTypesEnumList() {
         val list = arrayListOf(TypeEnum.HOUSE, TypeEnum.APARTMENT, TypeEnum.DUPLEX, TypeEnum.LOFT)
-        val listTest = viewModel.getTypesList()
+        val listTest = viewModel.getTypesEnumList()
         assertEquals(list, listTest)
     }
 
@@ -137,11 +135,6 @@ class EditDataViewModelTest {
         assertEquals("SCHOOL", viewModel.getNearby(list2))
     }
 
-    @Test
-    fun getAllNearbyPlacesFromEnumConstant() {
-        val list = listOf(NearbyEnum.BUS, NearbyEnum.SHOP, NearbyEnum.SCHOOL, NearbyEnum.POST, NearbyEnum.PUBLIC_TRANSPORT, NearbyEnum.RESTAURANT, NearbyEnum.UNIVERSITY)
-        assertEquals(list, viewModel.getNearbyList())
-    }
 
     @Test
     fun getAddressOfProperty_WithIdEqual22() = runBlockingTest {
@@ -149,7 +142,7 @@ class EditDataViewModelTest {
         val mockAddressDataRepository = mock<AddressDataRepository> {
             onBlocking { getAddressOfOneProperty("22") } doReturn address
         }
-        viewModel = EditDataViewModel(context, fakePhotoDataRepository, fakePropertyDataRepository, mockAddressDataRepository, executor, userDataRepository)
+        viewModel = EditDataViewModel(firebaseAuth, context, photoDataRepository, fakePropertyDataRepository, mockAddressDataRepository, executor, userDataRepository)
 
         viewModel.getAddressOfOneProperty("22")
 
@@ -162,11 +155,11 @@ class EditDataViewModelTest {
 
     @Test
     fun getPropertyWithId() = runBlockingTest {
-        val property = Property("001", "025","House", 250500, 125, 4, 2, 2, "Big house", true, "2020-03-12T12:20:25")
+        val property = Property("001", "025","House", 250500, 125, 4, 2, 2, "Big house", true, "RESTAURANT", "12/03/2020", null, "2020-03-12T12:20:25")
         val mockPropertyDataRepository = mock<PropertyDataRepository>{
             onBlocking { getPropertyFromId("001") } doReturn property
         }
-        viewModel = EditDataViewModel(context, fakePhotoDataRepository, mockPropertyDataRepository, addressDataRepository, executor, userDataRepository)
+        viewModel = EditDataViewModel(firebaseAuth, context, photoDataRepository, mockPropertyDataRepository, addressDataRepository, executor, userDataRepository)
 
         viewModel.getPropertyFromId("001")
 
@@ -179,13 +172,13 @@ class EditDataViewModelTest {
 
     @Test
     fun addPropertyWithSuccessAndGetIt() = runBlockingTest {
-        val property = Property("001", "025","House", 250500, 125, 4, 2, 2, "Big house", true, "2020-03-12T12:20:25")
+        val property = Property("001", "025","House", 250500, 125, 4, 2, 2, "Big house", true, "RESTAURANT", "12/03/2020", null, "2020-03-12T12:20:25")
         val SUCCESS = 2L
         val mockPropertyDataRepository = mock<PropertyDataRepository> {
             onBlocking { addProperty(property) } doReturn SUCCESS
             onBlocking { getPropertyFromId("001") } doReturn property
         }
-        viewModel = EditDataViewModel(context, fakePhotoDataRepository, mockPropertyDataRepository, addressDataRepository, executor, userDataRepository)
+        viewModel = EditDataViewModel(firebaseAuth, context, photoDataRepository, mockPropertyDataRepository, addressDataRepository, executor, userDataRepository)
 
         viewModel.addProperty(property)
         viewModel.getPropertyFromId("001")

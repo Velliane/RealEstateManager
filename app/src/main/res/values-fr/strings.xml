@@ -70,7 +70,7 @@
     <string name="notification_txt">Bonjour %1$s, le bien immobilier a bien été sauvegardé dans la base de données</string>
     <string name="notification_title">Sauvegarde effectuée avec succès !</string>
     <string name="notification_channel">Message de RealEstateManage</string>
-    <string name="manage_by">Manage by %1$s</string>
+    <string name="manage_by">Géré par %1$s</string>
 
     <!-- Search -->
     <string name="search_preview_rooms">entre %1$s et %2$s</string>
@@ -85,5 +85,10 @@
 
     <!--Settings -->
     <string name="choose_your_currency">Choisissez votre devise:</string>
+    <string name="photo">Photo</string>
+    <string name="add_photo_btn">Ajouter</string>
+    <string name="cant_be_empty">Merci de saisir une valeur</string>
+    <string name="description_required">Veuillez saisir une description</string>
+    <string name="image_and_description_required">Sélectionnez une photo et saisissez une description</string>
 
 </resources>

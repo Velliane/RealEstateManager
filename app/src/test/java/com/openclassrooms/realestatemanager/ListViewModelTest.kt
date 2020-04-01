@@ -8,15 +8,15 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
+import com.openclassrooms.realestatemanager.add_edit.Photo
 import com.openclassrooms.realestatemanager.add_edit.Property
+import com.openclassrooms.realestatemanager.data.AddressDataRepository
+import com.openclassrooms.realestatemanager.data.PhotoDataRepository
 import com.openclassrooms.realestatemanager.data.PropertyDataRepository
 import com.openclassrooms.realestatemanager.show.list.ListViewModel
-import com.openclassrooms.realestatemanager.utils.FakeAddressDataRepository
-import com.openclassrooms.realestatemanager.utils.FakePhotoDataRepository
 import com.openclassrooms.realestatemanager.utils.getOrAwaitValue
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
@@ -29,7 +29,6 @@ import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoRule
 import org.powermock.core.classloader.annotations.PrepareForTest
-import org.robolectric.RobolectricTestRunner
 
 
 @ExperimentalCoroutinesApi
@@ -42,9 +41,7 @@ class ListViewModelTest{
     @Mock
     private lateinit var context: Context
     @Mock
-    private lateinit var fakeAddressDataRepository: FakeAddressDataRepository
-    @Mock
-    private lateinit var fakePhotoDataRepository: FakePhotoDataRepository
+    private lateinit var addressDataRepository: AddressDataRepository
 
     @Rule
     @JvmField
@@ -61,16 +58,19 @@ class ListViewModelTest{
         val liveData = MutableLiveData<List<Property>>()
         val list = ArrayList<Property>()
         //-- Create Properties and add them to list --//
-        val property1 = Property("001", "025","House", 250500, 125, 4, 2, 2, "Big house", true, "2020-03-12T12:20:25")
-        val property2 = Property("002", "025","House", 185000, 75, 3, 1, 2, "Little house", true, "2020-03-09T12:20:25")
+        val property1 = Property("001", "025","House", 250500, 125, 4, 2, 2, "Big house", true, "RESTAURANT", "12/03/2020", null, "2020-03-12T12:20:25")
+        val property2 = Property("002", "025","House", 185000, 75, 3, 1, 2, "Little house", false, null, "12/03/2020", "02/04/2020", "2020-04-02T15:24:35")
         list.add(property1)
         list.add(property2)
         liveData.value = list
-
         val mockPropertyDataRepository = mock<PropertyDataRepository> {
             onBlocking { getAllProperties() } doReturn liveData
         }
-        viewModel = ListViewModel(context, mockPropertyDataRepository, fakeAddressDataRepository, fakePhotoDataRepository)
+        val listPhotos = arrayListOf(Photo("025/image.fr", "Salon séjour avec cheminée", false), Photo("054/imagefr", "Grande chambre", false))
+        val mockPhotoDataRepository = mock<PhotoDataRepository> {
+            onBlocking { getListOfPhotos("001") } doReturn listPhotos
+        }
+        viewModel = ListViewModel(context, mockPropertyDataRepository, addressDataRepository, mockPhotoDataRepository)
     }
 
     @Test
@@ -103,9 +103,10 @@ class ListViewModelTest{
     }
 
     @Test
-    fun getListOfPhoto() {
+    fun getFirstPhotoOfListToShowIt()= runBlockingTest {
         val photo = viewModel.getPhotoForPropertyId("001")
         assertEquals("Salon séjour avec cheminée", photo.description)
+        assertEquals("025/image.fr", photo.uri)
     }
 
 }

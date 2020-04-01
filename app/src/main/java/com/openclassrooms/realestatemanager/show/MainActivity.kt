@@ -3,9 +3,11 @@ package com.openclassrooms.realestatemanager.show
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -248,18 +250,25 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
         if (isLandscape) {
             if (bottomNavigationView.selectedItemId == R.id.action_map_view) {
                 showMapFragment()
+            }else{
+                val fragment = ListFragment.newInstance()
+                val details = DetailsFragment.newInstance()
+                supportFragmentManager.beginTransaction().replace(R.id.container_fragment_list, fragment).commit()
+                supportFragmentManager.beginTransaction().replace(R.id.container_fragment_details, details).commit()
             }
         }
     }
 
     override fun onBackPressed() {
         if (!isLandscape) {
-            showListFragment()
+            if (bottomNavigationView.selectedItemId == R.id.action_list_view) { showListFragment()
+            }else{ showMapFragment() }
+            bottomNavigationView.visibility = View.VISIBLE
+            invalidateOptionsMenu()
         }
     }
 
     override fun onItemClicked(id: String, position: Int) {
         sharedPreferences.edit().putString(Constants.PREF_ID_PROPERTY, id).apply()
-
     }
 }

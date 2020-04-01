@@ -6,8 +6,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
-import com.bumptech.glide.manager.ConnectivityMonitor.ConnectivityListener
-import com.google.firebase.auth.FirebaseUser
+import com.firebase.ui.auth.AuthUI
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.openclassrooms.realestatemanager.add_edit.Address
@@ -18,9 +17,7 @@ import com.openclassrooms.realestatemanager.data.PropertyDataRepository
 import com.openclassrooms.realestatemanager.login.User
 import com.openclassrooms.realestatemanager.login.UserDataRepository
 import com.openclassrooms.realestatemanager.show.MainViewModel
-import com.openclassrooms.realestatemanager.utils.FakeAddressDataRepository
 import com.openclassrooms.realestatemanager.utils.FakeFirestoreDataRepository
-import com.openclassrooms.realestatemanager.utils.FakeUserDataRepository
 import com.openclassrooms.realestatemanager.utils.getOrAwaitValue
 import junit.framework.Assert.*
 import kotlinx.coroutines.Dispatchers
@@ -49,11 +46,13 @@ class MainViewModelTest {
     @Mock
     private lateinit var context: Context
     @Mock
-    private lateinit var fakeAddressDataRepository: FakeAddressDataRepository
+    private lateinit var addressDataRepository: AddressDataRepository
     @Mock
     private lateinit var fakeFirestoreDataRepository: FakeFirestoreDataRepository
     @Mock
-    private lateinit var fakeUserDataRepository: FakeUserDataRepository
+    private lateinit var userDataRepository: UserDataRepository
+    @Mock
+    private lateinit var authUI: AuthUI
 
     private val listOfProperty = listOf(Property("001", "025","House", 250500, 125, 4, 2, 2, "Big house", true, "2020-03-12T12:20:25"),
             Property("002", "025","House", 185000, 75, 3, 1, 2, "Little house", true, "2020-03-09T12:20:25"))
@@ -95,7 +94,7 @@ class MainViewModelTest {
             onBlocking { getAllProperties() } doReturn liveData
         }
 
-        val viewModel = MainViewModel(context, mockPropertyDataRepository, fakeAddressDataRepository, fakeFirestoreDataRepository, mockUserDataRepository)
+        val viewModel = MainViewModel(authUI, context, mockPropertyDataRepository, addressDataRepository, fakeFirestoreDataRepository, mockUserDataRepository)
         viewModel.getUserById("566413")
         val result = viewModel.userLiveData.getOrAwaitValue()
         assertEquals("martin@orange.fr", result?.email)
@@ -112,7 +111,7 @@ class MainViewModelTest {
             onBlocking { getAddressOfOneProperty("001")} doReturn address
         }
 
-        val viewModel = MainViewModel(context, mockPropertyDataRepository, mockAddressDataRepository, fakeFirestoreDataRepository, fakeUserDataRepository)
+        val viewModel = MainViewModel(authUI, context, mockPropertyDataRepository, mockAddressDataRepository, fakeFirestoreDataRepository, userDataRepository)
         viewModel.getAddressOfOneProperty("001")
         val result = viewModel.addressLiveData.getOrAwaitValue()
         assertEquals(4, result?.number)
@@ -132,7 +131,7 @@ class MainViewModelTest {
             onBlocking { getAllProperties() } doReturn liveData
         }
 
-        val viewModel = MainViewModel(context, mockPropertyDataRepository, fakeAddressDataRepository, mockFirestoreDataRepository, fakeUserDataRepository)
+        val viewModel = MainViewModel(authUI, context, mockPropertyDataRepository, addressDataRepository, mockFirestoreDataRepository, userDataRepository)
         viewModel.updateDatabase()
 
         val result = viewModel.getAllProperty().getOrAwaitValue()
@@ -157,7 +156,7 @@ class MainViewModelTest {
         val mockUserDataRepository = mock<UserDataRepository> {
             onBlocking { getUserById("566413") } doReturn user
         }
-        val viewModel = MainViewModel(context, mockPropertyDataRepository, fakeAddressDataRepository, fakeFirestoreDataRepository, mockUserDataRepository)
+        val viewModel = MainViewModel(authUI, context, mockPropertyDataRepository, addressDataRepository, fakeFirestoreDataRepository, mockUserDataRepository)
 
         val userResulted = viewModel.updateHeader("Martin", "abc.fr", "martin2@orange.fr", "566413").getOrAwaitValue()
 
@@ -185,7 +184,7 @@ class MainViewModelTest {
         val mockUserDataRepository = mock<UserDataRepository> {
             onBlocking { getUserById("566413") } doReturn user
         }
-        val viewModel = MainViewModel(context, mockPropertyDataRepository, fakeAddressDataRepository, fakeFirestoreDataRepository, mockUserDataRepository)
+        val viewModel = MainViewModel(authUI, context, mockPropertyDataRepository, addressDataRepository, fakeFirestoreDataRepository, mockUserDataRepository)
 
         val userResulted = viewModel.updateHeader("Martin", "abc.fr", "martin2@orange.fr", "566413").getOrAwaitValue()
 

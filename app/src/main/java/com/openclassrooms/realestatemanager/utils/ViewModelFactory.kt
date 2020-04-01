@@ -3,6 +3,8 @@ package com.openclassrooms.realestatemanager.utils
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.firebase.ui.auth.AuthUI
+import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.data.AddressDataRepository
 import com.openclassrooms.realestatemanager.data.PhotoDataRepository
 import com.openclassrooms.realestatemanager.show.geocode_model.GeocodeRepository
@@ -25,19 +27,19 @@ class ViewModelFactory(private val context: Context, private val userDataReposit
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return when {
             modelClass.isAssignableFrom(MainViewModel::class.java) -> {
-                MainViewModel(context, propertyDataRepository, addressDataRepository, firestoreDataRepository, userDataRepository) as T
+                MainViewModel(AuthUI.getInstance(), context, propertyDataRepository, addressDataRepository, firestoreDataRepository, userDataRepository) as T
             }
             modelClass.isAssignableFrom(ListViewModel::class.java) -> {
                 ListViewModel(context, propertyDataRepository, addressDataRepository, photoDataRepository) as T
             }
             modelClass.isAssignableFrom(EditDataViewModel::class.java) -> {
-                EditDataViewModel(context, photoDataRepository, propertyDataRepository, addressDataRepository, executor, userDataRepository) as T
+                EditDataViewModel(FirebaseAuth.getInstance(), context, photoDataRepository, propertyDataRepository, addressDataRepository, executor, userDataRepository) as T
             }
             modelClass.isAssignableFrom(UserViewModel::class.java) -> {
                 return UserViewModel(userDataRepository) as T
             }
             modelClass.isAssignableFrom(DetailViewModel::class.java) -> {
-                return DetailViewModel(context, propertyDataRepository, geocodeRepository, addressDataRepository, photoDataRepository, userDataRepository) as T
+                return DetailViewModel(propertyDataRepository, geocodeRepository, addressDataRepository, photoDataRepository, userDataRepository) as T
             }
             modelClass.isAssignableFrom(MapViewModel::class.java) -> {
                 MapViewModel(propertyDataRepository, addressDataRepository, geocodeRepository) as T

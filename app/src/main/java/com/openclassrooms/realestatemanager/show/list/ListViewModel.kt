@@ -27,7 +27,7 @@ import kotlinx.coroutines.withContext
 class ListViewModel(private val context: Context, private val propertyDataRepository: PropertyDataRepository, private val addressDataRepository: AddressDataRepository, private val photoDataRepository: PhotoDataRepository) : ViewModel() {
 
     val propertiesLiveData = MediatorLiveData<List<PropertyModelForList>>()
-    val addressesMutableLiveData = MutableLiveData<MutableMap<String, Address?>>(HashMap<String, Address?>())
+    private val addressesMutableLiveData = MutableLiveData<MutableMap<String, Address?>>(HashMap<String, Address?>())
     private var propertiesFromResearchLiveData: LiveData<List<Property>?>? = null
     private val allPropertiesLiveData = getAllProperties()
     val currentIdPropertySelectedLiveData = MutableLiveData<String>()
@@ -70,6 +70,7 @@ class ListViewModel(private val context: Context, private val propertyDataReposi
                     it.price.toString(),
                     addresses[it.id_property]?.city,
                     getPhotoForPropertyId(it.id_property),
+                    it.in_sale,
                     it.id_property==idProperty)
         }
         propertiesLiveData.value = propertyModelsForList

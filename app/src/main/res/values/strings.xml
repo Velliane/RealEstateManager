@@ -91,5 +91,10 @@
     <string name="choose_your_currency">Choose your currency:</string>
     <string name="settings_euro" translatable="false">Euro</string>
     <string name="settings_dollar" translatable="false">Dollar</string>
+    <string name="photo">photo_title</string>
+    <string name="add_photo_btn">Add</string>
+    <string name="cant_be_empty">Can\'t be empty</string>
+    <string name="description_required">Please write a description</string>
+    <string name="image_and_description_required">Please select an image and write a description</string>
 
 </resources>

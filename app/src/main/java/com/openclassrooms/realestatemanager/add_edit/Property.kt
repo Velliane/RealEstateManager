@@ -45,7 +45,7 @@ data class Property(
 
 )
 
-fun fromContentValues(values: ContentValues?): Property {
+fun propertyFromContentValues(values: ContentValues?): Property {
         val property = Property()
         if(values!!.containsKey("id_property")){ property.id_property = values.getAsString("id_property") }
         if(values.containsKey("agent")){ property.agent = values.getAsString("agent") }

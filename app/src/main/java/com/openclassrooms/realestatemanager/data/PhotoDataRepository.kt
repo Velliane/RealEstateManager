@@ -46,9 +46,9 @@ open class PhotoDataRepository {
         }
     }
 
-    open fun saveImageToFirebase(uri: Uri, id_property: String, description: String){
+    open fun saveImageToFirebase(uri: String, id_property: String, description: String){
         val storageReference = FirebaseStorage.getInstance().getReference("/images/$id_property/$description")
-        storageReference.putFile(uri).addOnSuccessListener {
+        storageReference.putFile(Uri.parse(uri)).addOnSuccessListener {
             Log.d("PHOTO", "Photo successfully saved in Firebase")
         }
     }
@@ -60,11 +60,25 @@ open class PhotoDataRepository {
             val listFiles = photoPath.listFiles()
             if(listFiles != null) {
                 for (file in listFiles) {
-                    val photo = Photo(file.toUri(), file.name)
+                    val photo = Photo(file.toUri().toString(), file.nameWithoutExtension, false)
                     listPhoto.add(photo)
                 }
             }
         }
         return listPhoto
+    }
+
+    fun deletePhotos(idProperty: String, photo: Photo) {
+        val root = Environment.getExternalStorageDirectory().path + "/RealEstateManager/"
+        val dir = File(root)
+        if(!dir.exists()) {
+            dir.mkdirs()
+        }
+        val folder = File(root, "$idProperty/")
+        if(!folder.exists()){
+            folder.mkdirs()
+        }
+        val file = File(folder, "${photo.description}.jpg")
+        if(file.exists()) file.delete()
     }
 }
