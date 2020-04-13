@@ -16,6 +16,9 @@ import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.Injection
 import com.openclassrooms.realestatemanager.utils.getNearbyList
 import kotlinx.android.synthetic.main.activity_search.*
+import java.text.DecimalFormat
+import java.text.NumberFormat
+import java.util.*
 
 
 class SearchActivity : AppCompatActivity(), View.OnClickListener {
@@ -38,7 +41,7 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
     private var bedroomsMinValue = 1
     private var bedroomsMaxValue = 6
     private var priceMinValue = 0
-    private var priceMaxValue = 2000000
+    private var priceMaxValue = 100000000
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,7 +90,12 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
         rangePrice.setOnRangeSeekbarChangeListener { minValue, maxValue ->
             priceMinValue = minValue.toInt()
             priceMaxValue = maxValue.toInt()
-            val text = getString(R.string.search_preview_rooms, minValue.toString(), maxValue.toString())
+            val format = NumberFormat.getCurrencyInstance()
+            format.maximumFractionDigits = 0
+            format.currency = Currency.getInstance("EUR")
+            val min = format.format(minValue)
+            val max = format.format(maxValue)
+            val text = getString(R.string.search_preview_rooms, min, max)
             pricePreview.text = text
         }
     }

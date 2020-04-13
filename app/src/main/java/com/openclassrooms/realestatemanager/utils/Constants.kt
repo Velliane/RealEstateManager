@@ -17,6 +17,7 @@ class Constants {
         const val RC_PERMISSION_FILES_STORAGE = 3
         const val RC_CHOOSE_IMAGE = 4
         const val RC_SEARCH = 5
+        const val RC_CAMERA = 6
 
         // PERMISSIONS
         const val PERMS = android.Manifest.permission.READ_EXTERNAL_STORAGE

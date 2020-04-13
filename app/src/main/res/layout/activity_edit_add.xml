@@ -14,10 +14,9 @@
             android:id="@+id/edit_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
             android:text="@string/add_property_title"
             android:textAlignment="center"
-            android:textSize="35dp"
+            android:textSize="@dimen/title_window_add_property"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -26,18 +25,18 @@
         <RadioButton
             android:id="@+id/edit_on_sale_btn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:text="@string/on_sale"
             android:textColor="@color/sale_color"
             app:layout_constraintEnd_toStartOf="@id/edit_sold_btn"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/custom_created_date_container"
-            app:layout_constraintTop_toBottomOf="@id/edit_title"/>
+            app:layout_constraintBottom_toBottomOf="@id/edit_sold_btn"
+            app:layout_constraintTop_toTopOf="@id/edit_sold_btn"/>
 
         <RadioButton
             android:id="@+id/edit_sold_btn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:text="@string/sold"
             android:textColor="@color/sold_color"
             app:layout_constraintEnd_toEndOf="parent"
@@ -53,12 +52,12 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:hint="Date"
+            android:hint="@string/date_on_sale"
             app:errorEnabled="true"
             app:layout_constraintBottom_toTopOf="@id/agent"
             app:layout_constraintEnd_toStartOf="@id/custom_sold_date_container"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/edit_on_sale_btn">
+            app:layout_constraintTop_toTopOf="@id/custom_sold_date_container">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_date_created"
@@ -76,7 +75,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             app:errorEnabled="true"
-            android:hint="Sold date"
+            android:hint="@string/sold_date"
             app:layout_constraintBottom_toTopOf="@id/agent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/custom_created_date_container"
@@ -106,7 +105,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:text="Manage by"
+                android:text="@string/manage_by_edit"
                 android:textSize="18sp"/>
 
             <androidx.appcompat.widget.AppCompatSpinner
@@ -130,11 +129,10 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:hint="@string/type"
-            app:errorEnabled="true"
             app:layout_constraintBottom_toTopOf="@id/custom_surface_container"
             app:layout_constraintEnd_toStartOf="@id/custom_price_container"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/agent">
+            app:layout_constraintTop_toTopOf="@id/custom_price_container">
 
             <Spinner
                 android:id="@+id/add_edit_type_spinner"
@@ -250,7 +248,7 @@
                 android:id="@+id/edit_bedrooms"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Number of bedrooms"
+                android:hint="@string/add_number_of_bedrooms"
                 android:inputType="number" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -274,7 +272,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
-                android:hint="Number of bathrooms"/>
+                android:hint="@string/add_number_of_bathrooms"/>
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -282,9 +280,9 @@
             android:id="@+id/edit_title_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Location"
+            android:text="@string/location_title"
             android:textAlignment="center"
-            android:textSize="25dp"
+            android:textSize="@dimen/subtitle_edit"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/address"
             app:layout_constraintEnd_toEndOf="parent"
@@ -304,6 +302,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edit_title_location" />
 
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/edit_show_chip_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/Widget.MaterialComponents.ChipGroup"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/address"
+            app:layout_constraintBottom_toTopOf="@id/edit_nearby"/>
 
         <com.hootsuite.nachos.NachoTextView
             android:id="@+id/edit_nearby"
@@ -313,20 +320,20 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
-            android:hint="Nearby"
+            android:hint="@string/add_edit_nearby"
             app:layout_constraintBottom_toTopOf="@id/edit_title_photos"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/address"/>
+            app:layout_constraintTop_toBottomOf="@id/edit_show_chip_group"/>
 
 
         <TextView
             android:id="@+id/edit_title_photos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Photos"
+            android:text="@string/add_edit_title_photos"
             android:textAlignment="center"
-            android:textSize="25dp"
+            android:textSize="@dimen/subtitle_edit"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/edit_container_photo"
             app:layout_constraintEnd_toEndOf="parent"
@@ -344,12 +351,12 @@
 
             <ImageView
                 android:id="@+id/edit_add_photos"
-                android:layout_width="150dp"
-                android:layout_height="100dp"
+                android:layout_width="@dimen/width_photo_preview_edit"
+                android:layout_height="@dimen/height_photo_preview_edit"
                 android:src="@drawable/action_add"
                 android:layout_gravity="center_vertical"
                 android:background="@color/drawer_color"
-                android:contentDescription="Photo's property"
+                android:contentDescription="@string/photo_content_description"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/edit_add_photos_txt"
@@ -357,19 +364,20 @@
 
             <EditText
                 android:id="@+id/edit_add_photos_txt"
-                android:layout_width="150dp"
+                android:layout_width="@dimen/width_photo_preview_edit"
                 android:layout_height="wrap_content"
-                android:hint="Description"
+                android:hint="@string/description"
                 android:autofillHints="Photo's description"
                 android:textAlignment="center"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/edit_add_photos"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="@id/edit_add_photos_btn"/>
+                app:layout_constraintBottom_toBottomOf="@id/edit_add_photos_btn"
+                android:inputType="text" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/edit_add_photos_btn"
-                android:layout_width="150dp"
+                android:layout_width="@dimen/width_photo_preview_edit"
                 android:layout_height="50dp"
                 android:padding="3dp"
                 android:text="@string/add_photo_btn"

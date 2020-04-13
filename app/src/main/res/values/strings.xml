@@ -96,5 +96,27 @@
     <string name="cant_be_empty">Can\'t be empty</string>
     <string name="description_required">Please write a description</string>
     <string name="image_and_description_required">Please select an image and write a description</string>
+    <string name="list_location">LOCATION</string>
+    <string name="type_villa">Villa</string>
+    <string name="add_edit_title_photos">Photos</string>
+    <string name="add_edit_nearby">Nearby</string>
+    <string name="add_number_of_bathrooms">Number of bathrooms</string>
+    <string name="add_number_of_bedrooms">Number of bedrooms</string>
+    <string name="address_custom_nbr">Nbr</string>
+    <string name="address_custom_street">Street</string>
+    <string name="address_custom_zip_code">Zip Code</string>
+    <string name="address_custom_city">City</string>
+    <string name="address_custom_country">Country</string>
+    <string name="add_photo_from_camera">Take Photo</string>
+    <string name="add_photo_from_gallery">Choose from Gallery</string>
+    <string name="add_photo_cancel">Cancel</string>
+    <string name="add_photo_dialog_title">Add Photo!</string>
+    <string name="date_on_sale">Selling date</string>
+    <string name="sold_date">Sold date</string>
+    <string name="manage_by_edit">Manage by</string>
+    <string name="location_title">Location</string>
+    <string name="photos_title">Photos</string>
+    <string name="description_title">Description</string>
+    <string name="photo_content_description">Photo\'s property</string>
 
 </resources>

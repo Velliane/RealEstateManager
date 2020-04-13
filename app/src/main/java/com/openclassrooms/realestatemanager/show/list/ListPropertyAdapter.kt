@@ -16,6 +16,9 @@ import com.bumptech.glide.Glide
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.utils.Utils
 import com.openclassrooms.realestatemanager.utils.getScreenOrientation
+import java.text.NumberFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 class ListPropertyAdapter(private val listener: OnItemClickListener, private val context: Context) : ListAdapter<PropertyModelForList, ListPropertyAdapter.ListViewHolder>(PropertyAdapterDiffCallback()) {
 
@@ -65,10 +68,15 @@ class ListPropertyAdapter(private val listener: OnItemClickListener, private val
 
             itemView.isClickable = false
             type.text = property.type
+            val format = NumberFormat.getCurrencyInstance()
+            format.maximumFractionDigits = 0
             if(currency == 0){
-                price.text = itemView.context.getString(R.string.details_price_euro, property.price)
+                format.currency = Currency.getInstance("EUR")
+                price.text = format.format(property.price.toInt())
             }else{
-                price.text = itemView.context.getString(R.string.details_price_dollar, Utils.convertEuroToDollar(property.price.toInt()).toString())
+                format.currency = Currency.getInstance("USD")
+                val priceInDollar = Utils.convertEuroToDollar(property.price.toInt()).toString()
+                price.text = format.format(priceInDollar.toInt())
             }
 
             val propertyPhoto = property.photo

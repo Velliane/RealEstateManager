@@ -6,7 +6,7 @@
 
     <FrameLayout
         android:id="@+id/container_fragment_list"
-        android:layout_width="300dp"
+        android:layout_width="@dimen/width_listfrag_holder_land"
         android:layout_height="match_parent">
 
     </FrameLayout>

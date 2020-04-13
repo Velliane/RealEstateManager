@@ -122,6 +122,10 @@ class ListFragment: BaseFragment(), ListPropertyAdapter.OnItemClickListener, Vie
         when(view){
             resetBtn -> {
                 viewModel.reset()
+                if(noDataTxt.visibility == View.VISIBLE){
+                    noDataTxt.visibility = View.GONE
+                    recyclerView.visibility = View.VISIBLE
+                }
                 viewModel.resetBtnLiveData.observe(this, Observer {
                     resetBtn.visibility = it
                 })

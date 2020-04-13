@@ -53,7 +53,7 @@ open class PhotoDataRepository {
         }
     }
 
-    open fun getListOfPhotos(id_property: String): List<Photo>?{
+    open fun getListOfPhotos(id_property: String): ArrayList<Photo>?{
         val listPhoto = ArrayList<Photo>()
         val photoPath = File(Environment.getExternalStorageDirectory().path + "/RealEstateManager/$id_property")
         if(photoPath.isDirectory){

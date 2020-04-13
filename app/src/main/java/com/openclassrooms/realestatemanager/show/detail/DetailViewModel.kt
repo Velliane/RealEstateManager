@@ -1,13 +1,9 @@
 package com.openclassrooms.realestatemanager.show.detail
 
-import android.content.Context
-import android.net.Uri
-import android.widget.TextView
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.add_edit.Address
 import com.openclassrooms.realestatemanager.add_edit.Photo
 import com.openclassrooms.realestatemanager.add_edit.Property
@@ -16,7 +12,7 @@ import com.openclassrooms.realestatemanager.data.PhotoDataRepository
 import com.openclassrooms.realestatemanager.data.PropertyDataRepository
 import com.openclassrooms.realestatemanager.login.User
 import com.openclassrooms.realestatemanager.login.UserDataRepository
-import com.openclassrooms.realestatemanager.property.model.geocode.Geocode
+import com.openclassrooms.realestatemanager.show.geocode_model.Geocode
 import com.openclassrooms.realestatemanager.show.geocode_model.GeocodeRepository
 import com.openclassrooms.realestatemanager.utils.setAddressToString
 import kotlinx.coroutines.Dispatchers

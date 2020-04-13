@@ -5,8 +5,12 @@ import android.content.SharedPreferences
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.android.gms.tasks.OnFailureListener
 import com.openclassrooms.realestatemanager.utils.Constants
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.DisposableHandle
+import kotlinx.coroutines.launch
 
 /**
  * ViewModel for LoginActivity
@@ -18,7 +22,9 @@ class UserViewModel(private val userDataRepository: UserDataRepository): ViewMod
     private val userHelper = UserHelper()
 
     fun saveUser(user: User, context: Context, sharedPreferences: SharedPreferences) {
-        userDataRepository.addUser(user)
+        viewModelScope.launch(Dispatchers.IO) {
+            userDataRepository.addUser(user)
+        }
         userHelper.createUser(user.userId, user.name, user.email, user.photo!!).addOnFailureListener(OnFailureListener { exception ->
             Log.d("Error", exception.printStackTrace().toString())
             val builder = AlertDialog.Builder(context)

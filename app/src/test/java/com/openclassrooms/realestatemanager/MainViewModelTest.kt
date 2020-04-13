@@ -17,8 +17,10 @@ import com.openclassrooms.realestatemanager.data.PropertyDataRepository
 import com.openclassrooms.realestatemanager.login.User
 import com.openclassrooms.realestatemanager.login.UserDataRepository
 import com.openclassrooms.realestatemanager.show.MainViewModel
+import com.openclassrooms.realestatemanager.show.geocode_model.*
 import com.openclassrooms.realestatemanager.utils.FakeFirestoreDataRepository
 import com.openclassrooms.realestatemanager.utils.getOrAwaitValue
+import com.openclassrooms.realestatemanager.utils.setAddressToString
 import junit.framework.Assert.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -54,8 +56,8 @@ class MainViewModelTest {
     @Mock
     private lateinit var authUI: AuthUI
 
-    private val listOfProperty = listOf(Property("001", "025","House", 250500, 125, 4, 2, 2, "Big house", true, "2020-03-12T12:20:25"),
-            Property("002", "025","House", 185000, 75, 3, 1, 2, "Little house", true, "2020-03-09T12:20:25"))
+    private val listOfProperty = listOf(Property("001", "025","House", 0,250500, 125, 4, 2, 2, "Big house", true, "2020-03-12T12:20:25"),
+            Property("002", "025","House", 0,185000, 75, 3, 1, 2, "Little house", true, "2020-03-09T12:20:25"))
 
     private val listOfUser = listOf(User("566413", "Martin", "martin@orange.fr", "profile.martin/image.fr"), User("6534556", "John", "john@orange.fr", "profile.john/image.fr"))
     private val address1 = Address("1", 4, "allée des Bleuets", "71500", "Louhans", "France", "001")

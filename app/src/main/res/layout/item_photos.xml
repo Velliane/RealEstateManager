@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/item_photo"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="@dimen/photos_detail_width"
+        android:layout_height="@dimen/photos_detail_heigth"
         android:padding="10dp"
         android:layout_margin="2dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,7 +21,7 @@
 
     <TextView
         android:id="@+id/item_photo_txt"
-        android:layout_width="200dp"
+        android:layout_width="@dimen/photos_detail_width"
         android:layout_height="wrap_content"
         android:text="@string/description"
         android:layout_margin="2dp"

@@ -42,7 +42,7 @@ class PropertyContentProviderTest {
 
     @Test
     fun insertAndGetItem() {
-        val propertyUri: Uri? = contentResolver.insert(PropertyContentProvider.URI_PROPERTY, generateItem())
+        val propertyUri: Uri? = contentResolver.insert(PropertyContentProvider.URI_PROPERTY, generateProperty())
         val cursor: Cursor? = contentResolver.query(ContentUris.withAppendedId(PropertyContentProvider.URI_PROPERTY, PROPERTY_ID), null, null, null, null)
         assertThat(cursor, notNullValue())
         assertThat(cursor!!.count, `is`(1))
@@ -50,7 +50,7 @@ class PropertyContentProviderTest {
         assertThat(cursor.getString(cursor.getColumnIndexOrThrow("description")), `is`("Superbe maison, à visiter d'urgence !"))
     }
 
-    private fun generateItem(): ContentValues? {
+    private fun generateProperty(): ContentValues? {
         val values = ContentValues()
         values.put("property_id", "1")
         values.put("agent", "5")

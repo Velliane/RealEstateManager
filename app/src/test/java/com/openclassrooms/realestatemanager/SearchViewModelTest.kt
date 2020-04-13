@@ -1,6 +1,8 @@
 package com.openclassrooms.realestatemanager
 
 import android.content.Context
+import com.nhaarman.mockitokotlin2.doReturn
+import com.nhaarman.mockitokotlin2.whenever
 import com.openclassrooms.realestatemanager.search.SearchViewModel
 import com.openclassrooms.realestatemanager.search.TypeEnum
 import junit.framework.Assert.assertEquals
@@ -113,7 +115,12 @@ class SearchViewModelTest {
 
     @Test
     fun getTypesEnumListTest(){
-        val list = arrayListOf(context.getString(TypeEnum.HOUSE.res), context.getString(TypeEnum.APARTMENT.res), context.getString(TypeEnum.DUPLEX.res), context.getString(TypeEnum.LOFT.res))
+        whenever(context.getString(TypeEnum.HOUSE.res)) doReturn "House"
+        whenever(context.getString(TypeEnum.APARTMENT.res)) doReturn "Apartment"
+        whenever(context.getString(TypeEnum.DUPLEX.res)) doReturn "Duplex"
+        whenever(context.getString(TypeEnum.LOFT.res)) doReturn "Loft"
+        whenever(context.getString(TypeEnum.VILLA.res)) doReturn "Villa"
+        val list = arrayListOf(context.getString(TypeEnum.HOUSE.res), context.getString(TypeEnum.APARTMENT.res), context.getString(TypeEnum.DUPLEX.res), context.getString(TypeEnum.LOFT.res), context.getString(TypeEnum.VILLA.res))
         val listTest = viewModel.getTypesResList()
         assertEquals(list, listTest)
     }

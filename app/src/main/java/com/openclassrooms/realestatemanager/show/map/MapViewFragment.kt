@@ -90,11 +90,7 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerCl
 
             override fun onLocationResult(locationResult: LocationResult?) {
                 val lastLocation = LatLng(locationResult!!.lastLocation.latitude, locationResult.lastLocation.longitude)
-
                 googleMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(lastLocation, 15F))
-                val markerOptions = MarkerOptions().position(lastLocation).title("Test")
-                googleMap!!.addMarker(markerOptions)
-
                 getListOfProperty()
             }
         }, null)

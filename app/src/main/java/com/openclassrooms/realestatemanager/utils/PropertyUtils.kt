@@ -2,11 +2,17 @@ package com.openclassrooms.realestatemanager.utils
 
 import android.content.Context
 import android.net.Uri
+import android.os.Environment
+import android.provider.MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.add_edit.Address
 import com.openclassrooms.realestatemanager.add_edit.Photo
 import com.openclassrooms.realestatemanager.add_edit.Property
 import com.openclassrooms.realestatemanager.search.NearbyEnum
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 fun setAddressToString(address: Address): String {
@@ -63,6 +69,37 @@ fun getNearbyList(): List<NearbyEnum> {
     return list
 }
 
+//fun getOutputMediaFile(type: Int): File? {
+//
+//    // External sdcard location
+//    val mediaStorageDir = File(
+//            Environment
+//                    .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+//            IMAGE_DIRECTORY_NAME)
+//
+//    // Create the storage directory if it does not exist
+//    if (!mediaStorageDir.exists()) {
+//        if (!mediaStorageDir.mkdirs()) {
+//            return null
+//        }
+//    }
+//
+//    // Create a media file name
+//    val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss",
+//            Locale.getDefault()).format(Date())
+//    val mediaFile: File
+//    if (type == MEDIA_TYPE_IMAGE) {
+//        mediaFile = File(mediaStorageDir.getPath() + File.separator
+//                .toString() + "IMG_" + timeStamp + ".jpg")
+//    } else {
+//        return null
+//    }
+//    return mediaFile
+//}
+//
+//fun getOutputMediaFileUri(type: Int): Uri? {
+//    return Uri.fromFile(getOutputMediaFile(type))
+//}
 
 
 

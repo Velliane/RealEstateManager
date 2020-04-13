@@ -2,7 +2,6 @@ package com.openclassrooms.realestatemanager.show.geocode_model
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.openclassrooms.realestatemanager.property.model.geocode.Geocode
 import com.openclassrooms.realestatemanager.utils.GooglePlacesAPI
 import retrofit2.Call
 import retrofit2.Callback

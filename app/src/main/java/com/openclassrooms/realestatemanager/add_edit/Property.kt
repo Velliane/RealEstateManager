@@ -18,6 +18,8 @@ data class Property(
 
         @ColumnInfo (name = "type")
         var type: String = "",
+        @ColumnInfo (name = "type_id")
+        var type_id: Int = 0,
         @ColumnInfo (name = "price")
         var price: Int = 0,
         @ColumnInfo (name = "surface")
@@ -50,6 +52,7 @@ fun propertyFromContentValues(values: ContentValues?): Property {
         if(values!!.containsKey("id_property")){ property.id_property = values.getAsString("id_property") }
         if(values.containsKey("agent")){ property.agent = values.getAsString("agent") }
         if(values.containsKey("type")) { property.type = values.getAsString("type") }
+        if(values.containsKey("type_id")) { property.type_id = values.getAsInteger("type_id") }
         if(values.containsKey("price")) { property.price = values.getAsInteger("price") }
         if(values.containsKey("surface")) { property.surface = values.getAsInteger("surface") }
         if(values.containsKey("rooms_nbr")) { property.rooms_nbr = values.getAsInteger("rooms_nbr") }

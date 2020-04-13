@@ -90,5 +90,27 @@
     <string name="cant_be_empty">Merci de saisir une valeur</string>
     <string name="description_required">Veuillez saisir une description</string>
     <string name="image_and_description_required">Sélectionnez une photo et saisissez une description</string>
+    <string name="list_location">LOCALISATION</string>
+    <string name="type_villa">Villa</string>
+    <string name="add_edit_title_photos">Photos</string>
+    <string name="add_edit_nearby">A proximité</string>
+    <string name="add_number_of_bathrooms">Nombre de salle de bain</string>
+    <string name="add_number_of_bedrooms">Nombre de chambres</string>
+    <string name="address_custom_nbr">N°</string>
+    <string name="address_custom_street">voie</string>
+    <string name="address_custom_zip_code">Code Postal</string>
+    <string name="address_custom_city">Ville</string>
+    <string name="address_custom_country">Pays</string>
+    <string name="add_photo_from_camera">Prendre une photo</string>
+    <string name="add_photo_from_gallery">Sélectionner depuis la galerie</string>
+    <string name="add_photo_cancel">Annuler</string>
+    <string name="add_photo_dialog_title">Ajouter une photo</string>
+    <string name="date_on_sale">Date de mise en vente</string>
+    <string name="sold_date">Date de vente</string>
+    <string name="manage_by_edit">Géré par</string>
+    <string name="location_title">Localisation</string>
+    <string name="photos_title">Photos</string>
+    <string name="description_title">Description</string>
+    <string name="photo_content_description">Photo</string>
 
 </resources>

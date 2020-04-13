@@ -58,8 +58,8 @@ class ListViewModelTest{
         val liveData = MutableLiveData<List<Property>>()
         val list = ArrayList<Property>()
         //-- Create Properties and add them to list --//
-        val property1 = Property("001", "025","House", 250500, 125, 4, 2, 2, "Big house", true, "RESTAURANT", "12/03/2020", null, "2020-03-12T12:20:25")
-        val property2 = Property("002", "025","House", 185000, 75, 3, 1, 2, "Little house", false, null, "12/03/2020", "02/04/2020", "2020-04-02T15:24:35")
+        val property1 = Property("001", "025","House", 0,250500, 125, 4, 2, 2, "Big house", true, "RESTAURANT", "12/03/2020", null, "2020-03-12T12:20:25")
+        val property2 = Property("002", "025","House", 0,185000, 75, 3, 1, 2, "Little house", false, null, "12/03/2020", "02/04/2020", "2020-04-02T15:24:35")
         list.add(property1)
         list.add(property2)
         liveData.value = list
@@ -107,6 +107,12 @@ class ListViewModelTest{
         val photo = viewModel.getPhotoForPropertyId("001")
         assertEquals("Salon séjour avec cheminée", photo.description)
         assertEquals("025/image.fr", photo.uri)
+    }
+
+    @Test
+    fun turnStringValueToSimpleSQLiteQuery() {
+        val simpleSQLiteQuery = viewModel.stringToSimpleSQLiteQuery("Allée des Lilas")
+        assertEquals("Allée des Lilas", simpleSQLiteQuery.sql)
     }
 
 }

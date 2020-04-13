@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ListView -->
+    <dimen name="list_photo_height">210dp</dimen>
+    <dimen name="list_photo_width">170dp</dimen>
+    <dimen name="list_type_txt_size">30sp</dimen>
+    <dimen name="list_location_txt_size">20sp</dimen>
+    <!-- HomeIcon Size -->
+    <dimen name="home_icon_height">350dp</dimen>
+    <dimen name="home_icon_width">350dp</dimen>
+    <dimen name="home_txt_size">20sp</dimen>
+    <dimen name="home_progress_size">30dp</dimen>
+    <dimen name="width_listfrag_holder_land">300dp</dimen>
+    <!-- Photos from Details -->
+    <dimen name="photos_detail_width">200dp</dimen>
+    <dimen name="photos_detail_heigth">200dp</dimen>
+    <dimen name="title_window_add_property">35sp</dimen>
+    <dimen name="subtitle_edit">25sp</dimen>
+    <dimen name="width_photo_preview_edit">150dp</dimen>
+    <dimen name="height_photo_preview_edit">100dp</dimen>
+</resources>

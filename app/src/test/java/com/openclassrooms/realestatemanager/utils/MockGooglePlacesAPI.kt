@@ -1,9 +1,9 @@
 package com.openclassrooms.realestatemanager.utils
 
-import com.openclassrooms.realestatemanager.property.model.geocode.Geocode
-import com.openclassrooms.realestatemanager.property.model.geocode.Geometry
-import com.openclassrooms.realestatemanager.property.model.geocode.Location
-import com.openclassrooms.realestatemanager.property.model.geocode.Result
+import com.openclassrooms.realestatemanager.show.geocode_model.Geocode
+import com.openclassrooms.realestatemanager.show.geocode_model.Geometry
+import com.openclassrooms.realestatemanager.show.geocode_model.Location
+import com.openclassrooms.realestatemanager.show.geocode_model.Result
 import retrofit2.Call
 import retrofit2.mock.BehaviorDelegate
 
@@ -21,7 +21,7 @@ class MockGooglePlacesAPI(private val delegate: BehaviorDelegate<GooglePlacesAPI
         return delegate.returningResponse(geocode).getLatLng("24 allée des Mûriers 69450 St-Cyr-Mont-d'Or FRANCE", "FR", "123456789")
     }
 
-    private fun createResult(): Result{
+    private fun createResult(): Result {
 
         val result = Result()
         // Create location

@@ -30,6 +30,7 @@ import kotlinx.coroutines.withContext
 
 class MainViewModel(private val authUI: AuthUI, private val context: Context, private val propertyDataRepository: PropertyDataRepository, private val addressDataRepository: AddressDataRepository, private val firestoreDataRepository: FirestoreDataRepository, private val userDataRepository: UserDataRepository) : ViewModel() {
 
+    val progressUploadLiveData = MutableLiveData<Int>()
     val propertiesLiveData = MutableLiveData<List<Property>>()
     val addressLiveData = MutableLiveData<Address>()
     val userLiveData = MutableLiveData<User>()
@@ -64,10 +65,15 @@ class MainViewModel(private val authUI: AuthUI, private val context: Context, pr
     //-- UPDATE DATABASE --//
     fun updateDatabase(){
         val list = propertiesLiveData.value
+        progressUploadLiveData.value = 0
         viewModelScope.launch(Dispatchers.IO) {
             firestoreDataRepository.updateDatabase(list, userDataRepository.getAllUsers())
+            withContext(Dispatchers.Main){
+                progressUploadLiveData.value = 100
+            }
         }
     }
+
 
     //-- LOG OUT --//
     fun logOut(){

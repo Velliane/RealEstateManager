@@ -7,7 +7,7 @@ open class UserDataRepository(private val userDao: UserDao) {
         return userDao.getAllUsers()
     }
 
-    fun addUser(user: User): Long{
+    suspend fun addUser(user: User): Long{
         return userDao.addUser(user)
     }
 

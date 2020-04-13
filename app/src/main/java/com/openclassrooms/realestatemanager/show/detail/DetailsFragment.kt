@@ -3,7 +3,6 @@ package com.openclassrooms.realestatemanager.show.detail
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.net.Uri
 import android.os.Bundle
 import android.view.*
 import android.widget.ImageView
@@ -13,17 +12,17 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.google.android.material.snackbar.Snackbar
 import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.add_edit.EditAddActivity
 import com.openclassrooms.realestatemanager.add_edit.Address
 import com.openclassrooms.realestatemanager.add_edit.Photo
 import com.openclassrooms.realestatemanager.add_edit.Property
-import com.openclassrooms.realestatemanager.property.model.geocode.Geocode
+import com.openclassrooms.realestatemanager.show.geocode_model.Geocode
 import com.openclassrooms.realestatemanager.show.BaseFragment
 import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.Injection
 import com.openclassrooms.realestatemanager.utils.setAddressToString
-import kotlinx.android.synthetic.main.activity_edit_add.*
 
 /**
  * Show the information of the property selected in the ListFragment
@@ -117,9 +116,13 @@ class DetailsFragment : BaseFragment(), PhotosAdapter.OnItemClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.toolbar_menu_modify -> {
-                val intent = Intent(context, EditAddActivity::class.java)
-                intent.putExtra(Constants.PROPERTY_ID, propertyId)
-                startActivity(intent)
+                if(propertyId == "") {
+                    Snackbar.make(container, "Please select a place to modify", Snackbar.LENGTH_SHORT).show()
+                }else {
+                    val intent = Intent(context, EditAddActivity::class.java)
+                    intent.putExtra(Constants.PROPERTY_ID, propertyId)
+                    startActivity(intent)
+                }
             }
         }
         return super.onOptionsItemSelected(item)

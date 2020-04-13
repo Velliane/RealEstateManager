@@ -41,31 +41,6 @@
 
     </LinearLayout>
 
-<!--    <LinearLayout-->
-<!--        android:id="@+id/price"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_margin="5dp"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@id/type">-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/search_price"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_margin="10dp"-->
-<!--            android:textSize="18sp"-->
-<!--            android:text="@string/search_title_price"/>-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/search_spinner_price"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginEnd="10dp"-->
-<!--            android:text="@string/search_preview_rooms"/>-->
-
-<!--    </LinearLayout>-->
 
         <TextView
             android:id="@+id/search_price"
@@ -105,8 +80,8 @@
             app:left_thumb_color_pressed="@color/thumb_pressed"
             app:right_thumb_color_pressed="@color/thumb_pressed"
             app:min_value="0"
-            app:max_value="2000000"
-            app:steps="50000"/>
+            app:max_value="100000000"
+            app:steps="500000"/>
 
 
         <TextView

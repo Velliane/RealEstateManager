@@ -1,15 +1,13 @@
 package com.openclassrooms.realestatemanager.show.map
 
 import android.view.View
-import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.*
 import androidx.sqlite.db.SimpleSQLiteQuery
-import com.google.android.material.button.MaterialButton
 import com.openclassrooms.realestatemanager.add_edit.Address
 import com.openclassrooms.realestatemanager.add_edit.Property
 import com.openclassrooms.realestatemanager.data.AddressDataRepository
 import com.openclassrooms.realestatemanager.data.PropertyDataRepository
-import com.openclassrooms.realestatemanager.property.model.geocode.Geocode
+import com.openclassrooms.realestatemanager.show.geocode_model.Geocode
 import com.openclassrooms.realestatemanager.show.geocode_model.GeocodeRepository
 import com.openclassrooms.realestatemanager.utils.setAddressToString
 import kotlinx.coroutines.Dispatchers

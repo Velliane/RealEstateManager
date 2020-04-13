@@ -9,6 +9,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.openclassrooms.realestatemanager.login.User
 import com.openclassrooms.realestatemanager.login.UserDataRepository
 import com.openclassrooms.realestatemanager.login.UserViewModel
+import com.openclassrooms.realestatemanager.utils.TestHelper
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
@@ -45,7 +46,7 @@ class UserViewModelTest {
     @Before
     fun setUp() = runBlockingTest {
         MockitoAnnotations.initMocks(this)
-        FirebaseApp.initializeApp(context)
+        TestHelper.initialize()
     }
 
     @Test

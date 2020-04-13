@@ -68,7 +68,7 @@ class DetailsViewModelTest {
 
     @Test
     fun getPropertyFromDatabaseById() = runBlockingTest {
-        val property = Property("001", "025", "House", 250500, 125, 4, 2, 2, "Big house", true, "RESTAURANT", "12/03/2020", null, "2020-03-12T12:20:25")
+        val property = Property("001", "025", "House", 0,250500, 125, 4, 2, 2, "Big house", true, "RESTAURANT", "12/03/2020", null, "2020-03-12T12:20:25")
         val mockPropertyDataRepository = mock<PropertyDataRepository> {
             onBlocking { getPropertyFromId("001") } doReturn property
         }

@@ -1,17 +1,24 @@
 package com.openclassrooms.realestatemanager.show
 
+import android.Manifest
+import android.app.Dialog
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -47,7 +54,6 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
 
     /** Boolean isTablet */
     private var isLandscape: Boolean = false
-    private var searchActivated: Boolean = false
     private var querySearch: String? = ""
 
     /**Bottom Navigation View */
@@ -72,8 +78,13 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
         isLandscape = getScreenOrientation(resources.configuration.orientation)
         //-- Get Shared Preferences --//
         sharedPreferences = getSharedPreferences(Constants.SHARED_PREFERENCES, Context.MODE_PRIVATE)
-        //-- Configuration --//
         configureViewModel()
+        if(checkExternalStoragePermissions() && Utils.isInternetAvailable(this)) {
+            mainViewModel.updateDatabase()
+            showUploadingProgress()
+        }
+
+        //-- Configuration --//
         bindViews()
         configureDrawerLayout()
         if (savedInstanceState == null) {
@@ -81,10 +92,8 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
             bottomNavigationView.selectedItemId = R.id.action_list_view
             sharedPreferences.edit().putBoolean("Search activated", false).apply()
         }
-        mainViewModel.updateDatabase()
         configureDrawer()
         showFragments(savedInstanceState)
-        searchActivated = sharedPreferences.getBoolean("Search activated", false)
     }
 
 
@@ -93,21 +102,11 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
         when (item.itemId) {
             //-- Bottom navigation --//
             R.id.action_list_view -> {
-                if(searchActivated){
-                    val fragment = supportFragmentManager.findFragmentById(R.id.container_fragment_list)
-                    (fragment as? ListFragment)?.refreshQuery(querySearch!!)
-                }else{
-                    showListFragment()
-                }
+                showListFragment()
                 return true
             }
             R.id.action_map_view -> {
-                if(searchActivated){
-                    val mapFragment = supportFragmentManager.findFragmentById(R.id.map_fragment)
-                    (mapFragment as? MapViewFragment)?.refreshQuery(querySearch!!)
-                }else {
-                    showMapFragment()
-                }
+                showMapFragment()
                 return true
             }
             //-- Drawer --//
@@ -126,10 +125,13 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        querySearch = data!!.getStringExtra(Constants.SEARCH_QUERY)
-        sharedPreferences.edit().putBoolean("Search activated", true).apply()
-        val fragment = supportFragmentManager.findFragmentById(R.id.container_fragment_list)
-        (fragment as? ListFragment)?.refreshQuery(querySearch!!)
+        if(data == null){
+            return
+        }else {
+            querySearch = data.getStringExtra(Constants.SEARCH_QUERY)
+            val fragment = supportFragmentManager.findFragmentById(R.id.container_fragment_list)
+            (fragment as? ListFragment)?.refreshQuery(querySearch!!)
+        }
     }
 
     //-- TOOLBAR MENU --//
@@ -270,5 +272,30 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
 
     override fun onItemClicked(id: String, position: Int) {
         sharedPreferences.edit().putString(Constants.PREF_ID_PROPERTY, id).apply()
+    }
+
+    private fun checkExternalStoragePermissions(): Boolean {
+        return if(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+            true
+        }else{ //-- Request permissions --//
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), Constants.RC_PERMISSION_LOCATION)
+            false
+        }
+    }
+
+    /**
+     * Show Dialog with ProgressBar while uploading image in Firebase Storage
+     */
+    private fun showUploadingProgress(){
+        val dialog = ProgressDialog(this)
+        dialog.setTitle("Mise à jour de la base de données")
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+        dialog.show()
+        mainViewModel.progressUploadLiveData.observe(this, Observer {
+            dialog.progress = it
+            if(it == 100){
+                dialog.dismiss()
+            }
+        })
     }
 }

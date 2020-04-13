@@ -33,7 +33,7 @@ class EditDataViewModel(private val firabaseAuth: FirebaseAuth, private val cont
     var propertyLiveData = MutableLiveData<Property>()
     var addressLiveData = MutableLiveData<Address>()
     val userListLiveData = MutableLiveData<List<User>>()
-    val listPhotosLiveData = MutableLiveData<List<Photo>>()
+    val listPhotosLiveData = MutableLiveData<ArrayList<Photo>>()
     val currentIdPropertySelectedLiveData = MutableLiveData<String>()
     val photosLiveData = MediatorLiveData<List<Photo>>()
 
@@ -157,10 +157,11 @@ class EditDataViewModel(private val firabaseAuth: FirebaseAuth, private val cont
         listPhotosLiveData.value?.let {
             for (image in it) {
                 val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, Uri.parse(image.uri))
-                photoDataRepository.saveImageToExternalStorage(bitmap, id_property, image.description)
-                photoDataRepository.saveImageToFirebase(image.uri!!, id_property, image.description)
+                if(bitmap != null) {
+                    photoDataRepository.saveImageToExternalStorage(bitmap, id_property, image.description)
+                    photoDataRepository.saveImageToFirebase(image.uri!!, id_property, image.description)
+                }
             }
-
         }
 
     }
@@ -195,5 +196,9 @@ class EditDataViewModel(private val firabaseAuth: FirebaseAuth, private val cont
     fun deletePhotos(id_property: String, photo: Photo) {
         photoDataRepository.deletePhotos(id_property, photo)
         getListOfPhotos(id_property)
+    }
+
+    fun addPhotoToList(photo: Photo) {
+        listPhotosLiveData.value?.add(photo)
     }
 }

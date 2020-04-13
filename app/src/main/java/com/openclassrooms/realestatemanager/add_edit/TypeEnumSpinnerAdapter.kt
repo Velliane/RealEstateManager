@@ -27,6 +27,7 @@ class TypeEnumSpinnerAdapter(context: Context, list: List<TypeEnum>) : ArrayAdap
         val type = getItem(position)
 
         text.text = context.getText(type!!.res)
+        text.tag = type.id
 
         return view
     }

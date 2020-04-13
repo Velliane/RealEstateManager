@@ -103,7 +103,7 @@ class ListViewModel(private val context: Context, private val propertyDataReposi
 
     }
 
-    private fun stringToSimpleSQLiteQuery(query: String): SimpleSQLiteQuery {
+    fun stringToSimpleSQLiteQuery(query: String): SimpleSQLiteQuery {
         return SimpleSQLiteQuery(query)
     }
 
