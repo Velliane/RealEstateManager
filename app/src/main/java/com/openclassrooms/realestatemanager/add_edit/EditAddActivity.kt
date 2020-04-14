@@ -33,6 +33,7 @@ import com.hootsuite.nachos.tokenizer.ChipTokenizer
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.openclassrooms.realestatemanager.BaseActivity
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.login.User
 import com.openclassrooms.realestatemanager.search.NearbyEnum
 import com.openclassrooms.realestatemanager.search.TypeEnum
 import com.openclassrooms.realestatemanager.show.MainActivity
@@ -153,7 +154,11 @@ class EditAddActivity : BaseActivity(), View.OnClickListener, PhotosAdapter.OnIt
                 //-- Save property in database and Firestore --//
                 if (checkRequiredInfo()) {
                     val type = spinnerType.selectedItem.toString().toUpperCase(Locale.ROOT)
-                    val property = Property(propertyId, getCurrentUser().uid, type , TypeEnum.valueOf(type).ordinal,
+                    var agent: String = ""
+                    editDataViewModel.userListLiveData.observe(this, Observer {
+                        agent = it[spinnerAgent.selectedItemPosition].userId
+                    })
+                    val property = Property(propertyId, agent, type , TypeEnum.valueOf(type).ordinal,
                             price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(),
                             numberBedrooms.text.toString().toInt(), numberBathrooms.text.toString().toInt(), description.text.toString(),
                             inSaleRadioBtn.isChecked, editDataViewModel.getNearby(nearbyNachos.chipValues), inSaleDate.text.toString(), soldDate.text.toString(), parseLocalDateTimeToString(LocalDateTime.now()))

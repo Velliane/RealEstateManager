@@ -24,9 +24,9 @@ class AgentSpinnerAdapter (context: Context, list: List<User>) : ArrayAdapter<Us
         val view = LayoutInflater.from(parent.context).inflate(R.layout.spinner_item, parent, false)
 
         val txtView = view.findViewById<TextView>(R.id.spinner_item_name)
-        val userName = getItem(position)!!.name
+        val userName = getItem(position)!!
 
-        txtView.text = userName
+        txtView.text = userName.name
         return view
     }
 }

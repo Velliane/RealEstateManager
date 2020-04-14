@@ -52,7 +52,7 @@ class SearchViewModelTest {
                 "WHERE price >= '150000' AND price <= '350000' " +
                 "AND rooms_nbr >= '1' AND rooms_nbr <= '8' " +
                 "AND bed_nbr >= '2' AND bed_nbr <= '3'"
-        assertEquals(queryExpected, viewModel.constructQueryResearch(150000, 350000, emptyList(), emptyList(), emptyList(), 1, 8, 2, 3))
+        assertEquals(queryExpected, viewModel.constructQueryResearch(agent, 150000, 350000, emptyList(), emptyList(), emptyList(), 1, 8, 2, 3))
     }
 
     @Test
@@ -70,7 +70,7 @@ class SearchViewModelTest {
                 "AND UPPER(Address.street) LIKE '%LYON%' OR UPPER(Address.street) LIKE '%PARIS%' " +
                 "OR UPPER(Address.city) LIKE '%LYON%' OR UPPER(Address.city) LIKE '%PARIS%' " +
                 "OR UPPER(Address.country) LIKE '%LYON%' OR UPPER(Address.country) LIKE '%PARIS%' "
-        assertEquals(queryExpected, viewModel.constructQueryResearch(300000, 400000, arrayListOf("House"), arrayListOf("Lyon", "Paris"), emptyList(), 3, 4, 2, 3))
+        assertEquals(queryExpected, viewModel.constructQueryResearch(agent, 300000, 400000, arrayListOf("House"), arrayListOf("Lyon", "Paris"), emptyList(), 3, 4, 2, 3))
     }
 
     @Test
@@ -82,7 +82,7 @@ class SearchViewModelTest {
                 "AND price >= '300000' AND price <= '400000' " +
                 "AND rooms_nbr >= '3' AND rooms_nbr <= '4' " +
                 "AND bed_nbr >= '2' AND bed_nbr <= '3'"
-        assertEquals(queryExpected, viewModel.constructQueryResearch(300000, 400000, arrayListOf("House", "Loft"), emptyList(), emptyList(), 3, 4, 2, 3))
+        assertEquals(queryExpected, viewModel.constructQueryResearch(agent, 300000, 400000, arrayListOf("House", "Loft"), emptyList(), emptyList(), 3, 4, 2, 3))
     }
 
     @Test
@@ -96,7 +96,7 @@ class SearchViewModelTest {
                 "AND rooms_nbr >= '3' AND rooms_nbr <= '4' " +
                 "AND bed_nbr >= '2' AND bed_nbr <= '3' " +
                 "AND nearby IN ('BUS','RESTAURANT')"
-        assertEquals(queryExpected, viewModel.constructQueryResearch(300000, 400000, arrayListOf("House"), emptyList(), arrayListOf("BUS", "RESTAURANT"), 3, 4, 2, 3))
+        assertEquals(queryExpected, viewModel.constructQueryResearch(agent, 300000, 400000, arrayListOf("House"), emptyList(), arrayListOf("BUS", "RESTAURANT"), 3, 4, 2, 3))
     }
 
     @Test
@@ -110,7 +110,7 @@ class SearchViewModelTest {
                 "AND rooms_nbr >= '3' AND rooms_nbr <= '4' " +
                 "AND bed_nbr >= '2' AND bed_nbr <= '3' " +
                 "AND nearby LIKE 'UNIVERSITY'"
-        assertEquals(queryExpected, viewModel.constructQueryResearch(300000, 400000, emptyList(), emptyList(), arrayListOf("UNIVERSITY"), 3, 4, 2, 3))
+        assertEquals(queryExpected, viewModel.constructQueryResearch(agent, 300000, 400000, emptyList(), emptyList(), arrayListOf("UNIVERSITY"), 3, 4, 2, 3))
     }
 
     @Test

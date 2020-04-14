@@ -71,10 +71,10 @@ class ListPropertyAdapter(private val listener: OnItemClickListener, private val
             val format = NumberFormat.getCurrencyInstance()
             format.maximumFractionDigits = 0
             if(currency == 0){
-                format.currency = Currency.getInstance("EUR")
+                format.currency = Currency.getInstance("USD")
                 price.text = format.format(property.price.toInt())
             }else{
-                format.currency = Currency.getInstance("USD")
+                format.currency = Currency.getInstance("EUR")
                 val priceInDollar = Utils.convertEuroToDollar(property.price.toInt()).toString()
                 price.text = format.format(priceInDollar.toInt())
             }

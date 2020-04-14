@@ -51,7 +51,7 @@ class ViewModelFactory(private val context: Context, private val userDataReposit
                 SettingsViewModel(context) as T
             }
             modelClass.isAssignableFrom(SearchViewModel::class.java) -> {
-                SearchViewModel(context) as T
+                SearchViewModel(context, userDataRepository) as T
             }
             else -> throw IllegalArgumentException("Unknown ViewModel")
         }

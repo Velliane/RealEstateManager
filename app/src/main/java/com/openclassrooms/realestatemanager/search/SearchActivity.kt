@@ -3,6 +3,7 @@ package com.openclassrooms.realestatemanager.search
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -11,12 +12,12 @@ import com.crystal.crystalrangeseekbar.widgets.CrystalRangeSeekbar
 import com.hootsuite.nachos.NachoTextView
 import com.hootsuite.nachos.terminator.ChipTerminatorHandler
 import com.openclassrooms.realestatemanager.R
+import com.openclassrooms.realestatemanager.add_edit.AgentSpinnerAdapter
 import com.openclassrooms.realestatemanager.add_edit.NearbyAdapter
 import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.Injection
 import com.openclassrooms.realestatemanager.utils.getNearbyList
 import kotlinx.android.synthetic.main.activity_search.*
-import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.*
 
@@ -32,6 +33,7 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var bedroomsPreview: TextView
     private lateinit var rangePrice: CrystalRangeSeekbar
     private lateinit var pricePreview: TextView
+    private lateinit var spinnerAgent: Spinner
 
     /** ViewModel */
     private lateinit var searchViewModel: SearchViewModel
@@ -58,6 +60,7 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun bindViews() {
+        spinnerAgent = findViewById(R.id.agent_spinner)
         //-- Nachos --//
         nachoType = findViewById(R.id.search_spinner_type)
         nachoType.setAdapter(ArrayListStringAdapter(this, searchViewModel.getTypesResList()))
@@ -72,6 +75,12 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
         bedroomsPreview = findViewById(R.id.bedrooms_view)
         rangePrice = findViewById(R.id.search_price_seek_bar)
         pricePreview = findViewById(R.id.price_preview)
+
+        searchViewModel.getAllUser()
+        searchViewModel.userListLiveData.observe(this, androidx.lifecycle.Observer {
+            val adapterAgent = AgentSpinnerAdapter(this, it)
+            spinnerAgent.adapter = adapterAgent
+        })
     }
 
     private fun manageRangeSeekBar() {
@@ -92,7 +101,7 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
             priceMaxValue = maxValue.toInt()
             val format = NumberFormat.getCurrencyInstance()
             format.maximumFractionDigits = 0
-            format.currency = Currency.getInstance("EUR")
+            format.currency = Currency.getInstance("USD")
             val min = format.format(minValue)
             val max = format.format(maxValue)
             val text = getString(R.string.search_preview_rooms, min, max)
@@ -102,7 +111,11 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
 
     override fun onClick(item: View?) {
         if (item == search_button) {
-            val query = searchViewModel.constructQueryResearch(priceMinValue, priceMaxValue, nachoType.chipValues, nachoLocation.chipValues, nachoNearby.chipValues, roomsMinValue, roomsMaxValue, bedroomsMinValue, bedroomsMaxValue)
+            var agent = ""
+            searchViewModel.userListLiveData.observe(this, androidx.lifecycle.Observer {
+                agent = it[spinnerAgent.selectedItemPosition].userId
+            })
+            val query = searchViewModel.constructQueryResearch(agent, priceMinValue, priceMaxValue, nachoType.chipValues, nachoLocation.chipValues, nachoNearby.chipValues, roomsMinValue, roomsMaxValue, bedroomsMinValue, bedroomsMaxValue)
             val intent = Intent()
             intent.putExtra(Constants.SEARCH_QUERY, query)
             setResult(Constants.RC_SEARCH, intent)

@@ -221,6 +221,33 @@
 
     </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/agent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/nearby"
+            app:layout_constraintBottom_toTopOf="@id/search_button"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <TextView
+                android:id="@+id/agent_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="@string/manage_by_edit"
+                android:textSize="18sp"/>
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/agent_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:layout_margin="10dp" />
+
+        </LinearLayout>
+
     <com.google.android.material.button.MaterialButton
         android:id="@+id/search_button"
         android:layout_width="wrap_content"

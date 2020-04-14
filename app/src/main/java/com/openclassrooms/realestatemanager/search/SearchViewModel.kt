@@ -1,18 +1,26 @@
 package com.openclassrooms.realestatemanager.search
 
 import android.content.Context
-import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.openclassrooms.realestatemanager.login.User
+import com.openclassrooms.realestatemanager.login.UserDataRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.collections.ArrayList
 
-class SearchViewModel(private val context: Context): ViewModel() {
+class SearchViewModel(private val context: Context, private val userDataRepository: UserDataRepository): ViewModel() {
+
+    val userListLiveData = MutableLiveData<List<User>>()
 
     /**
      * Construct query with all filters for research
      * @return a string query
      */
-    fun constructQueryResearch(priceMinValue: Int, priceMaxValue: Int, types: List<String>, locations: List<String>, nearbies: List<String>, roomsMinValue: Int, roomsMaxValue: Int, bedroomsMinValue: Int, bedroomsMaxValue: Int): String {
+    fun constructQueryResearch(agent: String, priceMinValue: Int, priceMaxValue: Int, types: List<String>, locations: List<String>, nearbies: List<String>, roomsMinValue: Int, roomsMaxValue: Int, bedroomsMinValue: Int, bedroomsMaxValue: Int): String {
 
         var query = String()
         query += "SELECT * FROM Property"
@@ -59,6 +67,11 @@ class SearchViewModel(private val context: Context): ViewModel() {
                 query += " nearby IN ("
                 query += constructQueryFromList(nearbies)
             }
+        }
+
+        if(agent != ""){
+            query += ifContains(contains)
+            query += " agent LIKE '$agent'"
         }
 
         return query
@@ -112,6 +125,15 @@ class SearchViewModel(private val context: Context): ViewModel() {
             list.add(context.getString(type.res))
         }
         return list
+    }
+
+    fun getAllUser() {
+        viewModelScope.launch {
+            val list = userDataRepository.getAllUsers()
+            withContext(Dispatchers.Main) {
+                userListLiveData.value = list
+            }
+        }
     }
 
 }

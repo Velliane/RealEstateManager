@@ -14,7 +14,7 @@
 
     <!-- Property -->
     <string name="type">Type</string>
-    <string name="price">Prix</string>
+    <string name="price">Prix en dollar</string>
     <string name="surface">Surface</string>
     <string name="number_of_rooms">Nombre de pièces</string>
     <string name="description">Description</string>
@@ -52,7 +52,7 @@
     <string name="duration_in_year">Durée(en année)</string>
     <string name="rate_in">Taux(en %)</string>
     <string name="calculate">Calculer</string>
-    <string name="result">Your monthly payement is %1$s</string>
+    <string name="result">Vos mensualités sont de %1$s</string>
     <string name="on_sale">En vente</string>
     <string name="sold">Vendu</string>
     <string name="connexion_btn">Connexion</string>

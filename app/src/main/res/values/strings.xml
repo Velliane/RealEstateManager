@@ -13,7 +13,7 @@
 
     <!-- Property -->
     <string name="type">Type</string>
-    <string name="price">Price</string>
+    <string name="price">Price in USD</string>
     <string name="surface">Surface</string>
     <string name="number_of_rooms">Number of rooms</string>
     <string name="description">Description</string>
