@@ -47,25 +47,19 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
 
     /** Toolbar*/
     private lateinit var toolbar: Toolbar
-
     /** Drawer */
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var drawerMenu: NavigationView
-
     /** Boolean isTablet */
     private var isLandscape: Boolean = false
     private var querySearch: String? = ""
-
     /**Bottom Navigation View */
     private lateinit var bottomNavigationView: BottomNavigationView
-
     /** ViewModel */
     private lateinit var mainViewModel: MainViewModel
-
     /** Header Views */
     private lateinit var photo: ImageView
     private lateinit var name: TextView
-
     /** Shared Preferences */
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -90,7 +84,6 @@ class MainActivity : BaseActivity(), ListPropertyAdapter.OnItemClickListener, Bo
         if (savedInstanceState == null) {
             sharedPreferences.edit().putString(Constants.PREF_ID_PROPERTY, "").apply()
             bottomNavigationView.selectedItemId = R.id.action_list_view
-            sharedPreferences.edit().putBoolean("Search activated", false).apply()
         }
         configureDrawer()
         showFragments(savedInstanceState)

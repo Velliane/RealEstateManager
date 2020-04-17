@@ -1,4 +1,7 @@
-package com.openclassrooms.realestatemanager.login
+package com.openclassrooms.realestatemanager.data
+
+import com.openclassrooms.realestatemanager.data.database.UserDao
+import com.openclassrooms.realestatemanager.login.User
 
 
 open class UserDataRepository(private val userDao: UserDao) {
@@ -7,7 +10,7 @@ open class UserDataRepository(private val userDao: UserDao) {
         return userDao.getAllUsers()
     }
 
-    suspend fun addUser(user: User): Long{
+    fun addUser(user: User): Long{
         return userDao.addUser(user)
     }
 
@@ -15,7 +18,7 @@ open class UserDataRepository(private val userDao: UserDao) {
         return userDao.updateUser(user)
     }
 
-    open suspend fun getUserById(userId: String): User{
+    open suspend fun getUserById(userId: String): User {
         return userDao.getUserById(userId)
     }
 }

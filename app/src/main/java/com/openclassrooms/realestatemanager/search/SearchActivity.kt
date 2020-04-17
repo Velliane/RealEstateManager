@@ -1,6 +1,7 @@
 package com.openclassrooms.realestatemanager.search
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.Spinner
@@ -24,6 +25,7 @@ import java.util.*
 
 class SearchActivity : AppCompatActivity(), View.OnClickListener {
 
+    /** Views */
     private lateinit var nachoType: NachoTextView
     private lateinit var nachoLocation: NachoTextView
     private lateinit var nachoNearby: NachoTextView
@@ -34,7 +36,6 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var rangePrice: CrystalRangeSeekbar
     private lateinit var pricePreview: TextView
     private lateinit var spinnerAgent: Spinner
-
     /** ViewModel */
     private lateinit var searchViewModel: SearchViewModel
     /** Default value */
@@ -51,6 +52,8 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.title = getString(R.string.search_button)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
         //-- Configure ViewModel --//
         val searchViewModelFactory = Injection.provideViewModelFactory(this)
         searchViewModel = ViewModelProviders.of(this, searchViewModelFactory).get(SearchViewModel::class.java)
@@ -113,6 +116,7 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
         if (item == search_button) {
             var agent = ""
             searchViewModel.userListLiveData.observe(this, androidx.lifecycle.Observer {
+
                 agent = it[spinnerAgent.selectedItemPosition].userId
             })
             val query = searchViewModel.constructQueryResearch(agent, priceMinValue, priceMaxValue, nachoType.chipValues, nachoLocation.chipValues, nachoNearby.chipValues, roomsMinValue, roomsMaxValue, bedroomsMinValue, bedroomsMaxValue)
@@ -121,6 +125,11 @@ class SearchActivity : AppCompatActivity(), View.OnClickListener {
             setResult(Constants.RC_SEARCH, intent)
             finish()
         }
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        onBackPressed()
+        return true
     }
 
 }

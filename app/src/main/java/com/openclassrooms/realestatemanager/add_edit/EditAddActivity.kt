@@ -10,7 +10,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -21,7 +20,6 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -29,21 +27,17 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.hootsuite.nachos.NachoTextView
 import com.hootsuite.nachos.chip.ChipInfo
-import com.hootsuite.nachos.tokenizer.ChipTokenizer
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.openclassrooms.realestatemanager.BaseActivity
 import com.openclassrooms.realestatemanager.R
-import com.openclassrooms.realestatemanager.login.User
 import com.openclassrooms.realestatemanager.search.NearbyEnum
 import com.openclassrooms.realestatemanager.search.TypeEnum
 import com.openclassrooms.realestatemanager.show.MainActivity
 import com.openclassrooms.realestatemanager.show.detail.PhotosAdapter
-import com.openclassrooms.realestatemanager.utils.Constants
-import com.openclassrooms.realestatemanager.utils.Injection
-import com.openclassrooms.realestatemanager.utils.getNearbyList
-import com.openclassrooms.realestatemanager.utils.parseLocalDateTimeToString
+import com.openclassrooms.realestatemanager.utils.*
 import kotlinx.android.synthetic.main.activity_edit_add.*
 import kotlinx.android.synthetic.main.custom_address.*
+import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import pub.devrel.easypermissions.EasyPermissions
 import java.io.*
@@ -84,7 +78,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener, PhotosAdapter.OnIt
     private lateinit var inSaleDate: TextView
     private lateinit var soldDate: TextView
     private lateinit var chipGroup: ChipGroup
-
+    /** Adapter for TypeSpinner */
     private lateinit var adapterType: TypeEnumSpinnerAdapter
     /** TextInputLayout */
     private lateinit var priceContainer: TextInputLayout
@@ -104,6 +98,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener, PhotosAdapter.OnIt
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AndroidThreeTen.init(this)
         setContentView(R.layout.activity_edit_add)
         setFinishOnTouchOutside(false)
         AndroidThreeTen.init(this)
@@ -121,6 +116,9 @@ class EditAddActivity : BaseActivity(), View.OnClickListener, PhotosAdapter.OnIt
         propertyId = intent.getStringExtra(Constants.PROPERTY_ID)!!
         if (propertyId != "") {
             getDataFromDatabase(propertyId)
+        }else{
+            inSaleDate.text = Utils.getTodayDate(LocalDate.now())
+            inSaleRadioBtn.isChecked = true
         }
     }
 
@@ -129,13 +127,9 @@ class EditAddActivity : BaseActivity(), View.OnClickListener, PhotosAdapter.OnIt
      * @param id The id of the property
      */
     private fun getDataFromDatabase(id: String) {
-        editDataViewModel.getPropertyFromId(id)
-        editDataViewModel.propertyLiveData.observe(this, Observer {
+        editDataViewModel.getPropertyToEdit(id)
+        editDataViewModel.propertyToEditLiveData.observe(this, Observer {
             updateViewsWithRoomData(it)
-        })
-        editDataViewModel.getAddressOfOneProperty(id)
-        editDataViewModel.addressLiveData.observe(this, Observer {
-            updateAddressWithRoomData(it)
         })
         editDataViewModel.getAllPhotos(id)
         editDataViewModel.photosLiveData.observe(this, Observer {
@@ -152,26 +146,32 @@ class EditAddActivity : BaseActivity(), View.OnClickListener, PhotosAdapter.OnIt
         when (v) {
             saveBtn -> {
                 //-- Save property in database and Firestore --//
+                //-- Check required info --//
                 if (checkRequiredInfo()) {
                     val type = spinnerType.selectedItem.toString().toUpperCase(Locale.ROOT)
-                    var agent: String = ""
+                    var agent = ""
                     editDataViewModel.userListLiveData.observe(this, Observer {
                         agent = it[spinnerAgent.selectedItemPosition].userId
                     })
-                    val property = Property(propertyId, agent, type , TypeEnum.valueOf(type).ordinal,
-                            price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(),
-                            numberBedrooms.text.toString().toInt(), numberBathrooms.text.toString().toInt(), description.text.toString(),
-                            inSaleRadioBtn.isChecked, editDataViewModel.getNearby(nearbyNachos.chipValues), inSaleDate.text.toString(), soldDate.text.toString(), parseLocalDateTimeToString(LocalDateTime.now()))
+                    //-- Create property --//
+                    val property = Property(propertyId, agent, type, TypeEnum.valueOf(type).ordinal, price.text.toString().toInt(), surface.text.toString().toInt(), rooms.text.toString().toInt(),
+                            numberBedrooms.text.toString().toInt(), numberBathrooms.text.toString().toInt(), description.text.toString(), inSaleRadioBtn.isChecked, editDataViewModel.getNearby(nearbyNachos.chipValues),
+                            inSaleDate.text.toString(), soldDate.text.toString(), parseLocalDateTimeToString(LocalDateTime.now()))
+                    //-- Save it --//
                     editDataViewModel.save(property.id_property, property, number.text.toString().toInt(),
                             street.text.toString(), zipCode.text.toString(), city.text.toString(),
                             country.text.toString())
+                    //-- Return to MainActivity --//
                     startActivity(Intent(this, MainActivity::class.java))
                 } else {
+                    //-- Show error message if required info are not found --//
+                    if (imageList.isEmpty()) {
+                        Snackbar.make(layout, getString(R.string.add_edit_error_select_one_image), Snackbar.LENGTH_SHORT).show()
+                    }
                     priceContainer.error = getString(R.string.cant_be_empty)
                     custom_surface_container.error = getString(R.string.cant_be_empty)
                     custom_rooms_container.error = getString(R.string.cant_be_empty)
                     address_country_container.error = getString(R.string.cant_be_empty)
-                    custom_type_container.error = getString(R.string.cant_be_empty)
                 }
             }
             addPhotoImg -> {
@@ -180,7 +180,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener, PhotosAdapter.OnIt
                     EasyPermissions.requestPermissions(this, "Permission", Constants.RC_PERMISSION_FILES_STORAGE, Constants.PERMS)
                     return
                 }
-                photoOriginDialog()
+                openphotoOriginDialog()
             }
             soldRadioBtn -> {
                 soldRadioBtn.isChecked = true
@@ -197,9 +197,13 @@ class EditAddActivity : BaseActivity(), View.OnClickListener, PhotosAdapter.OnIt
     }
 
     private fun checkRequiredInfo(): Boolean {
-        return price.text.toString() != "" && surface.text.toString() != "" && rooms.text.toString() != "" && country.text.toString() != "" && spinnerType.selectedItem != null
+        return price.text.toString() != "" && surface.text.toString() != "" && rooms.text.toString() != "" && country.text.toString() != "" && spinnerType.selectedItem != null && imageList.isNotEmpty()
     }
 
+    /**
+     * Open DatePickerDialog to let user choose a date for
+     * createdDate and soldDate
+     */
     private fun getDateFromDatePicker(view: TextView) {
         val calendar = Calendar.getInstance()
         val actualYear = calendar.get(Calendar.YEAR)
@@ -214,25 +218,38 @@ class EditAddActivity : BaseActivity(), View.OnClickListener, PhotosAdapter.OnIt
         picker.show()
     }
 
-    private fun photoOriginDialog() {
+
+    //-- MANAGE IMAGE --//
+    /**
+     * Open an AlertDialog to ask user if he want to add photo from Gallery or from Camera
+     */
+    private fun openphotoOriginDialog() {
         val options = arrayOf<CharSequence>(getString(R.string.add_photo_from_camera), getString(R.string.add_photo_from_gallery), getString(R.string.add_photo_cancel))
         val builder = AlertDialog.Builder(this)
         builder.setTitle(getString(R.string.add_photo_dialog_title))
         builder.setItems(options) { dialog, item ->
-            if (options[item] == getString(R.string.add_photo_from_camera)) {
-                val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                startActivityForResult(intent, Constants.RC_CAMERA)
-            } else if (options[item] == getString(R.string.add_photo_from_gallery)) {
-                val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                startActivityForResult(intent, Constants.RC_CHOOSE_IMAGE)
-            } else if (options[item] == getString(R.string.add_photo_cancel)) {
-                dialog.dismiss()
+            when {
+                options[item] == getString(R.string.add_photo_from_camera) -> {
+                    val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                    startActivityForResult(intent, Constants.RC_CAMERA)
+                }
+                options[item] == getString(R.string.add_photo_from_gallery) -> {
+                    val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                    startActivityForResult(intent, Constants.RC_CHOOSE_IMAGE)
+                }
+                options[item] == getString(R.string.add_photo_cancel) -> {
+                    dialog.dismiss()
+                }
             }
         }
         builder.show()
     }
 
-    //-- MANAGE IMAGE --//
+    /**
+     * Check if an image is choose and a description is written
+     * If true, add Photo to list and show it in Recycler View
+     * Else, show SnackBar with error message
+     */
     private fun addImageToListAndShowIt() {
         desImage = addPhotoTxt.text.toString()
         if (uriImage != null && desImage != "") {
@@ -255,21 +272,25 @@ class EditAddActivity : BaseActivity(), View.OnClickListener, PhotosAdapter.OnIt
         loadImage(requestCode, resultCode, data)
     }
 
+    /**
+     * Get image choose by user and show it in preview with Glide
+     */
     private fun loadImage(requestCode: Int, resultCode: Int, data: Intent?) {
+        //-- Get image from phone's gallery --//
+        assert(data != null)
         if (requestCode == Constants.RC_CHOOSE_IMAGE) {
             if (resultCode == Activity.RESULT_OK) {
                 uriImage = data?.data
                 Glide.with(this).load(uriImage).into(addPhotoImg)
                 addPhotoBtn.visibility = View.VISIBLE
             } else {
-                Snackbar.make(layout, "Error with image", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(layout, getString(R.string.error_loading_img), Snackbar.LENGTH_SHORT).show()
             }
-        }else if (requestCode == Constants.RC_CAMERA){
+            //-- Let user take a photo and save it in folder 'RealEstateManager' in SD card --//
+        } else if (requestCode == Constants.RC_CAMERA) {
             val bitmap = data?.extras!!["data"] as Bitmap?
             val bytes = ByteArrayOutputStream()
             bitmap?.compress(Bitmap.CompressFormat.JPEG, 50, bytes)
-
-            Log.e("Activity", "Pick from Camera::>>> ")
 
             val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
             val destination = File(Environment.getExternalStorageDirectory().path + "/RealEstateManager/", "IMG_$timeStamp.jpg")
@@ -289,6 +310,9 @@ class EditAddActivity : BaseActivity(), View.OnClickListener, PhotosAdapter.OnIt
             val file = File(path)
             uriImage = Uri.fromFile(file)
             Glide.with(this).load(uriImage).into(addPhotoImg)
+        }
+        if(data == null){
+            Snackbar.make(layout, getString(R.string.error_loading_img), Snackbar.LENGTH_SHORT).show()
         }
     }
 
@@ -351,7 +375,6 @@ class EditAddActivity : BaseActivity(), View.OnClickListener, PhotosAdapter.OnIt
         soldDate.setOnClickListener(this)
         priceContainer = findViewById(R.id.custom_price_container)
         chipGroup = findViewById(R.id.edit_show_chip_group)
-
     }
 
     //-- SAVE INSTANCE --//
@@ -364,6 +387,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener, PhotosAdapter.OnIt
         outState.putCharSequence(Constants.KEY_TEXT_BEDROOMS, numberBedrooms.text)
         outState.putCharSequence(Constants.KEY_TEXT_BATHROOMS, numberBathrooms.text)
         outState.putCharSequence(Constants.KEY_TEXT_TYPE, spinnerType.selectedItem.toString())
+        outState.putCharSequence(Constants.KEY_TEXT_AGENT, spinnerAgent.selectedItem.toString())
     }
 
     /**
@@ -377,6 +401,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener, PhotosAdapter.OnIt
             setText(description, Constants.KEY_TEXT_DESCRIPTION, savedInstanceState)
             setText(numberBedrooms, Constants.KEY_TEXT_BEDROOMS, savedInstanceState)
             setText(numberBathrooms, Constants.KEY_TEXT_BATHROOMS, savedInstanceState)
+            spinnerType.setSelection((savedInstanceState.getCharSequence(Constants.KEY_TEXT_TYPE)).toString().toInt())
         }
     }
 
@@ -389,7 +414,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener, PhotosAdapter.OnIt
     /**
      * Update the views with the data got from PropertyDatabase
      */
-    private fun updateViewsWithRoomData(property: Property) {
+    private fun updateViewsWithRoomData(property: PropertyToEdit) {
         price.setText(property.price.toString())
         surface.setText(property.surface.toString())
         rooms.setText(property.rooms_nbr.toString())
@@ -398,13 +423,15 @@ class EditAddActivity : BaseActivity(), View.OnClickListener, PhotosAdapter.OnIt
         numberBathrooms.setText(property.bath_nbr.toString())
         val typeEnum = TypeEnum.values()[property.type_id]
         spinnerType.setSelection(adapterType.getPosition(typeEnum))
-        val nearby = property.nearby!!.split(",").toTypedArray()
-        val listOfChip = ArrayList<ChipInfo>()
-        for(item in nearby){
-            val chip = ChipInfo(getString(NearbyEnum.valueOf(item).res), null)
-            listOfChip.add(chip)
+        if (property.nearby != "") {
+            val nearby = property.nearby!!.split(",").toTypedArray()
+            val listOfChip = ArrayList<ChipInfo>()
+            for (item in nearby) {
+                val chip = ChipInfo(getString(NearbyEnum.valueOf(item).res), null)
+                listOfChip.add(chip)
+            }
+            nearbyNachos.setTextWithChips(listOfChip)
         }
-        nearbyNachos.setTextWithChips(listOfChip)
         if (property.in_sale) {
             inSaleRadioBtn.isChecked = true
         } else {
@@ -412,6 +439,8 @@ class EditAddActivity : BaseActivity(), View.OnClickListener, PhotosAdapter.OnIt
         }
         inSaleDate.text = property.created_date
         soldDate.text = property.sold_date
+
+        updateAddressWithRoomData(property.address)
     }
 
     /**
@@ -441,6 +470,10 @@ class EditAddActivity : BaseActivity(), View.OnClickListener, PhotosAdapter.OnIt
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
+    /**
+     * When click on a photo, set it selected
+     * User can delete selected photo
+     */
     override fun onItemClicked(photo: Photo, position: Int) {
         editDataViewModel.photoClicked(photo.uri!!)
         deletePhotoBtn.show()

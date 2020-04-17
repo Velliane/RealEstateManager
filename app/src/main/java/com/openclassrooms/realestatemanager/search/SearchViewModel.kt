@@ -4,8 +4,9 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.openclassrooms.realestatemanager.R
 import com.openclassrooms.realestatemanager.login.User
-import com.openclassrooms.realestatemanager.login.UserDataRepository
+import com.openclassrooms.realestatemanager.data.UserDataRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -35,16 +36,16 @@ class SearchViewModel(private val context: Context, private val userDataReposito
             query += ifContains(contains)
             if(types.size == 1) {
                 val type = types[0]
-                query += " type LIKE '$type'"
+                query += "type LIKE '$type'"
             }else{
-                query += " type IN ("
+                query += "type IN ("
                 query += constructQueryFromList(types)
             }
             contains = true
         }
 
         query += ifContains(contains)
-        query += " price >= '$priceMinValue' AND price <= '$priceMaxValue'"
+        query += "price >= '$priceMinValue' AND price <= '$priceMaxValue'"
         query += " AND rooms_nbr >= '$roomsMinValue' AND rooms_nbr <= '$roomsMaxValue'"
         query += " AND bed_nbr >= '$bedroomsMinValue' AND bed_nbr <= '$bedroomsMaxValue'"
         contains = true
@@ -52,9 +53,9 @@ class SearchViewModel(private val context: Context, private val userDataReposito
         if(locations.isNotEmpty()){
             query += ifContains(contains)
             query += constructLocationQuery(locations, "street")
-            query += "OR"
+            query += " OR "
             query += constructLocationQuery(locations, "city")
-            query += "OR"
+            query += " OR "
             query += constructLocationQuery(locations, "country")
         }
 
@@ -62,16 +63,16 @@ class SearchViewModel(private val context: Context, private val userDataReposito
             query += ifContains(contains)
             if(nearbies.size == 1) {
                 val type = nearbies[0]
-                query += " nearby LIKE '$type'"
+                query += "nearby LIKE '$type'"
             }else{
-                query += " nearby IN ("
+                query += "nearby IN ("
                 query += constructQueryFromList(nearbies)
             }
         }
 
-        if(agent != ""){
+        if(agent != "000"){
             query += ifContains(contains)
-            query += " agent LIKE '$agent'"
+            query += "agent LIKE '$agent'"
         }
 
         return query
@@ -82,9 +83,9 @@ class SearchViewModel(private val context: Context, private val userDataReposito
      */
     fun ifContains(contains: Boolean): String {
         return if(contains) {
-            " AND"
+            " AND "
         }else {
-            " WHERE"
+            " WHERE "
         }
     }
 
@@ -110,9 +111,9 @@ class SearchViewModel(private val context: Context, private val userDataReposito
         var query = String()
         list.forEachIndexed{ index, element ->
             val location = element.toUpperCase(Locale.ROOT)
-            query += " UPPER(Address.$field) LIKE '%$location%' "
+            query += "UPPER(Address.$field) LIKE '%$location%'"
             if(index < list.size-1){
-                query += "OR"
+                query += " OR "
             }
         }
         return query
@@ -130,8 +131,12 @@ class SearchViewModel(private val context: Context, private val userDataReposito
     fun getAllUser() {
         viewModelScope.launch {
             val list = userDataRepository.getAllUsers()
+            val newList = ArrayList<User>()
+            val defautUser = User("000", context.getString(R.string.all), "", "")
+            newList.add(defautUser)
+            newList.addAll(list)
             withContext(Dispatchers.Main) {
-                userListLiveData.value = list
+                userListLiveData.value = newList
             }
         }
     }

@@ -118,5 +118,21 @@
     <string name="photos_title">Photos</string>
     <string name="description_title">Description</string>
     <string name="photo_content_description">Photo\'s property</string>
+    <string name="price_marker">Price</string>
+    <string name="all">All</string>
+    <string name="error_loading_img">Error with image</string>
+    <string name="there_s_no_property_saved">There\'s no property saved</string>
+    <string name="error_simulator_capital">Please enter a capital</string>
+    <string name="error_simulator_length">Please enter a length</string>
+    <string name="error_simulator_rate">Please enter a rate</string>
+    <string name="please_select_an_item_of_the_list">Please select an item of the list</string>
+    <string name="settings_title">Settings</string>
+    <string name="settings_success">Settings changed successfully</string>
+    <string name="login_connect_succeed">Connexion succeed</string>
+    <string name="login_connect_canceled">Connexion canceled</string>
+    <string name="login_no_network">No Network</string>
+    <string name="login_error_unknown">Unknown error</string>
+    <string name="add_edit_error_select_one_image">Please select at least one photo</string>
+    <string name="details_map">Map</string>
 
 </resources>

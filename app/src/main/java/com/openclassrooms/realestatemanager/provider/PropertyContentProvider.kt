@@ -20,12 +20,10 @@ class PropertyContentProvider : ContentProvider() {
         const val AUTHORITY = "com.openclassrooms.realestatemanager.provider"
         val TABLE_PROPERTY = Property::class.java.simpleName
         val TABLE_ADDRESS = Address::class.java.simpleName
-        val URI_PROPERTY = Uri.parse("content://$AUTHORITY$TABLE_PROPERTY")
-        val URI_ADDRESS = Uri.parse("content://$AUTHORITY$TABLE_ADDRESS")
+        val URI_PROPERTY = Uri.parse("content://$AUTHORITY/$TABLE_PROPERTY")
+        val URI_ADDRESS = Uri.parse("content://$AUTHORITY/$TABLE_ADDRESS")
         const val INT_PROPERTY = 100
-        //const val INT_PROPERTY_ID = 101
         const val INT_ADDRESS = 200
-        //const val INT_ADDRESS_ID = 201
 
     }
     private val uriMatcher = buildUriMatcher()
@@ -33,9 +31,7 @@ class PropertyContentProvider : ContentProvider() {
     private fun buildUriMatcher(): UriMatcher{
         val uriMatcher = UriMatcher(UriMatcher.NO_MATCH)
         uriMatcher.addURI(AUTHORITY, TABLE_PROPERTY, INT_PROPERTY)
-        //uriMatcher.addURI(AUTHORITY, "$TABLE_PROPERTY/#", INT_PROPERTY_ID)
         uriMatcher.addURI(AUTHORITY, TABLE_ADDRESS, INT_ADDRESS)
-        //uriMatcher.addURI(AUTHORITY, "$TABLE_ADDRESS/#", INT_ADDRESS_ID)
         return uriMatcher
     }
 
@@ -66,10 +62,8 @@ class PropertyContentProvider : ContentProvider() {
 
     override fun getType(uri: Uri): String? {
         when(uriMatcher.match(uri)){
-            INT_PROPERTY -> return "vnd.android.cursor.property/$AUTHORITY.$TABLE_PROPERTY"
-            //INT_PROPERTY_ID -> return "vnd.android.cursor.item/$AUTHORITY.$TABLE_PROPERTY"
-            INT_ADDRESS -> return "vnd.android.cursor.address/$AUTHORITY.$TABLE_ADDRESS"
-            //INT_ADDRESS_ID -> return "vnd.android.cursor.item/$AUTHORITY.$TABLE_ADDRESS"
+            INT_PROPERTY -> return "vnd.android.cursor.dir/$AUTHORITY/$TABLE_PROPERTY"
+            INT_ADDRESS -> return "vnd.android.cursor.dir/$AUTHORITY/$TABLE_ADDRESS"
         }
         throw IllegalArgumentException("Failed to query row for uri $uri")
     }

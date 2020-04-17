@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.openclassrooms.realestatemanager.login.UserDao
 import com.openclassrooms.realestatemanager.login.User
 import com.openclassrooms.realestatemanager.add_edit.Address
 import com.openclassrooms.realestatemanager.add_edit.Property

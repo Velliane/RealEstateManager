@@ -10,7 +10,7 @@ import com.openclassrooms.realestatemanager.data.PhotoDataRepository
 import com.openclassrooms.realestatemanager.show.geocode_model.GeocodeRepository
 import com.openclassrooms.realestatemanager.data.FirestoreDataRepository
 import com.openclassrooms.realestatemanager.data.PropertyDataRepository
-import com.openclassrooms.realestatemanager.login.UserDataRepository
+import com.openclassrooms.realestatemanager.data.UserDataRepository
 import com.openclassrooms.realestatemanager.login.UserViewModel
 import com.openclassrooms.realestatemanager.add_edit.EditDataViewModel
 import com.openclassrooms.realestatemanager.search.SearchViewModel

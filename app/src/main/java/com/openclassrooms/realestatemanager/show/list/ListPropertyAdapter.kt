@@ -59,7 +59,7 @@ class ListPropertyAdapter(private val listener: OnItemClickListener, private val
         var type: TextView = itemView.findViewById(R.id.item_type)
         var location: TextView = itemView.findViewById(R.id.item_location)
         var price: TextView = itemView.findViewById(R.id.item_price)
-        val soldIcon: ImageView = itemView.findViewById(R.id.drawable_sold_icon)
+        private val soldIcon: ImageView = itemView.findViewById(R.id.drawable_sold_icon)
         private var container: ConstraintLayout = itemView.findViewById(R.id.item_list_container)
         private var progressBar: ProgressBar = itemView.findViewById(R.id.item_list_progress)
 
@@ -75,7 +75,7 @@ class ListPropertyAdapter(private val listener: OnItemClickListener, private val
                 price.text = format.format(property.price.toInt())
             }else{
                 format.currency = Currency.getInstance("EUR")
-                val priceInDollar = Utils.convertEuroToDollar(property.price.toInt()).toString()
+                val priceInDollar = Utils.convertDollarToEuro(property.price.toInt()).toString()
                 price.text = format.format(priceInDollar.toInt())
             }
 

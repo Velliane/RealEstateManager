@@ -21,7 +21,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:gravity="center"
             android:visibility="gone"
-            android:text="Please select an item of the list" />
+            android:text="@string/please_select_an_item_of_the_list" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/details_infos_container"
@@ -60,7 +60,7 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="@string/details_title_description"
-            android:textSize="23sp"
+            android:textSize="@dimen/detail_titles_text_size"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/details_description"
             app:layout_constraintEnd_toEndOf="parent"
@@ -73,6 +73,7 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="@string/details_title_description"
+            android:textSize="@dimen/detail_description_text_size"
             app:layout_constraintBottom_toTopOf="@id/details_surface_container"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
@@ -109,6 +110,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/details_surface_title"
+                android:textSize="@dimen/detail_description_text_size"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/details_surface"
                 app:layout_constraintStart_toEndOf="@id/details_surface_img"
@@ -119,6 +121,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/details_surface"
+                android:textSize="@dimen/detail_description_text_size"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/details_title_surface"
@@ -152,6 +155,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/details_number_of_rooms"
+                android:textSize="@dimen/detail_description_text_size"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/details_rooms_img"
@@ -162,6 +166,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/details_rooms_number"
+                android:textSize="@dimen/detail_description_text_size"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/details_title_nbr_rooms"
@@ -198,6 +203,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/details_number_of_bedrooms"
+                android:textSize="@dimen/detail_description_text_size"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/details_bedrooms"
                 app:layout_constraintStart_toEndOf="@id/details_bedrooms_img"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -207,6 +214,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/details_number_bedrooms"
+                android:textSize="@dimen/detail_description_text_size"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/details_title_bedrooms"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -231,13 +239,15 @@
                 android:background="@drawable/details_bath"
                 app:layout_constraintEnd_toStartOf="@id/details_title_bathrooms"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/details_number_of_bathrooms" />
 
             <TextView
                 android:id="@+id/details_title_bathrooms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/details_number_of_bathrooms"
+                android:textSize="@dimen/detail_description_text_size"
                 app:layout_constraintEnd_toStartOf="@id/details_bathrooms"
                 app:layout_constraintStart_toEndOf="@id/details_bathrooms_img"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -247,6 +257,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/details_number_bathrooms"
+                android:textSize="@dimen/detail_description_text_size"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/details_title_bathrooms"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -261,9 +272,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_margin="15dp"
+            android:textSize="@dimen/detail_description_text_size"
             app:layout_constraintTop_toBottomOf="@id/details_bath_container"
             app:layout_constraintBottom_toTopOf="@id/details_map"
-            android:textSize="15sp"
             android:gravity="center"
             android:text="@string/manage_by"/>
 
@@ -275,7 +286,7 @@
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:text="@string/details_address"
-            android:textSize="23sp"
+            android:textSize="@dimen/detail_titles_text_size"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@id/details_address"
             app:layout_constraintEnd_toStartOf="@id/details_map"
@@ -287,7 +298,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minLines="3"
-            android:text="N/C"
+            android:textSize="@dimen/detail_description_text_size"
             android:textAlignment="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/details_map"
@@ -296,12 +307,13 @@
 
         <ImageView
             android:id="@+id/details_map"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
+            android:layout_width="@dimen/detail_map_width"
+            android:layout_height="@dimen/detail_map_height"
             android:layout_marginEnd="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/details_manager" />
+            app:layout_constraintTop_toBottomOf="@id/details_manager"
+            android:contentDescription="@string/details_map" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

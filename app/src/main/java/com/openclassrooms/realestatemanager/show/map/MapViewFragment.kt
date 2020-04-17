@@ -23,6 +23,15 @@ import com.openclassrooms.realestatemanager.show.detail.DetailsFragment
 import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.getScreenOrientation
 import com.openclassrooms.realestatemanager.utils.setAddressToString
+import java.text.NumberFormat
+import java.util.*
+
+/**
+ * Fragment that show properties saved in the PropertyDatabase around user's location on a GoogleMap
+ * When click on an InfoWindow:
+ * - if orientation is portrait : the fragment DetailsFragment replace the MapViewFragment with the details of the property clicked
+ * - if orientation is landscape : the fragment DetailsFragment is update with the details of the property clicked
+ */
 
 class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnInfoWindowClickListener, View.OnClickListener {
 
@@ -69,6 +78,7 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerCl
         googleMap!!.uiSettings?.isZoomControlsEnabled = true
         googleMap!!.setOnMarkerClickListener(this)
         googleMap!!.setOnInfoWindowClickListener(this)
+        googleMap!!.setInfoWindowAdapter(MarkerAdapter(layoutInflater))
 
         //-- Check if permissions are granted for FINE_LOCATION or request it --//
         if (checkLocationPermissions()) {
@@ -108,7 +118,18 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerCl
                            val result = it.results!![0]
                            val location = LatLng(result.geometry!!.location!!.lat!!, result.geometry!!.location!!.lng!!)
                            val txt = setAddressToString(property.address)
-                           val markerOptions = MarkerOptions().position(location).title(property.type).snippet("${txt}, price:${property.price}")
+                           val price = getString(R.string.price_marker)
+                           val currency = sharedPreferences.getInt(Constants.PREF_CURRENCY, 0)
+                           val format = NumberFormat.getCurrencyInstance()
+                           var priceValue = ""
+                           if(currency == 0){
+                               format.currency = Currency.getInstance("USD")
+                               priceValue = format.format(property.price.toInt())
+                           }else{
+                               format.currency = Currency.getInstance("EUR")
+                               priceValue = format.format(property.price.toInt())
+                           }
+                           val markerOptions = MarkerOptions().position(location).title(property.type).snippet("${txt}\n$price:${priceValue}")
                            googleMap!!.addMarker(markerOptions).tag = property.propertyId
                        })
                    }
@@ -117,17 +138,6 @@ class MapViewFragment : BaseFragment(), OnMapReadyCallback, GoogleMap.OnMarkerCl
            }
         })
    }
-
-    /**
-     * Refresh list of properties according to search query
-     */
-    fun refreshQuery(querySearch: String) {
-        mapViewModel.searchInDatabase(querySearch)
-        mapViewModel.resetBtnLiveData.observe(this, Observer {
-            resetBtn.visibility = it
-        })
-    }
-
 
     override fun onMarkerClick(marker: Marker?): Boolean {
         return false

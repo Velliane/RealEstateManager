@@ -22,7 +22,6 @@ open class PhotoDataRepository {
      */
     open fun saveImageToExternalStorage(bitmap: Bitmap, id_property: String, description: String){
 
-        //val file = File(context.getExternalFilesDir(null), "$id_property$description.jpg")
         val root = Environment.getExternalStorageDirectory().path + "/RealEstateManager/"
         val dir = File(root)
         if(!dir.exists()) {
@@ -49,7 +48,6 @@ open class PhotoDataRepository {
     open fun saveImageToFirebase(uri: String, id_property: String, description: String){
         val storageReference = FirebaseStorage.getInstance().getReference("/images/$id_property/$description")
         storageReference.putFile(Uri.parse(uri)).addOnSuccessListener {
-            Log.d("PHOTO", "Photo successfully saved in Firebase")
         }
     }
 

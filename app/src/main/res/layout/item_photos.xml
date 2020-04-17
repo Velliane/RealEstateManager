@@ -25,6 +25,7 @@
         android:layout_height="wrap_content"
         android:text="@string/description"
         android:layout_margin="2dp"
+        android:textSize="@dimen/detail_description_text_size"
         app:layout_constraintStart_toStartOf="@id/item_photo"
         app:layout_constraintEnd_toEndOf="@id/item_photo"
         app:layout_constraintBottom_toBottomOf="@id/item_photo"

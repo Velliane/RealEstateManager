@@ -13,7 +13,7 @@ import com.openclassrooms.realestatemanager.data.AddressDataRepository
 import com.openclassrooms.realestatemanager.data.PhotoDataRepository
 import com.openclassrooms.realestatemanager.data.PropertyDataRepository
 import com.openclassrooms.realestatemanager.login.User
-import com.openclassrooms.realestatemanager.login.UserDataRepository
+import com.openclassrooms.realestatemanager.data.UserDataRepository
 import com.openclassrooms.realestatemanager.search.TypeEnum
 import com.openclassrooms.realestatemanager.utils.FakePropertyDataRepository
 import com.openclassrooms.realestatemanager.utils.getOrAwaitValue
@@ -157,7 +157,7 @@ class EditDataViewModelTest {
 
     @Test
     fun getPropertyWithId() = runBlockingTest {
-        val property = Property("001", "025", "House", 0,250500, 125, 4, 2, 2, "Big house", true, "RESTAURANT", "12/03/2020", null, "2020-03-12T12:20:25")
+        val property = Property("001", "025", "House", 0, 250500, 125, 4, 2, 2, "Big house", true, "RESTAURANT", "12/03/2020", null, "2020-03-12T12:20:25")
         val mockPropertyDataRepository = mock<PropertyDataRepository> {
             onBlocking { getPropertyFromId("001") } doReturn property
         }
@@ -210,12 +210,67 @@ class EditDataViewModelTest {
     fun getListOfAllPhotos_ContainsTwo_WithOnSelected() {
         val listOfPhotos = arrayListOf(Photo("sd/65455.png", "Chambre", false),
                 Photo("sd/97844.png", "Salon", false))
+        val mockPhotoDataRepository = mock<PhotoDataRepository> {
+            onBlocking { getListOfPhotos("002") } doReturn listOfPhotos
+        }
+        viewModel = EditDataViewModel(firebaseAuth, context, mockPhotoDataRepository, fakePropertyDataRepository, addressDataRepository, executor, userDataRepository)
+        viewModel.photoClicked("sd/97844.png")
 
+        viewModel.getAllPhotos("002")
+        val list = viewModel.photosLiveData.getOrAwaitValue()
+        assertEquals(2, list.size)
+        assertEquals("sd/97844.png", viewModel.currentIdPropertySelectedLiveData.getOrAwaitValue())
+    }
 
+    @Test
+    fun getEditedProperty() {
+        val property = Property("001", "025", "House", 0, 250500, 125, 4, 2, 2, "Big house", true, "RESTAURANT", "12/03/2020", null, "2020-03-12T12:20:25")
+        val mockPropertyDataRepository = mock<PropertyDataRepository> {
+            onBlocking { getPropertyFromId("001") } doReturn property
+        }
+        val address = Address("01", 4, "allée des Bleuets", null, "Louhans", "France", "001")
+        val mockAddressDataRepository = mock<AddressDataRepository> {
+            onBlocking { getAddressOfOneProperty("001") } doReturn address
+        }
+        viewModel = EditDataViewModel(firebaseAuth, context, photoDataRepository, mockPropertyDataRepository, mockAddressDataRepository, executor, userDataRepository)
+
+        viewModel.getPropertyToEdit("001")
+        val propertyEdited = viewModel.propertyToEditLiveData.getOrAwaitValue()
+        assertEquals(address, propertyEdited.address)
+        assertEquals("025", propertyEdited.agent)
+    }
+
+    @Test
+    fun whenUserClickOnAPhoto(){
+        viewModel.photoClicked("sd/realestatemanager/salon.png")
+        val uri = viewModel.currentIdPropertySelectedLiveData.getOrAwaitValue()
+        assertEquals("sd/realestatemanager/salon.png", uri)
+    }
+
+    @Test
+    fun deleteOnePhoto(){
+        val listOfPhotos = arrayListOf(Photo("sd/65455.png", "Chambre", false))
         val mockPhotoDataRepository = mock<PhotoDataRepository> {
             onBlocking { getListOfPhotos("002") } doReturn listOfPhotos
         }
         viewModel = EditDataViewModel(firebaseAuth, context, mockPhotoDataRepository, fakePropertyDataRepository, addressDataRepository, executor, userDataRepository)
 
+        viewModel.listPhotosLiveData.postValue(arrayListOf(Photo("sd/65455.png", "Chambre", false),
+                Photo("sd/97844.png", "Salon", false)))
+        viewModel.deletePhotos("002", Photo("sd/97844.png", "Salon", false))
+
+        viewModel.getListOfPhotos("002")
+        val list = viewModel.listPhotosLiveData.getOrAwaitValue()
+        assertEquals(1, list.size)
+    }
+
+    @Test
+    fun addOnePhoto(){
+        viewModel.listPhotosLiveData.postValue(arrayListOf(Photo("sd/65455.png", "Chambre", false),
+                Photo("sd/97844.png", "Salon", false)))
+        viewModel.addPhotoToList(Photo("sd/6fgg55.png", "Cuisine", true))
+
+        val list = viewModel.listPhotosLiveData.getOrAwaitValue()
+        assertEquals(3, list.size)
     }
 }

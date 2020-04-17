@@ -1,7 +1,7 @@
-package com.openclassrooms.realestatemanager.login
+package com.openclassrooms.realestatemanager.data.database
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.openclassrooms.realestatemanager.login.User
 
 
 /**

@@ -22,6 +22,7 @@ import com.openclassrooms.realestatemanager.show.geocode_model.Geocode
 import com.openclassrooms.realestatemanager.show.BaseFragment
 import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.Injection
+import com.openclassrooms.realestatemanager.utils.getScreenOrientation
 import com.openclassrooms.realestatemanager.utils.setAddressToString
 
 /**
@@ -110,6 +111,9 @@ class DetailsFragment : BaseFragment(), PhotosAdapter.OnItemClickListener {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         menu.findItem(R.id.toolbar_menu_modify).isVisible = true
+        if(!getScreenOrientation(resources.configuration.orientation)){
+            menu.findItem(R.id.toolbar_menu_search).isVisible = false
+        }
         super.onPrepareOptionsMenu(menu)
     }
 
@@ -161,7 +165,7 @@ class DetailsFragment : BaseFragment(), PhotosAdapter.OnItemClickListener {
                         "&key=$key&markers=color:blue%7Clabel:S%7C$lat,$lng"
                 Glide.with(this).load(url).into(map)
             } else {
-                //TODO default image
+                Glide.with(this).load(R.drawable.no_data).into(map)
             }
         })
     }
@@ -182,6 +186,6 @@ class DetailsFragment : BaseFragment(), PhotosAdapter.OnItemClickListener {
     }
 
     override fun onItemClicked(photo: Photo, position: Int) {
-        //
+        //don't do anything
     }
 }

@@ -6,7 +6,7 @@ import com.openclassrooms.realestatemanager.add_edit.Property
 import com.openclassrooms.realestatemanager.data.FirestoreDataRepository
 import com.openclassrooms.realestatemanager.data.database.AddressDao
 import com.openclassrooms.realestatemanager.data.database.PropertyDao
-import com.openclassrooms.realestatemanager.login.UserDao
+import com.openclassrooms.realestatemanager.data.database.UserDao
 
 class FakeFirestoreDataRepository(private val context: Context, private val propertyDao: PropertyDao, private val addressDao: AddressDao, private val userDao: UserDao): FirestoreDataRepository(context, propertyDao, addressDao, userDao) {
 

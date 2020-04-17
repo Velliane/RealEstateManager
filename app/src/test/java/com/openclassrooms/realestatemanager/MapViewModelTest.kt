@@ -94,13 +94,6 @@ class MapViewModelTest {
     }
 
     @Test
-    fun searchProperties_Found1Property() {
-        viewModel.searchInDatabase("SELECT * FROM Property WHERE price = 250500")
-        val listFound = viewModel.propertiesFromResearchLiveData?.getOrAwaitValue()
-        assertEquals("House", listFound?.get(0)?.type)
-    }
-
-    @Test
     fun setResetButtonToVisibilityVisible() {
         viewModel.setButtonVisibility(true)
         val result = viewModel.resetBtnLiveData.getOrAwaitValue()

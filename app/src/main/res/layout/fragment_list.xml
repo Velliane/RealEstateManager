@@ -41,7 +41,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:textAlignment="center"
         android:gravity="center_vertical"
-        android:text="There's no property saved"
-        android:visibility="gone"/>
+        android:text="@string/there_s_no_property_saved"
+        android:visibility="gone"
+        tools:ignore="RtlCompat" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

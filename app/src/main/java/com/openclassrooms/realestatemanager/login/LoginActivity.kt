@@ -67,7 +67,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener{
         if(requestCode == Constants.RC_SIGN_IN){
             val response = IdpResponse.fromResultIntent(data)
             if(resultCode == Activity.RESULT_OK){
-                Snackbar.make(layout, "Connexion succeed" , Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(layout, getString(R.string.login_connect_succeed) , Snackbar.LENGTH_SHORT).show()
                 //-- Create User and save it in Room and Firebase --
                 val user = User(getCurrentUser().uid, getCurrentUser().displayName!!, getCurrentUser().email!!, getCurrentUser().photoUrl.toString())
                 userViewModel.saveUser(user, this, sharedPreferences)
@@ -75,9 +75,9 @@ class LoginActivity : BaseActivity(), View.OnClickListener{
                 startActivity(Intent(this, MainActivity::class.java))
             }else{
                 when {
-                    response == null -> Snackbar.make(layout, "Connexion canceled" , Snackbar.LENGTH_SHORT).show()
-                    response.error?.errorCode == ErrorCodes.NO_NETWORK -> Snackbar.make(layout, "No Network", Snackbar.LENGTH_SHORT).show()
-                    response.error?.errorCode == ErrorCodes.UNKNOWN_ERROR -> Snackbar.make(layout, "Unknown error", Snackbar.LENGTH_SHORT).show()
+                    response == null -> Snackbar.make(layout, getString(R.string.login_connect_canceled) , Snackbar.LENGTH_SHORT).show()
+                    response.error?.errorCode == ErrorCodes.NO_NETWORK -> Snackbar.make(layout, getString(R.string.login_no_network), Snackbar.LENGTH_SHORT).show()
+                    response.error?.errorCode == ErrorCodes.UNKNOWN_ERROR -> Snackbar.make(layout, getString(R.string.login_error_unknown), Snackbar.LENGTH_SHORT).show()
                 }
             }
         }

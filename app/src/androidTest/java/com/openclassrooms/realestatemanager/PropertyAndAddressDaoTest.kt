@@ -25,7 +25,7 @@ class PropertyAndAddressDaoTest {
 
     private lateinit var propertyDatabase: PropertyDatabase
     private val propertyId: String = "1"
-    val property1 = Property(propertyId, "025","House", 2, 250500, 125, 4, 2, 2, "Big house", true, "RESTAURANT", "12/03/2020", null, "2020-03-12T12:20:25")
+    private val property1 = Property(propertyId, "025","House", 2, 250500, 125, 4, 2, 2, "Big house", true, "RESTAURANT", "12/03/2020", null, "2020-03-12T12:20:25")
     private val property2 = Property("2", "025","House", 2, 350000, 115, 4, 2, 3, "Big house", false, null, "12/03/2020", "02/04/2020", "2020-04-02T12:20:25")
     private val addressTest = Address("1", 4, "allée des Bleuets", "71500", "Louhans", "France", propertyId)
     private val addresTest2 = Address("2", 22, "rue des Lilas", "01350", "Culoz", "France", "2")

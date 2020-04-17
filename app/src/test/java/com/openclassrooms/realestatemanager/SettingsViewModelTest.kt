@@ -40,7 +40,7 @@ class SettingsViewModelTest {
     fun getListOfCurrencyAvailable() {
         given(context.getString(R.string.settings_euro)).willReturn("Euro")
         given(context.getString(R.string.settings_dollar)).willReturn("Dollar")
-        val list = arrayListOf("Euro", "Dollar")
+        val list = arrayListOf("Dollar", "Euro")
         assertEquals(list, settingsViewModelTest.getCurrencyList())
         assertNotSame("Euro", settingsViewModelTest.getCurrencyList())
     }

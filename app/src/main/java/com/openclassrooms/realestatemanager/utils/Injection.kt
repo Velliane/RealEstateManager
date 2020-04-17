@@ -5,7 +5,7 @@ import com.openclassrooms.realestatemanager.data.database.PropertyDatabase
 import com.openclassrooms.realestatemanager.data.AddressDataRepository
 import com.openclassrooms.realestatemanager.show.geocode_model.GeocodeRepository
 import com.openclassrooms.realestatemanager.data.PropertyDataRepository
-import com.openclassrooms.realestatemanager.login.UserDataRepository
+import com.openclassrooms.realestatemanager.data.UserDataRepository
 import com.openclassrooms.realestatemanager.data.PhotoDataRepository
 import com.openclassrooms.realestatemanager.data.FirestoreDataRepository
 import java.util.concurrent.Executor

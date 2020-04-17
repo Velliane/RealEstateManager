@@ -30,6 +30,7 @@ class Constants {
         const val KEY_TEXT_BEDROOMS = "KEY_TEXT_BEDROOMS"
         const val KEY_TEXT_BATHROOMS = "KEY_TEXT_BATHROOMS"
         const val KEY_TEXT_TYPE = "KEY_TEXT_TYPE"
+        const val KEY_TEXT_AGENT = "KEY_TEXT_AGENT"
 
         // FIRESTORE COLLECTIONS
         const val COLLECTION_USERS = "users"

@@ -40,7 +40,7 @@ class SettingsActivity : AppCompatActivity(), View.OnClickListener {
     private fun bindViews(){
         val toolbar: Toolbar = findViewById(R.id.settings_toolbar)
         setSupportActionBar(toolbar)
-        supportActionBar?.title = "Paramètres"
+        supportActionBar?.title = getString(R.string.settings_title)
         currencySPinner = findViewById(R.id.settings_spinner_money)
         currencySPinner.adapter = ArrayListStringAdapter(this, viewModel.getCurrencyList())
         val currencySaved = sharedPreferences.getInt(Constants.PREF_CURRENCY, 0)
@@ -54,7 +54,7 @@ class SettingsActivity : AppCompatActivity(), View.OnClickListener {
         when(view){
             saveBtn -> {
                 sharedPreferences.edit().putInt(Constants.PREF_CURRENCY, currencySPinner.selectedItemPosition).apply()
-                Snackbar.make(settings_container, "Settings changed successfully", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(settings_container, getString(R.string.settings_success), Snackbar.LENGTH_SHORT).show()
             }
         }
     }

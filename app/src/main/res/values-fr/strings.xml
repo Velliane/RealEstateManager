@@ -112,5 +112,21 @@
     <string name="photos_title">Photos</string>
     <string name="description_title">Description</string>
     <string name="photo_content_description">Photo</string>
+    <string name="price_marker">Prix</string>
+    <string name="all">Tous</string>
+    <string name="error_loading_img">Une erreur s\'est produite</string>
+    <string name="there_s_no_property_saved">Aucun bien n\'a été trouvé</string>
+    <string name="error_simulator_capital">Veuillez saisir un montant</string>
+    <string name="error_simulator_length">Veuillez saisir une durée</string>
+    <string name="error_simulator_rate">Veuillez saisir un taux</string>
+    <string name="please_select_an_item_of_the_list">Please select an item of the list</string>
+    <string name="settings_title">Paramètres</string>
+    <string name="settings_success">Les paramètres ont été modifiés</string>
+    <string name="login_connect_succeed">Connexion réussie</string>
+    <string name="login_connect_canceled">Connexion annulée</string>
+    <string name="login_no_network">Aucun connexion au réseau</string>
+    <string name="login_error_unknown">Erreur inconnue</string>
+    <string name="add_edit_error_select_one_image">Merci de sélectionner au moins une image</string>
+    <string name="details_map">Carte</string>
 
 </resources>

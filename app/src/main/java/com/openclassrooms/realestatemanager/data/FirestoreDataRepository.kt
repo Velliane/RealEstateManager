@@ -2,14 +2,13 @@ package com.openclassrooms.realestatemanager.data
 
 import android.content.Context
 import android.os.Environment
-import android.util.Log
 import com.google.firebase.storage.FirebaseStorage
 import com.openclassrooms.realestatemanager.add_edit.Address
 import com.openclassrooms.realestatemanager.add_edit.Property
 import com.openclassrooms.realestatemanager.data.database.AddressDao
 import com.openclassrooms.realestatemanager.data.database.PropertyDao
 import com.openclassrooms.realestatemanager.login.User
-import com.openclassrooms.realestatemanager.login.UserDao
+import com.openclassrooms.realestatemanager.data.database.UserDao
 import com.openclassrooms.realestatemanager.login.UserHelper
 import com.openclassrooms.realestatemanager.search.TypeEnum
 import com.openclassrooms.realestatemanager.utils.compareByDate
@@ -31,7 +30,6 @@ open class FirestoreDataRepository(private val context: Context, private val pro
         val listDocument = propertyHelper.getAllProperties()
         for (document in listDocument) {
             val place = document.toObject(Property::class.java)
-            Log.d("Place from firebase", document.data.toString())
             list.add(place!!)
         }
         return list
@@ -146,7 +144,6 @@ open class FirestoreDataRepository(private val context: Context, private val pro
                     file.createNewFile()
                     ref.downloadUrl.addOnSuccessListener { uri ->
                         storage.getReferenceFromUrl(uri.toString()).getFile(file).addOnSuccessListener {
-                            Log.d("File", file.absolutePath)
                         }
                     }
                 }

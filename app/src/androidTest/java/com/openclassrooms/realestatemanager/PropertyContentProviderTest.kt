@@ -42,7 +42,7 @@ class PropertyContentProviderTest {
 
     @Test
     fun insertAndGetItem() {
-        val propertyUri: Uri? = contentResolver.insert(PropertyContentProvider.URI_PROPERTY, generateProperty())
+        contentResolver.insert(PropertyContentProvider.URI_PROPERTY, generateProperty())
         val cursor: Cursor? = contentResolver.query(ContentUris.withAppendedId(PropertyContentProvider.URI_PROPERTY, PROPERTY_ID), null, null, null, null)
         assertThat(cursor, notNullValue())
         assertThat(cursor!!.count, `is`(1))
@@ -68,4 +68,5 @@ class PropertyContentProviderTest {
         values.put("date", "2020-03-23T12:20:25")
         return values
     }
+
 }

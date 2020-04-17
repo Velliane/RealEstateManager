@@ -14,6 +14,7 @@ import org.mockito.Mockito
 import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoRule
+import org.threeten.bp.LocalDate
 
 class UtilsTest {
 
@@ -70,5 +71,14 @@ class UtilsTest {
         Mockito.`when`(networkInfo.isConnected).thenReturn(true)
 
         assertTrue(Utils.isInternetAvailable(context))
+    }
+
+    @Test
+    fun convertTodayDateToMoreAppropriateFormat(){
+        val date = LocalDate.of(2020, 4, 15)
+        assertEquals("15/04/2020", Utils.getTodayDate(date))
+
+        val date2 = LocalDate.of(2020, 12, 20)
+        assertEquals("20/12/2020", Utils.getTodayDate(date2))
     }
 }

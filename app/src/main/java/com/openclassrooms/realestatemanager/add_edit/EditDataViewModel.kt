@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.openclassrooms.realestatemanager.data.*
 import com.openclassrooms.realestatemanager.data.PhotoDataRepository
 import com.openclassrooms.realestatemanager.login.User
-import com.openclassrooms.realestatemanager.login.UserDataRepository
+import com.openclassrooms.realestatemanager.data.UserDataRepository
 import com.openclassrooms.realestatemanager.search.TypeEnum
 import com.openclassrooms.realestatemanager.utils.Constants
 import com.openclassrooms.realestatemanager.utils.NotificationWorker
@@ -36,6 +36,7 @@ class EditDataViewModel(private val firabaseAuth: FirebaseAuth, private val cont
     val listPhotosLiveData = MutableLiveData<ArrayList<Photo>>()
     val currentIdPropertySelectedLiveData = MutableLiveData<String>()
     val photosLiveData = MediatorLiveData<List<Photo>>()
+    val propertyToEditLiveData = MutableLiveData<PropertyToEdit>()
 
     /**
      * Save data in Room and Firestore
@@ -142,6 +143,22 @@ class EditDataViewModel(private val firabaseAuth: FirebaseAuth, private val cont
         }
     }
 
+    fun getPropertyToEdit(id_property: String){
+        viewModelScope.launch(Dispatchers.IO) {
+            val address = addressDataRepository.getAddressOfOneProperty(id_property)
+            val property = propertyDataRepository.getPropertyFromId(id_property)
+            withContext(Dispatchers.Main) {
+                val propertyToEdit = PropertyToEdit(property.id_property, property.agent, address, property.type, property.type_id, property.price, property.surface,
+                property.rooms_nbr, property.bath_nbr, property.bed_nbr, property.description, property.in_sale, property.nearby, property.created_date, property.sold_date,
+                property.date)
+                propertyToEditLiveData.value = propertyToEdit
+            }
+        }
+    }
+
+    /**
+     * Get all agent
+     */
     fun getAllUser() {
         viewModelScope.launch {
             val list = userDataRepository.getAllUsers()

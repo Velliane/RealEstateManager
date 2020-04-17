@@ -19,4 +19,8 @@
     <dimen name="subtitle_edit">25sp</dimen>
     <dimen name="width_photo_preview_edit">150dp</dimen>
     <dimen name="height_photo_preview_edit">100dp</dimen>
+    <dimen name="detail_description_text_size">15sp</dimen>
+    <dimen name="detail_titles_text_size">23sp</dimen>
+    <dimen name="detail_map_width">200dp</dimen>
+    <dimen name="detail_map_height">200dp</dimen>
 </resources>

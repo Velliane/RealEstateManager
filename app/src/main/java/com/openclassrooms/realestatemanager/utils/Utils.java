@@ -4,9 +4,9 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import org.threeten.bp.LocalDate;
+import org.threeten.bp.format.DateTimeFormatter;
+
 
 /**
  * Created by Philippe on 21/02/2018.
@@ -39,9 +39,9 @@ public class Utils {
      * NOTE : NE PAS SUPPRIMER, A MONTRER DURANT LA SOUTENANCE
      * @return
      */
-    public static String getTodayDate(){
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        return dateFormat.format(new Date());
+    public static String getTodayDate(LocalDate date){
+        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return date.format(dateTimeFormatter);
     }
 
     /**

@@ -7,9 +7,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.tasks.OnFailureListener
+import com.openclassrooms.realestatemanager.data.UserDataRepository
 import com.openclassrooms.realestatemanager.utils.Constants
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.DisposableHandle
 import kotlinx.coroutines.launch
 
 /**

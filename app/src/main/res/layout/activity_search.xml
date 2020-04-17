@@ -241,10 +241,15 @@
 
             <androidx.appcompat.widget.AppCompatSpinner
                 android:id="@+id/agent_spinner"
-                android:layout_width="match_parent"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:gravity="end"
-                android:layout_margin="10dp" />
+                android:layout_marginTop="10dp"/>
+
+<!--            <CheckBox-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:gravity="end"/>-->
 
         </LinearLayout>
 

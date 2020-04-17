@@ -12,7 +12,6 @@ class SimulatorViewModel: ViewModel() {
 
     val monthlyLiveData = MutableLiveData<BigDecimal>()
 
-    @VisibleForTesting
     fun calculateMonthlyPayment(capital: Int, duration: Int, rate: Float): LiveData<BigDecimal> {
         //-- calculate capital*(rate/12) --//
         val rateInInt = BigDecimal(rate.toDouble()).divide(BigDecimal(100))

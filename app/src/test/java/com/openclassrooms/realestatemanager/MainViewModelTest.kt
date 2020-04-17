@@ -12,15 +12,12 @@ import com.nhaarman.mockitokotlin2.mock
 import com.openclassrooms.realestatemanager.add_edit.Address
 import com.openclassrooms.realestatemanager.add_edit.Property
 import com.openclassrooms.realestatemanager.data.AddressDataRepository
-import com.openclassrooms.realestatemanager.data.FirestoreDataRepository
 import com.openclassrooms.realestatemanager.data.PropertyDataRepository
 import com.openclassrooms.realestatemanager.login.User
-import com.openclassrooms.realestatemanager.login.UserDataRepository
+import com.openclassrooms.realestatemanager.data.UserDataRepository
 import com.openclassrooms.realestatemanager.show.MainViewModel
-import com.openclassrooms.realestatemanager.show.geocode_model.*
 import com.openclassrooms.realestatemanager.utils.FakeFirestoreDataRepository
 import com.openclassrooms.realestatemanager.utils.getOrAwaitValue
-import com.openclassrooms.realestatemanager.utils.setAddressToString
 import junit.framework.Assert.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -119,26 +116,6 @@ class MainViewModelTest {
         assertEquals(4, result?.number)
     }
 
-    @Test
-    fun updateDatabaseWhenListFromRoomDatabaseIsEmpty() = runBlockingTest {
-        val mockFirestoreDataRepository = mock<FirestoreDataRepository> {
-            onBlocking { getAllPropertyFromFirestore() } doReturn listOfProperty
-            onBlocking { getAllUsersFromFirestore() } doReturn listOfUser
-            onBlocking { getAddressFromFirestore("001") } doReturn address1
-            onBlocking { getAddressFromFirestore("002") } doReturn address2
-        }
-        val liveData = MutableLiveData<List<Property>>()
-        liveData.postValue(null)
-        val mockPropertyDataRepository = mock<PropertyDataRepository> {
-            onBlocking { getAllProperties() } doReturn liveData
-        }
-
-        val viewModel = MainViewModel(authUI, context, mockPropertyDataRepository, addressDataRepository, mockFirestoreDataRepository, userDataRepository)
-        viewModel.updateDatabase()
-
-        val result = viewModel.getAllProperty().getOrAwaitValue()
-        assertEquals(2, result.size)
-    }
 
     @Test
     fun updateHeaderIfInternetIsNotAvailable() {

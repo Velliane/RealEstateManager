@@ -69,37 +69,4 @@ fun getNearbyList(): List<NearbyEnum> {
     return list
 }
 
-//fun getOutputMediaFile(type: Int): File? {
-//
-//    // External sdcard location
-//    val mediaStorageDir = File(
-//            Environment
-//                    .getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-//            IMAGE_DIRECTORY_NAME)
-//
-//    // Create the storage directory if it does not exist
-//    if (!mediaStorageDir.exists()) {
-//        if (!mediaStorageDir.mkdirs()) {
-//            return null
-//        }
-//    }
-//
-//    // Create a media file name
-//    val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss",
-//            Locale.getDefault()).format(Date())
-//    val mediaFile: File
-//    if (type == MEDIA_TYPE_IMAGE) {
-//        mediaFile = File(mediaStorageDir.getPath() + File.separator
-//                .toString() + "IMG_" + timeStamp + ".jpg")
-//    } else {
-//        return null
-//    }
-//    return mediaFile
-//}
-//
-//fun getOutputMediaFileUri(type: Int): Uri? {
-//    return Uri.fromFile(getOutputMediaFile(type))
-//}
-
-
 
