@@ -170,7 +170,7 @@ class EditDataViewModel(private val firabaseAuth: FirebaseAuth, private val cont
 
 
     //-- PHOTOS --//
-    private fun savePhotos(id_property: String) {
+    fun savePhotos(id_property: String) {
         listPhotosLiveData.value?.let {
             for (image in it) {
                 val bitmap = MediaStore.Images.Media.getBitmap(context.contentResolver, Uri.parse(image.uri))

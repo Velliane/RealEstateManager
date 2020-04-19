@@ -95,6 +95,8 @@ class EditAddActivity : BaseActivity(), View.OnClickListener, PhotosAdapter.OnIt
     /** RecyclerView and Adapter */
     private lateinit var recyclerView: RecyclerView
     private var photosAdapter = PhotosAdapter(this, this)
+    /** Deleted photos list */
+    private val deletedPhotos = ArrayList<Photo>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -479,7 +481,19 @@ class EditAddActivity : BaseActivity(), View.OnClickListener, PhotosAdapter.OnIt
         deletePhotoBtn.show()
         deletePhotoBtn.setOnClickListener {
             editDataViewModel.deletePhotos(propertyId, photo)
+            deletedPhotos.add(photo)
             deletePhotoBtn.hide()
         }
+    }
+
+    override fun onBackPressed() {
+        //-- If edited is canceled, restore deleted photos --//
+        if(propertyId != ""){
+            for(photo in deletedPhotos){
+                editDataViewModel.addPhotoToList(photo)
+            }
+            editDataViewModel.savePhotos(propertyId)
+        }
+        super.onBackPressed()
     }
 }

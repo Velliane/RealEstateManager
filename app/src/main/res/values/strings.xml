@@ -134,5 +134,8 @@
     <string name="login_error_unknown">Unknown error</string>
     <string name="add_edit_error_select_one_image">Please select at least one photo</string>
     <string name="details_map">Map</string>
+    <string name="map">Map</string>
+    <string name="list">List</string>
+    <string name="initialize_research">Réinitialiser la recherche</string>
 
 </resources>

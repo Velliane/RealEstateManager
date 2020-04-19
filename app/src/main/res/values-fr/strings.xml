@@ -128,5 +128,8 @@
     <string name="login_error_unknown">Erreur inconnue</string>
     <string name="add_edit_error_select_one_image">Merci de sélectionner au moins une image</string>
     <string name="details_map">Carte</string>
+    <string name="map">Carte</string>
+    <string name="list">Liste</string>
+    <string name="initialize_research">Réinitialiser la recherche</string>
 
 </resources>

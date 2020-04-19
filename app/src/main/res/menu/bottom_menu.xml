@@ -4,14 +4,14 @@
     <item
         android:id="@+id/action_map_view"
         android:enabled="true"
-        android:title="Map"
+        android:title="@string/map"
         android:icon="@drawable/nav_map"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_list_view"
         android:enabled="true"
-        android:title="List"
+        android:title="@string/list"
         android:icon="@drawable/nav_list"
         app:showAsAction="ifRoom" />
 </menu>
