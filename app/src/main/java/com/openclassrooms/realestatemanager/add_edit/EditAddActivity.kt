@@ -97,6 +97,8 @@ class EditAddActivity : BaseActivity(), View.OnClickListener, PhotosAdapter.OnIt
     private var photosAdapter = PhotosAdapter(this, this)
     /** Deleted photos list */
     private val deletedPhotos = ArrayList<Photo>()
+    /** Address*/
+    private var address: Address? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -132,6 +134,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener, PhotosAdapter.OnIt
         editDataViewModel.getPropertyToEdit(id)
         editDataViewModel.propertyToEditLiveData.observe(this, Observer {
             updateViewsWithRoomData(it)
+            address = it.address
         })
         editDataViewModel.getAllPhotos(id)
         editDataViewModel.photosLiveData.observe(this, Observer {
@@ -160,11 +163,13 @@ class EditAddActivity : BaseActivity(), View.OnClickListener, PhotosAdapter.OnIt
                             numberBedrooms.text.toString().toInt(), numberBathrooms.text.toString().toInt(), description.text.toString(), inSaleRadioBtn.isChecked, editDataViewModel.getNearby(nearbyNachos.chipValues),
                             inSaleDate.text.toString(), soldDate.text.toString(), parseLocalDateTimeToString(LocalDateTime.now()))
                     //-- Save it --//
-                    editDataViewModel.save(property.id_property, property, number.text.toString().toInt(),
+                    editDataViewModel.save(propertyId, property, number.text.toString().toInt(),
                             street.text.toString(), zipCode.text.toString(), city.text.toString(),
-                            country.text.toString())
+                            country.text.toString(), address)
                     //-- Return to MainActivity --//
-                    startActivity(Intent(this, MainActivity::class.java))
+                    if(editDataViewModel.savedSuccessLiveData.value == true){
+                        startActivity(Intent(this, MainActivity::class.java))
+                    }
                 } else {
                     //-- Show error message if required info are not found --//
                     if (imageList.isEmpty()) {

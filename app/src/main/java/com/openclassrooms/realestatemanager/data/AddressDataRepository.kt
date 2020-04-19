@@ -3,6 +3,9 @@ package com.openclassrooms.realestatemanager.data
 import androidx.lifecycle.LiveData
 import com.openclassrooms.realestatemanager.add_edit.Address
 import com.openclassrooms.realestatemanager.data.database.AddressDao
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.DisposableHandle
+import kotlinx.coroutines.runBlocking
 
 open class AddressDataRepository(private val addressDao: AddressDao) {
 
@@ -14,7 +17,7 @@ open class AddressDataRepository(private val addressDao: AddressDao) {
         return addressDao.addAddress(address)
     }
 
-    open fun getAddressOfOneProperty(idProperty: String): Address {
+    open suspend fun getAddressOfOneProperty(idProperty: String): Address {
         return addressDao.getAddressOfOneProperty(idProperty)
     }
 }
