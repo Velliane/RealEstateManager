@@ -47,20 +47,20 @@ class EditDataViewModel(private val firabaseAuth: FirebaseAuth, private val cont
         savedSuccessLiveData.value = false
         //-- If property doesn't exist, create one and save it --//
         if (propertyId == "") {
-            newProperty.id_property = UUID.randomUUID().toString()
+            val id = UUID.randomUUID().toString()
+            newProperty.id_property = id
             addProperty(newProperty)
             updatePropertyType(context.getString(TypeEnum.valueOf(newProperty.type).res), newProperty.id_property)
             saveAddress(UUID.randomUUID().toString(), number, street, zip_code, city, country, newProperty.id_property, newProperty)
-            savePhotos(newProperty.id_property)
+            savePhotos(id)
         } else {
             //-- If property already exist, update it --//
             addProperty(newProperty)
             updatePropertyType(context.getString(TypeEnum.valueOf(newProperty.type).res), propertyId)
             val id = address?.id_address!!
             saveAddress(id, number, street, zip_code, city, country, propertyId, newProperty)
+            savePhotos(propertyId)
         }
-
-        savePhotos(propertyId)
     sendNotification()
     savedSuccessLiveData.value = true
 }

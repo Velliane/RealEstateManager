@@ -192,6 +192,7 @@ class EditAddActivity : BaseActivity(), View.OnClickListener, PhotosAdapter.OnIt
             soldRadioBtn -> {
                 soldRadioBtn.isChecked = true
                 inSaleRadioBtn.isChecked = false
+                getDateFromDatePicker(soldDate)
             }
             inSaleRadioBtn -> {
                 inSaleRadioBtn.isChecked = true
@@ -494,10 +495,12 @@ class EditAddActivity : BaseActivity(), View.OnClickListener, PhotosAdapter.OnIt
     override fun onBackPressed() {
         //-- If edited is canceled, restore deleted photos --//
         if(propertyId != ""){
-            for(photo in deletedPhotos){
-                editDataViewModel.addPhotoToList(photo)
+            if(deletedPhotos.isNotEmpty()){
+                for(photo in deletedPhotos){
+                    editDataViewModel.addPhotoToList(photo)
+                }
+                editDataViewModel.savePhotos(propertyId)
             }
-            editDataViewModel.savePhotos(propertyId)
         }
         super.onBackPressed()
     }

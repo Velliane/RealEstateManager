@@ -46,7 +46,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/item_location"
-        android:text="TYPE"
+        android:text="@string/type"
         android:textSize="@dimen/list_type_txt_size"/>
 
     <TextView

@@ -1,6 +1,5 @@
 package com.openclassrooms.realestatemanager.simulator
 
-import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
