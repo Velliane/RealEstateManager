@@ -50,7 +50,7 @@ You can:
 - Glide
 - EasyPermission
 - CardView
-- Chip Nachos
+- [Chip Nachos](https://github.com/hootsuite/nachos)
 
 
 ## APIs
